@@ -227,11 +227,11 @@ import com.lilithsthrone.world.places.AbstractPlaceUpgrade;
 import com.lilithsthrone.world.places.PlaceType;
 import com.lilithsthrone.world.places.PlaceUpgrade;
 
-import jdk.nashorn.api.scripting.NashornScriptEngine;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+// import jdk.nashorn.api.scripting.NashornScriptEngine;
+// import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 // Use the following imports when using the org.openjdk.nashorn dependency:
-//import org.openjdk.nashorn.api.scripting.NashornScriptEngine;
-//import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngine;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 /**
  * @since 0.1.0
@@ -498,16 +498,16 @@ public class UtilText {
 				&& Main.sex.getAllParticipants().contains(target)
 				&& target.isSpeechMuffled()) {
 			if(Main.sex.isOngoingActionsBlockingSpeech(target)) {
-				modifiedSentence = Util.replaceWithMuffle(modifiedSentence, 2);
+				modifiedSentence = Util.replaceWithMuffle(modifiedSentence, 4);
 			}
 			
 		} else {
 			if(includePersonalityEffects) {
 				if(target.hasFetish(Fetish.FETISH_BIMBO)) {
 					if(target.isFeminine()) {
-						modifiedSentence = Util.addBimbo(modifiedSentence, 6);
+						modifiedSentence = Util.addBimbo(modifiedSentence, 9);
 					} else {
-						modifiedSentence = Util.addBro(modifiedSentence, 6);
+						modifiedSentence = Util.addBro(modifiedSentence, 9);
 					}
 				}
 				
@@ -523,11 +523,11 @@ public class UtilText {
 				
 				// Apply speech effects:
 				if(target.isSpeechMuffled()) {
-					modifiedSentence = Util.addMuffle(modifiedSentence, 5);
+					modifiedSentence = Util.addMuffle(modifiedSentence, 7);
 					
 				} else if(Main.game.isInSex() && Main.sex.getAllParticipants().contains(target)) {
 					if(Main.sex.isCharacterEngagedInOngoingAction(target)) {
-						modifiedSentence = Util.addSexSounds(modifiedSentence, 6);
+						modifiedSentence = Util.addSexSounds(modifiedSentence, 9);
 					}
 					
 				}
@@ -539,7 +539,7 @@ public class UtilText {
 				}
 	
 				if(target.hasPersonalityTrait(PersonalityTrait.STUTTER)) {
-					modifiedSentence = Util.addStutter(modifiedSentence, 4);
+					modifiedSentence = Util.addStutter(modifiedSentence, 6);
 				}
 			}
 			
@@ -4822,10 +4822,10 @@ public class UtilText {
 			commandsList.add(new ParserCommand(
 					Util.newArrayListOfValues(
 							gender.getType()==PronounType.FEMININE
-								?gender.getGenderName().getFeminine()
+								?gender.getGenderName().getFeminineId()
 								:(gender.getType()==PronounType.MASCULINE
-									?gender.getGenderName().getMasculine()
-									:gender.getGenderName().getNeutral())),
+									?gender.getGenderName().getMasculineId()
+									:gender.getGenderName().getNeutralId())),
 					true,
 					true,
 					"",

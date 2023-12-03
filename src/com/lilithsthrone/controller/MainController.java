@@ -960,7 +960,7 @@ public class MainController implements Initializable {
 								 
 									Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenFieldName').innerHTML=document.getElementById('offspringPetNameInput').value;");
 									if(Main.mainController.getWebEngine().getDocument()!=null) {
-										if (Main.mainController.getWebEngine().getDocument().getElementById("hiddenFieldName").getTextContent().length() < 2
+										if (Main.mainController.getWebEngine().getDocument().getElementById("hiddenFieldName").getTextContent().length() < 1
 												|| Main.mainController.getWebEngine().getDocument().getElementById("hiddenFieldName").getTextContent().length() > 32)
 											unsuitableName = true;
 										else {
@@ -3158,8 +3158,10 @@ public class MainController implements Initializable {
 	public void setTooltipSize(int width, int height) {
 		webviewTooltip.setMaxWidth(width);
 		webviewTooltip.setMaxHeight(height);
+		webviewTooltip.setPrefHeight(height);
 		tooltip.setMaxWidth(width);
 		tooltip.setMaxHeight(height);
+		tooltip.setPrefHeight(height);
 	}
 
 	public KeyboardAction getActionToBind() {

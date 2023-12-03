@@ -558,6 +558,16 @@ public class Main extends Application {
 	 * Do not call Font.getFamilies() prior to this as additional fonts must be loaded before the list is cached.
 	 */
 	protected void loadFonts() {
+
+		// Load Chinese font
+		if (Font.loadFont(toUri("res/fonts/Source Han/SourceHanSansCN-Regular.otf"), 12) != null) {
+			// Load variants
+			Font.loadFont(toUri("res/fonts/Source Han/SourceHanSansCN-Bold.otf"), 12);
+		} else {
+			System.err.println("Source Han font could not be loaded.");
+		}
+
+		
 		// Load fallback for Calibri
 		if (Font.loadFont(toUri("res/fonts/Carlito/Carlito-Regular.ttf"), 11) != null) {
 			// Load variants

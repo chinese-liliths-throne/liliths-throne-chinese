@@ -315,7 +315,12 @@ public class Brax extends NPC {
 
 	@Override
 	public String getArtworkFolderName() {
-		return this.getNameIgnoresPlayerKnowledge();
+		if (Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.bimbofiedBrax))
+			return "Brandi";
+		else if (Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.feminisedBrax))
+			return "Bree";
+		else
+			return "Brax";
 	}
 	
 	@Override

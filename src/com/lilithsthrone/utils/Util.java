@@ -596,116 +596,62 @@ public class Util {
 
 		return null;
 	}
-	
-	private static String[] numbersLessThanTwenty = {
-			"zero",
-			"one",
-			"two",
-			"three",
-			"four",
-			"five",
-			"six",
-			"seven",
-			"eight",
-			"nine",
-			"ten",
-			"eleven",
-			"twelve",
-			"thirteen",
-			"fourteen",
-			"fifteen",
-			"sixteen",
-			"seventeen",
-			"eighteen",
-			"nineteen"
-	};
-	private static String[] positionsLessThanTwenty = {
-			"zero",
-			"first",
-			"second",
-			"third",
-			"fourth",
-			"fifth",
-			"sixth",
-			"seventh",
-			"eighth",
-			"ninth",
-			"tenth",
-			"eleventh",
-			"twelfth",
-			"thirteenth",
-			"fourteenth",
-			"fifteenth",
-			"sixteenth",
-			"seventeenth",
-			"eighteenth",
-			"nineteenth"
-	};
-	private static String[] tensGreaterThanNineteen = {
-			"",
-			"",
-			"twenty",
-			"thirty",
-			"forty",
-			"fifty",
-			"sixty",
-			"seventy",
-			"eighty",
-			"ninety"
-	};
-	
 	/**
 	 * Only works for values -99,999 to 99,999.
 	 * @param integer
 	 * @return
 	 */
+	static String[] digits = {"零","一","二","三","四","五","六","七","八","九"};
+	static String[] lower_base = {"","十","百","千"};
+	static String[] upper_base = {"","万","亿"};
+
+	static String intBlockToString(int integer, boolean isLower, char charTwo)
+	{
+		if (integer == 2 && !isLower) return String.valueOf(charTwo);
+		StringBuilder sb = new StringBuilder();
+		String intStr = Integer.toString(integer);
+		int n = intStr.length();
+		for(int i = 0; i < n; i++)
+		{
+			int num = intStr.charAt(i) - '0';
+			if (num == 0 && sb.length() > 0 && sb.charAt(sb.length()-1) == '零') continue;
+			String digit = digits[num];
+			if (num == 2 && n - 1 - i != 0 && n - 1 - i != 1) sb.append('两');
+			else sb.append(digit);
+			if (num != 0) sb.append(lower_base[n - 1 - i]);
+			if (!isLower && sb.length() > 1 && sb.charAt(0) == '一' && sb.charAt(1) == '十') sb.deleteCharAt(0);
+		}
+		if (sb.length() == 0) return "";
+		if (sb.charAt(sb.length()-1) == '零') sb.deleteCharAt(sb.length()-1);
+		return sb.toString();
+	}
+
 	public static String intToString(int integer) {
-		String intToString = "";
-		
-		if(integer<0) {
-			intToString = "minus ";
+		return intToString(integer, true);
+	}
+
+	public static String intToString(int integer, boolean withLiang) {
+		if (integer == 0) return "零";
+		StringBuilder sb = new StringBuilder();
+		String minus = "";
+		if (integer < 0) 
+		{
+			minus = "负";
+			integer = -integer;
 		}
-		integer = Math.abs(integer);
-		if (integer >= 100_000) {
-			return String.valueOf(integer); // Too big
+		int upper_cap = 0;
+		while(integer > 0)
+		{
+			int upper = integer%10000;
+			if (sb.length() == 1 || (sb.length() > 1 && sb.charAt(1) != '千')) sb.insert(0, '零');
+			sb.insert(0, intBlockToString(upper, integer/10000 > 0, withLiang ? '两' : '二')+upper_base[upper_cap]);
+			integer = integer/10000;
+			upper_cap++;
 		}
-		
-		
-		if(integer>=1000) {
-			if((integer/1000)<20) {
-				intToString+=numbersLessThanTwenty[(integer/1000)]+" thousand";
-			} else {
-				intToString+=tensGreaterThanNineteen[integer/10000] + (((integer/1000)%10!=0)?"-"+numbersLessThanTwenty[(integer/1000)%10]:"")+" thousand";
-			}
-		}
-		
-		if(integer>=100) {
-			if(integer>=1000 && integer%1000 != 0) {
-				intToString+=", ";
-			}
-			integer = integer % 1000;
-			if (intToString.isEmpty() || integer>=100) {
-				intToString += numbersLessThanTwenty[integer/100]+" hundred";
-			}
-			if(integer%100!=0) {
-				intToString+=" and ";
-				integer = integer % 100;
-			}
-		}
-		
-		if(integer%100<20) {
-			if (integer%100 == 0) {
-				if (intToString.isEmpty()) {
-					return "zero";
-				}
-			} else {
-				intToString+=numbersLessThanTwenty[integer%100];
-			}
-		} else {
-			intToString+=tensGreaterThanNineteen[(integer%100)/10] + ((integer%10!=0)?"-"+numbersLessThanTwenty[integer%10]:"");
-		}
-		
-		return intToString;
+
+		sb.insert(0, minus);
+
+		return sb.toString();
 	}
 	
 	private static String[] primarySequence = {
@@ -762,52 +708,7 @@ public class Util {
 	 * @return 'first', 'second', etc.
 	 */
 	public static String intToPosition(int integer) {
-		String intToString = "";
-		
-		if(integer<0) {
-			intToString = "minus ";
-		}
-		integer = Math.abs(integer);
-		if (integer >= 100_000) {
-			return String.valueOf(integer); // Too big
-		}
-		
-		
-		if(integer>=1000) {
-			if((integer/1000)<20) {
-				intToString+=numbersLessThanTwenty[(integer/1000)]+" thousand";
-			} else {
-				intToString+=tensGreaterThanNineteen[integer/10000] + (((integer/1000)%10!=0)?"-"+numbersLessThanTwenty[(integer/1000)%10]:"")+" thousand";
-			}
-		}
-		
-		if(integer>=100) {
-			if(integer>=1000 && integer%1000 != 0) {
-				intToString+=", ";
-			}
-			integer = integer % 1000;
-			if (intToString.isEmpty() || integer>=100) {
-				intToString += numbersLessThanTwenty[integer/100]+" hundred";
-			}
-			if(integer%100!=0) {
-				intToString+=" and ";
-				integer = integer % 100;
-			}
-		}
-		
-		if(integer%100<20) {
-			if (integer%100 == 0) {
-				if (intToString.isEmpty()) {
-					return "zero";
-				}
-			} else {
-				intToString+=positionsLessThanTwenty[integer%100];
-			}
-		} else {
-			intToString+=tensGreaterThanNineteen[(integer%100)/10] + ((integer%10!=0)?"-"+positionsLessThanTwenty[integer%10]:"");
-		}
-		
-		return intToString;
+		return "第" + intToString(integer, false);
 	}
 	
 	private final static TreeMap<Integer, String> numeralMap = new TreeMap<Integer, String>();
@@ -836,6 +737,16 @@ public class Util {
             return numeralMap.get(integer);
         }
         return numeralMap.get(l) + intToNumerals(integer-l);
+	}
+
+	public static String intToZheng(int integer, int max) {
+		String[] zhengPhase = {"丨","丄","上","止"};
+		StringBuilder numeralSB = new StringBuilder();
+		int limit = Math.min(integer, max);
+		for(int i=0; i<limit/5; i++) numeralSB.append("正");
+		if(limit%5 != 0) numeralSB.append(zhengPhase[limit%5-1]);
+		if(limit<integer) numeralSB.append("…… (共计："+integer+")");
+		return numeralSB.toString();
 	}
 	
 	public static String intToTally(int integer, int max) {
@@ -953,7 +864,7 @@ public class Util {
 		return modifiedSentence.toString();
 	}
 
-	private static Pattern endOfSentence = Pattern.compile("[,.!?]");
+	private static Pattern endOfSentence = Pattern.compile("[,.!?，。！？、]");
 	
 	private static boolean isEndOfSentence(char c) {
 		return endOfSentence.matcher(String.valueOf(c)).matches();

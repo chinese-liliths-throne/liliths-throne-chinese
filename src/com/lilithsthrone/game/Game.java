@@ -4773,7 +4773,7 @@ public class Game implements XMLSaving {
 		if(withYear) {
 			return date;
 		} else {
-			return date.substring(0, date.length()-5);
+			return date.substring(5, date.length());
 		}
 	}
 	

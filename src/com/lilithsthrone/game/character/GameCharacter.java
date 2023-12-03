@@ -3870,11 +3870,9 @@ public abstract class GameCharacter implements XMLSaving {
 			if(this.isUnique()) {
 				determiner = "the";
 			}
-			return (determiner.equalsIgnoreCase("a") || determiner.equalsIgnoreCase("an")
-						?(Character.isUpperCase(determiner.charAt(0))
-								?Util.capitaliseSentence(UtilText.generateSingularDeterminer(nameText))
-								:UtilText.generateSingularDeterminer(nameText))
-						:determiner)
+			return (Character.isUpperCase(determiner.charAt(0))
+						?Util.capitaliseSentence(UtilText.generateSingularDeterminer(nameText))
+						:UtilText.generateSingularDeterminer(nameText))
 					+ " " + nameText;
 		}
 	}

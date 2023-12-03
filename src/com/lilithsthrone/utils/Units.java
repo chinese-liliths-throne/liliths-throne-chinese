@@ -71,10 +71,9 @@ public enum Units {
      */
     public void updateDateFormat(boolean autoLocale) {
         Locale.setDefault(autoLocale ? defaultLocale : Locale.ENGLISH);
-        shortDate = (autoLocale ? DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-                : DateTimeFormatter.ofPattern(Main.getProperties().hasValue(PropertyValue.internationalDate) ? "dd.MM.yy" : "MM/dd/yy"))
+        shortDate = DateTimeFormatter.ofPattern(Main.getProperties().hasValue(PropertyValue.internationalDate) ? "yy.MM.dd" : "yy.MM.dd")
                 .withZone(ZoneId.systemDefault());
-        longDate = DateTimeFormatter.ofPattern("d'%o %m' yyyy")
+        longDate = DateTimeFormatter.ofPattern("yyyy年MM月dd日")
                 .withZone(ZoneId.systemDefault());
     }
 
@@ -83,9 +82,8 @@ public enum Units {
      * @param autoLocale Determines if automatic or manual detection is used
      */
     public void updateTimeFormat(boolean autoLocale) {
-        time = (autoLocale ? DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-                : DateTimeFormatter.ofPattern(Main.getProperties().hasValue(PropertyValue.twentyFourHourTime) ? "HH:mm" : "hh:mm a"))
-                .withZone(ZoneId.systemDefault());
+        time = DateTimeFormatter.ofPattern(Main.getProperties().hasValue(PropertyValue.twentyFourHourTime) ? "HH:mm" : "hh:mm a")
+                .withLocale(Locale.ENGLISH).withZone(ZoneId.systemDefault());
     }
 
     /**

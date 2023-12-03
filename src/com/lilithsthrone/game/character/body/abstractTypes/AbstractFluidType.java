@@ -190,7 +190,7 @@ public abstract class AbstractFluidType implements BodyPartTypeInterface {
 		if(name==null || name.isEmpty()) {
 			return Util.randomItemFrom(baseFluidType.getNames());
 		}
-		if(name.endsWith("-")) {
+		if(!baseFluidType.getNames().contains(name)) {
 			if(Math.random()<0.25f) { // 25% chance to return this '-' name.
 				return name + Util.randomItemFrom(baseFluidType.getNames());
 			} else {

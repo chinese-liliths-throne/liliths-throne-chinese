@@ -109,7 +109,7 @@ public abstract class AbstractAttribute {
 	}
 	
 	public String getColouredName(String tag) {
-		return "<"+tag+" style='color:"+this.getColour().toWebHexString()+";'>"+name+"</"+tag+">";
+		return "<"+tag+" style='color:"+this.getColour().toWebHexString()+";'>"+nameAbbreviation+"</"+tag+">";
 	}
 
 	public String getFormattedValue(float value) {

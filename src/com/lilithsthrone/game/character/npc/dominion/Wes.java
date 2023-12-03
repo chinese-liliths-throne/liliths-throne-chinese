@@ -249,7 +249,7 @@ public class Wes extends NPC {
 
 	@Override
 	public String getArtworkFolderName() {
-		return this.getNameIgnoresPlayerKnowledge();
+		return "Wes";
 	}
 	
 	@Override

@@ -2191,16 +2191,14 @@ public class Sex {
 			}
 		}
 		
-		positionActionsPlayer.sort((a1, a2) -> 
-		a1.getActionType()==SexActionType.POSITIONING_MENU
-			?a2.getActionType()==SexActionType.POSITIONING_MENU
-				?a1.getActionTitle().compareTo(a2.getActionTitle())
-				:-1
-			:a2.getActionType()!=SexActionType.POSITIONING_MENU && a1.isPositionSwap()
-				?-1
-				:a1.getActionType()!=SexActionType.POSITIONING_MENU && a2.isPositionSwap()
-					?1
-					:a1.getActionTitle().compareTo(a2.getActionTitle()));
+		positionActionsPlayer.sort((a1, a2) ->
+			a1.getActionType() == a2.getActionType()
+			? (a1.isPositionSwap() == a2.isPositionSwap() 
+				? a1.getActionTitle().compareTo(a2.getActionTitle()) 
+				: (a1.isPositionSwap() ? -1 : 1)
+			)
+			: (a1.getActionType() == SexActionType.POSITIONING_MENU ? -1 : 1)
+		);
 		
 		if(Main.sex.getTotalParticipantCount(false)>2) {
 			for(GameCharacter character : Main.sex.getAllParticipants(false)) {
