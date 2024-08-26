@@ -692,6 +692,10 @@ public abstract class AbstractLegType implements BodyPartTypeInterface {
 				if(!body.isShortStature()) {
 					newHeight = Math.max(Height.getShortStatureCutOff(), newHeight);
 				}
+				if(!body.isFairySized()) {
+					newHeight = Math.max(Height.getFairySizeCutOff(), newHeight);
+				}
+				newHeight = Math.max(newHeight, Height.NEGATIVE_TWO_MINIMUM.getMinimumValue()); // Do not reduce into tiny size
 				body.setHeight(newHeight);
 				String colouredHeightValue = "<span style='color:"+body.getHeight().getColour().toWebHexString()+";'>[npc.heightValue]</span>";
 				feralStringBuilder.append("<p>The reduced size of [npc.namePos] new lower body has resulted in [npc.herHim] getting shorter, so now when standing at full height [npc.she] [npc.verb(measure)] "+colouredHeightValue+".</p>");

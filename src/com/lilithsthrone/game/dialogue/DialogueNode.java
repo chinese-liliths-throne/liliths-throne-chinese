@@ -763,6 +763,20 @@ public abstract class DialogueNode {
 	}
 
 	/**
+	 * @return True if this dialogue node disables inventory management. By default, this returns false. <b>This should only be used in very specific circumstances.</b>
+	 */
+	public boolean isInventoryForcedDisabledInSex() {
+		return false;
+	}
+
+	/**
+	 * @return True if this dialogue node disables phone use. By default, this returns false. <b>This should only be used in very specific circumstances.</b>
+	 */
+	public boolean isPhoneDisabled() {
+		return false;
+	}
+
+	/**
 	 * @return True if health and aura regeneration is disabled in this dialogue node.
 	 */
 	public boolean isRegenerationDisabled() {

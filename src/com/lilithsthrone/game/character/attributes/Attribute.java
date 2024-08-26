@@ -22,7 +22,7 @@ import com.lilithsthrone.utils.colours.PresetColour;
 public class Attribute {
 
 	public static AbstractAttribute HEALTH_MAXIMUM = new AbstractAttribute(false,
-			0,
+			1,
 			1,
 			1000,
 			"health",
@@ -42,7 +42,7 @@ public class Attribute {
 	};
 
 	public static AbstractAttribute MANA_MAXIMUM = new AbstractAttribute(false,
-			0,
+			1,
 			1,
 			1000,
 			"aura",

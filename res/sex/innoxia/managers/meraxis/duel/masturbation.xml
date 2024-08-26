@@ -200,6 +200,9 @@
 						<applierId><![CDATA[lilaya]]></applierId>
 						<type><![CDATA[WITCH_SEAL]]></type>
 					</startingImmobilisation>
+				Please note that you can add multiple 'startingImmobilisation' elements to make this character begin sex under the effects of multiple ImmobilisationTypes.
+					If defining multiple 'startingImmobilisation' elements, please be aware that each element must have a unique 'type'.
+					If two 'startingImmobilisation' elements have the same 'type', only one will be used at the start of sex.
 				OPTIONAL: Default is no immobilisation type applied at the start of sex.
 				PARSER: Initial -->
 			<startingImmobilisation/>
@@ -241,8 +244,9 @@
 			<canSelfTransform><![CDATA[true]]></canSelfTransform>
 	
 			<!-- Whether or not this character starts the sex scene being banned from rape-play (i.e. going into the 'resisting' pace in consensual sex scenes due to having the 'unwilling fuck-toy' fetish).
-				The default is true, thereby making it so NPCs don't start sex resisting, as it without a scene which leads into it (such as that with the slime queen), the resisting behaviour is quite jarring.
-				OPTIONAL: Default true
+				The default is based on the player's 'Rape-play allowed by default' content setting.
+				By default that's false, thereby making it so NPCs don't start sex resisting, as it without a scene which leads into it (such as that with the slime queen), the resisting behaviour is quite jarring.
+				OPTIONAL: Default based on 'Rape-play allowed by default' content setting
 				PARSER: Initial -->
 			<rapePlayBannedAtStart><![CDATA[true]]></rapePlayBannedAtStart>
 			

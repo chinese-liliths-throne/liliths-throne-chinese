@@ -35,6 +35,7 @@ import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.dialogue.DialogueNodeType;
 import com.lilithsthrone.game.dialogue.eventLog.EventLogEntry;
 import com.lilithsthrone.game.dialogue.utils.CharactersPresentDialogue;
+import com.lilithsthrone.game.dialogue.utils.DebugDialogue;
 import com.lilithsthrone.game.dialogue.utils.InventoryDialogue;
 import com.lilithsthrone.game.dialogue.utils.InventoryInteraction;
 import com.lilithsthrone.game.dialogue.utils.MapTravelType;
@@ -76,7 +77,7 @@ import com.lilithsthrone.world.population.Population;
 
 /**
  * @since 0.1.0
- * @version 0.4
+ * @version 0.4.9.7
  * @author Innoxia
  */
 public enum RenderingEngine {
@@ -92,7 +93,7 @@ public enum RenderingEngine {
 	private boolean renderingTattoosRight = false;
 	
 	public static final int INVENTORY_PAGES = 5;
-	public static final int ITEMS_PER_PAGE = 24 + 6;
+	public static final int ITEMS_PER_PAGE = 6 * 5; // 6 items per row
 	
 	public static Colour[] orgasmColours = new Colour[]{
 			PresetColour.AROUSAL_STAGE_ZERO,
@@ -164,7 +165,7 @@ public enum RenderingEngine {
 			
 			equippedPanelSB.append("<div class='inventory-item-slot secondary' style='background-color:"+PresetColour.BACKGROUND.toWebHexString()+";'>"
 										+ "<div class='inventory-icon-content'>"
-											+SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing()
+											+SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing(charactersInventoryToRender)
 										+"</div>"
 									+ "<div class='overlay-inventory disabled'></div></div>");
 
@@ -491,7 +492,7 @@ public enum RenderingEngine {
 			equippedPanelSB.append("<div class='inventory-icon-content'>"
 										+(this.isRenderingTattoosLeft()
 											?SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchTattoo()
-											:SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing())
+											:SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing(charactersInventoryToRender))
 									+"</div>"
 									+ "<div class='overlay-inventory' id='TATTOO_SWITCH_LEFT'></div>");
 			
@@ -499,7 +500,7 @@ public enum RenderingEngine {
 			equippedPanelSB.append("<div class='inventory-icon-content"+getClassRarityIdentifier(Rarity.COMMON)+"'>"
 										+(this.isRenderingTattoosRight()
 												?SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchTattoo()
-												:SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing())
+												:SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing(charactersInventoryToRender))
 									+"</div>"
 									+ "<div class='overlay-inventory' id='TATTOO_SWITCH_RIGHT'></div>");
 		}
@@ -1509,6 +1510,7 @@ public enum RenderingEngine {
 				|| (getCharacterToRender()!=null
 					&& (Main.game.getCurrentDialogueNode().getDialogueNodeType() == DialogueNodeType.CHARACTERS_PRESENT
 						|| Main.game.getCurrentDialogueNode() == PhoneDialogue.CONTACTS_CHARACTER
+						|| Main.game.getCurrentDialogueNode() == DebugDialogue.OUTFIT_VIEWER
 						|| Main.game.getDialogueFlags().getManagementCompanion()!=null
 						|| (Main.game.getCurrentDialogueNode().getDialogueNodeType()==DialogueNodeType.INVENTORY && InventoryDialogue.getInventoryNPC()!=null)));
 	}

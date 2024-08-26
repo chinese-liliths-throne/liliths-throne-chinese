@@ -2,6 +2,7 @@ package com.lilithsthrone.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.w3c.dom.events.EventTarget;
 
@@ -192,7 +193,7 @@ public class OccupantController {
 				new Util.Value<>(CoverableArea.VAGINA, SexAreaOrifice.VAGINA),
 				new Util.Value<>(CoverableArea.ANUS, SexAreaOrifice.ANUS));
 		
-		for (Map.Entry<CoverableArea, SexAreaOrifice> area : areas.entrySet()) {
+		for (Entry<CoverableArea, SexAreaOrifice> area : areas.entrySet()) {
 			String id = idModifier+"_"+area.getKey()+"_"+fluid.hashCode();
 			if (MainController.document.getElementById(id) != null) {
 				float milkAmount = Math.min(fluid.getMillilitres(), MilkingRoom.INGESTION_AMOUNT);
@@ -283,12 +284,12 @@ public class OccupantController {
 						}
 						
 						String ingestion;
-						try {
-							GameCharacter c = fluid.getFluidCharacter();
-							ingestion = MilkingRoom.getTargetedCharacter().ingestFluid(c, fluid.getFluid(), area.getValue(), milkAmount);
-						} catch (Exception e1) {
+//						try {
+//							GameCharacter c = fluid.getFluidCharacter();
+//							ingestion = MilkingRoom.getTargetedCharacter().ingestFluid(c, fluid.getBody(), fluid.getFluid(), area.getValue(), milkAmount);
+//						} catch (Exception e1) {
 							ingestion = MilkingRoom.getTargetedCharacter().ingestFluid(fluid, area.getValue(), milkAmount);
-						}
+//						}
 						if (!ingestion.isEmpty()) {
 							Main.game.getTextEndStringBuilder().append("</p>"
 									+"<p>"
@@ -664,19 +665,37 @@ public class OccupantController {
 							@Override
 							public void effects() {
 								slave.setHomeLocation(Main.game.getPlayer().getWorldLocation(), Main.game.getPlayer().getLocation());
-								if(!slave.isAtWork() || slave.getLocationPlaceType().equals(PlaceType.SLAVER_ALLEY_SLAVERY_ADMINISTRATION)) {
+								if(!slave.isAtWork()
+										|| slave.getLocationPlaceType().equals(PlaceType.SLAVER_ALLEY_SLAVERY_ADMINISTRATION)
+										|| slave.getWorldLocation().equals(WorldType.getWorldTypeFromId("innoxia_dominion_sex_shop"))) {
 									slave.returnToHome();
-								}							}
+								}
+							}
 						});
 					}, false);
 					MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Move Slave Here",
 							UtilText.parse(slave, "Move [npc.name] to your current location.")));
 				}
 				
-				id = slaveId+"_TRANSFER_DISABLED";
+				id = slaveId+"_TRANSFER_DISABLED_FULL";
 				if (MainController.document.getElementById(id) != null) {
 					MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Move Slave Here",
 							UtilText.parse(slave, "You cannot move [npc.name] to this location, as there's no room for [npc.herHim] here.")));
+				}
+				id = slaveId+"_TRANSFER_DISABLED_INAPPPROPRIATE";
+				if (MainController.document.getElementById(id) != null) {
+					MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Move Slave Here",
+							UtilText.parse(slave,
+									"You cannot move [npc.name] to this location, as it's not a suitable room for [npc.herHim]..."
+									+(slave.isDoll()
+										?"<br/><i>Dolls can only use doll closets as their home tile...</i>"
+										:"<br/><i>Slaves can only use slave rooms as their home tile...</i>")
+									)));
+				}
+				id = slaveId+"_TRANSFER_DISABLED_ALREADY_HERE";
+				if (MainController.document.getElementById(id) != null) {
+					MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Move Slave Here",
+							UtilText.parse(slave, "You cannot move [npc.name] to this location, as [npc.sheIs] already treating this room as [npc.her] home!")));
 				}
 				
 				id = slaveId+"_SELL";

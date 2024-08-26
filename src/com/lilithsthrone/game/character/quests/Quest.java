@@ -840,6 +840,23 @@ public enum Quest {
 			return "Lilaya gave you permission to use the empty rooms to house your friends and family, on the condition that you pay for the expenses that are incurred.";
 		}
 	},
+
+	// Doll sotrage:
+	
+	SIDE_DOLL_STORAGE_ASK_FOR_SPACE(QuestType.SIDE, 1, 5) {
+		@Override
+		public String getName() {
+			return "Where do the dolls go?";
+		}
+		@Override
+		public String getDescription() {
+			return "Although Lilaya's mansion is full of empty rooms in which dolls could be stored, you'd better ask her for permission before bringing any home...";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "Lilaya gave you permission to use the empty rooms to store any dolls you buy.";
+		}
+	},
 	
 	// Other:
 	
@@ -2133,17 +2150,17 @@ public enum Quest {
 	DOLL_FACTORY_1(QuestType.SIDE, 30, 10) {
 		@Override
 		public String getName() {
-			return "On Lovienne's Orders";
+			return "Investigate Lovienne's Luxuries";
 		}
 		@Override
 		public String getDescription() {
-			return "Angelixx's diary revealed that the kidnapped refugees were being teleported to the shop 'Lovienne's Luxury' in Dominion."
+			return "Angelixx's diary revealed that the kidnapped refugees were being teleported to the shop 'Lovienne's Luxuries' in Dominion."
 					+ " If you're to discover what's happened to Angelixx's victims, then you'll need to investigate this store...";
 		}
 		@Override
 		public String getCompletedDescription() {
-			return "You travelled to the shop 'Lovienne's Luxury' and attempted to discover if the refugees kidnapped by Angelixx were being taken there."
-					+ " Although you weren't able to discover anything, a woman approached you as you left and offered her help.";
+			return "You travelled to the shop 'Lovienne's Luxuries' and attempted to discover if the refugees kidnapped by Angelixx were being taken there."
+					+ " Although you weren't able to discover anything, a reporter named Fiammetta approached you as you left and offered her help.";
 		}
 	},
 	
@@ -2154,12 +2171,12 @@ public enum Quest {
 		}
 		@Override
 		public String getDescription() {
-			return "The woman you met outside 'Lovienne's Luxury' knows a way into the rear of the premises, where she believes the kidnapped refugees are being held and used as slave labour."
-					+ " With no other way to gain entry and get to the bottom of what's happening in there, you agreed to her plan and said you'd meet her near to the shop between [units.time(1)]-[units.time(4)].";
+			return "Fiammetta knows a way into the rear of Lovienne's Luxuries, where she believes the kidnapped refugees are being held and used as slave labour."
+					+ " With no other way to gain entry and get to the bottom of what's happening in there, you agreed to her plan and said you'd meet her near the shop between [units.time(1)]-[units.time(4)].";
 		}
 		@Override
 		public String getCompletedDescription() {
-			return "You met the woman outside 'Lovienne's Luxury' and managed to break in to the rear of the premises without setting off the alarm system.";
+			return "You met Fiametta outside Lovienne's Luxuries and managed to break in to the rear of the premises without setting off the alarm system.";
 		}
 	},
 	
@@ -2170,12 +2187,11 @@ public enum Quest {
 		}
 		@Override
 		public String getDescription() {
-			return "The doll factory to the rear of 'Lovienne's Luxury' has turned out to be nothing but a facade."
-					+ " The real factory, and where you're sure to find the kidnapped refugees, has been revealed to be deep underground, so it's down you go...";
+			return "Now that you've managed to gain entry to the back of Lovienne's Luxuries, you need to investigate and find out where the kidnapped refugees are.";
 		}
 		@Override
 		public String getCompletedDescription() {
-			return "You travelled down the elevator to the real doll factory, where you witnessed Angelixx converting a captive into a sex doll.";
+			return "You discovered a large elevator in the rear of Lovienne's Luxuries, and after taking it down, you discovered a large facility hidden deep beneath Dominion.";
 		}
 	},
 	
@@ -2186,64 +2202,83 @@ public enum Quest {
 		}
 		@Override
 		public String getDescription() {
-			return "Nobody will believe what you've seen, so you're going to need to gather hard evidence of how Lovienne's dolls are created."
-					+ " Ledgers, machine schematics, or other such documents are sure to be found in an office somewhere...";
+			return "You and Fiammetta need to find evidence of what's happened to the refugees."
+					+ " Ledgers, machine schematics, or other such documents are sure to be found somewhere in here...";
 		}
 		@Override
 		public String getCompletedDescription() {
-			return "You managed to gather hard evidence of how Lovienne's dolls are created.";
+			return "You managed to gather hard evidence of Saellatrix's and Angelixx's involvement in kidnapping and illegal slavery, and also acquired the disturbing knowledge of how Lovienne's dolls are created.";
 		}
 	},
 	
-	DOLL_FACTORY_5(QuestType.SIDE, 30, 10) {
+	DOLL_FACTORY_5(QuestType.SIDE, 30, 250) {
 		@Override
 		public String getName() {
-			return "Up and Away";
+			return "Time to Leave";
 		}
 		@Override
 		public String getDescription() {
-			return "With hard evidence of Lovienne's dolls are created now in your possession, you need to escape from the factory...";
+			return "Now that Fia has obtained enough proof to get a story published, the two of you need to escape from the factory...";
 		}
 		@Override
 		public String getCompletedDescription() {
-			return "You managed to escape from the lower factory, but as you exited the elevator you were confronted by Angelixx herself, who offered you a deal...";
+			return "You and Fia managed to escape from the lower factory.";
 		}
 	},
 	
-	DOLL_FACTORY_6A(QuestType.SIDE, 30, 10) {
+	DOLL_FACTORY_6(QuestType.SIDE, 30, 500) {
 		@Override
 		public String getName() {
-			return "Angelixx's Fall";
+			return "Fiammetta's Message";
 		}
 		@Override
 		public String getDescription() {
-			return "You refused to make a deal with Angelixx, and instead handed the evidence you'd gathered over to the woman."
-					+ " When word of what's going on in her shop is made public, Lovienne is likely to administer a severe punishment to Angelixx."
-					+ " Perhaps if you return to the shop during opening hours you'll find out what's to become of her...";
+			return "Fiammetta has promised to write an article on everything the two of you have witnessed in Lovienne's Luxuries."
+					+ " She's promised to send a message to you once it's ready to be published."
+					+ "<br/>[style.italicsMinorGood(After a few days have passed, check in the entrance hall to Lilaya's mansion during daylight hours.)]";
 		}
 		@Override
 		public String getCompletedDescription() {
-			return "You refused to make a deal with Angelixx, and instead handed the evidence you'd gathered over to the woman."
-					+ " Returning to 'Lovienne's Luxury' during opening hours, you discovered that the evidence of how sex dolls are created is not being taken seriously by members of the public."
-					+ " What's more, there's now a limited-edition succubus sex doll for sale, who's the spitting image of Angelixx...";
+			return "Instead of receiving Fiammetta's message, you encountered Saellatrix."
+					+ " Exploiting her intimate relationship with Lilaya, she put you on the spot and demanded that you sign a document declaring that Fiammetta is lying.";
 		}
 	},
 	
-	DOLL_FACTORY_6B(QuestType.SIDE, 30, 10) {
+	//TODO
+	
+	DOLL_FACTORY_7A(QuestType.SIDE, 30, 10) {
 		@Override
 		public String getName() {
-			return "Angelixx's Associate";
+			return "Integrity Above All";
 		}
 		@Override
 		public String getDescription() {
-			return "You betrayed the trust of the woman and handed her over to Angelixx, along with the evidence you'd gathered."
-					+ " The succubus offered you her thanks and told you to return to the shop during opening hours to get a special reward...";
+			return "You refused to make a deal with Saellatrix, and instead swore to tell the truth and back up all that Fiammetta has written in her article."
+					+ " Before swiftly leaving the mansion, Saellatrix mentioned that her store will be closed for at least a month."
+					+ "<br/>[style.italicsMinorGood(You should return to Lovienne's Luxuries once it's reopened to find out what's become of the refugees...)]";
 		}
 		@Override
 		public String getCompletedDescription() {
-			return "You betrayed the trust of the woman and handed her over to Angelixx, along with the evidence you'd gathered."
-					+ " In return, Angelixx will convert your slaves to dolls in exchange for a small fee, or will instead pay you if you don't want them back."
-					+ " She also offered you her intimate company...";
+			return "You refused to make a deal with Saellatrix, and instead swore to tell the truth and back up all that Fiammetta has written in her article."
+					+ " Returning to Lovienne's Luxuries after it'd been closed for a month, you discovered that Saellatrix has been pressured into creating a method to reverse the dollification process."
+					+ " You can now transform any of your dolls back into people, and as a peace offering, Saellatrix has allowed you to decide what to do with Angelixx...";
+		}
+	},
+	
+	DOLL_FACTORY_7B(QuestType.SIDE, 30, 10) {
+		@Override
+		public String getName() {
+			return "It's Just Good Business";
+		}
+		@Override
+		public String getDescription() {
+			return "You betrayed the trust of Fiammetta and signed the document declaring that the reporter is lying."
+					+ " Saellatrix was delighted by your decision, and asked you to return to her shop during opening hours to get a special reward...";
+		}
+		@Override
+		public String getCompletedDescription() {
+			return "You betrayed the trust of Fiammetta and signed the document declaring that the reporter is lying."
+					+ " In return, Saellatrix offered to convert any of your slaves into dolls in exchange for a small fee, or will instead pay you if you let her keep them to sell in her shop.";
 		}
 	},
 	

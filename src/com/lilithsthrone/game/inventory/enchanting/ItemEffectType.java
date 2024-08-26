@@ -30,6 +30,7 @@ import com.lilithsthrone.game.character.body.types.WingType;
 import com.lilithsthrone.game.character.body.valueEnums.AssSize;
 import com.lilithsthrone.game.character.body.valueEnums.BodyHair;
 import com.lilithsthrone.game.character.body.valueEnums.BodyMaterial;
+import com.lilithsthrone.game.character.body.valueEnums.BreastShape;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringPattern;
 import com.lilithsthrone.game.character.body.valueEnums.CumProduction;
 import com.lilithsthrone.game.character.body.valueEnums.CupSize;
@@ -116,9 +117,12 @@ public class ItemEffectType {
 	};
 	
 	public static AbstractItemEffectType USED_CONDOM_DRINK = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"Provides a slimy snack."),
+			"Provides a dose of stored cum."),
 			PresetColour.GENERIC_SEX) {
-		
+		@Override
+		public boolean isBreakOutOfInventory() {
+			return true;
+		}
 		@Override
 		public String itemEffectOverride(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
 			return ""; // THIS EFFECT IS NOT USED, AS AbstractFilledCondom OVERRIDES THE USUAL AbstractItem's applyEffects() METHOD!!!
@@ -699,35 +703,23 @@ public class ItemEffectType {
 	// Ingredients and potions:
 	
 	public static AbstractItemEffectType MYSTERY_KINK = new AbstractItemEffectType(Util.newArrayListOfValues(
-			"[style.boldFetish(Random fetish addition or removal)]"),
+			"[style.italicsSex(+50)] [style.italicsLust(Lust)]",
+			"[style.italicsSex(+50)] [style.italicsArousal(Arousal)] during sex"
+			//"[style.boldFetish(Random fetish addition or removal)]"
+			),
 			PresetColour.FETISH) {
 		
 		@Override
 		public String itemEffectOverride(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			List<AbstractFetish> fetishesToAdd = new ArrayList<>();
-			List<AbstractFetish> fetishesToRemove = new ArrayList<>();
-			for(AbstractFetish f : Fetish.getAllFetishes()) {
-				if(!f.isContentEnabled()) {
-					continue;
-				}
-				if(f.getFetishesForAutomaticUnlock().isEmpty()) {
-					if(target.hasFetish(f)) {
-						fetishesToRemove.add(f);
-						
-					} else if(f.isAvailable(target)) {
-						fetishesToAdd.add(f);
-					}
-				}
+			StringBuilder sb = new StringBuilder();
+			sb.append(target.incrementLust(50, false));
+			if(Main.game.isInSex()) {
+				target.incrementArousal(50);
+				sb.append("<p style='text-align:center;'>"
+							+ UtilText.parse(target, "[npc.Name] [style.colourSex(gained)] [style.boldSex(50 arousal)]!")
+						+ "</p>");
 			}
-			
-			if((Math.random()>0.33f && !fetishesToAdd.isEmpty()) || fetishesToRemove.isEmpty()) {
-				AbstractFetish f = fetishesToAdd.get(Util.random.nextInt(fetishesToAdd.size()));
-				return target.addFetish(f);
-				
-			} else {
-				AbstractFetish f = fetishesToRemove.get(Util.random.nextInt(fetishesToRemove.size()));
-				return target.removeFetish(f);
-			}
+			return sb.toString();
 		}
 	};
 	
@@ -1914,6 +1906,7 @@ public class ItemEffectType {
 		@Override
 		public List<TFModifier> getPrimaryModifiers() {
 			return Util.newArrayListOfValues(
+					TFModifier.NONE,
 					TFModifier.TF_MOD_FETISH_BODY_PART,
 					TFModifier.TF_MOD_FETISH_BEHAVIOUR);
 		}
@@ -1922,17 +1915,21 @@ public class ItemEffectType {
 		public List<TFModifier> getSecondaryModifiers(AbstractCoreItem targetItem, TFModifier primaryModifier) {
 			List<TFModifier> list = new ArrayList<>();
 			list.add(TFModifier.NONE);
+			
 			if(primaryModifier == TFModifier.TF_MOD_FETISH_BEHAVIOUR) {
 				list.addAll(TFModifier.getTFBehaviouralFetishList());
-				return list;
-			} else {
-				list.addAll(TFModifier.getTFBodyPartFetishList());
-				return list;
 			}
+			if(primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART){
+				list.addAll(TFModifier.getTFBodyPartFetishList());
+			}
+			return list;
 		}
 		
 		@Override
 		public List<TFPotency> getPotencyModifiers(TFModifier primaryModifier, TFModifier secondaryModifier) {
+			if(primaryModifier==TFModifier.NONE) {
+				return Util.newArrayListOfValues(TFPotency.MINOR_BOOST);
+			}
 			return Util.newArrayListOfValues(
 					TFPotency.BOOST,
 					TFPotency.MINOR_BOOST,
@@ -1942,32 +1939,43 @@ public class ItemEffectType {
 		
 		@Override
 		public List<String> getEffectsDescription(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target) {
-			String descriptor = primaryModifier==TFModifier.TF_MOD_FETISH_BODY_PART ? "body-part": "behavioural";
+
+			if(primaryModifier==TFModifier.NONE) {
+				return Util.newArrayListOfValues("Adds or removes a [style.boldFetish(random fetish)].");
+			}
+			
+			String descriptor = "";
+			
+			if(primaryModifier==TFModifier.TF_MOD_FETISH_BODY_PART) {
+				descriptor = " body-part";
+			} else if(primaryModifier==TFModifier.TF_MOD_FETISH_BEHAVIOUR) {
+				descriptor = " behavioural";
+			}
 			
 			if(potency==TFPotency.BOOST) {
 				if(secondaryModifier == TFModifier.NONE) {
-					return Util.newArrayListOfValues("Adds a [style.boldFetish(random "+descriptor+" fetish)].");
+					return Util.newArrayListOfValues("Adds a [style.boldFetish(random"+descriptor+" fetish)].");
 				} else {
 					return Util.newArrayListOfValues("Adds the [style.boldFetish("+secondaryModifier.getName()+" fetish)].");
 				}
 				
 			} else if(potency==TFPotency.MINOR_BOOST) {
 				if(secondaryModifier == TFModifier.NONE) {
-					return Util.newArrayListOfValues("Boosts [style.boldLust(desire)] for a [style.boldFetish(random "+descriptor+" fetish)].");
+					return Util.newArrayListOfValues("Boosts [style.boldLust(desire)] for a [style.boldFetish(random"+descriptor+" fetish)].");
 				} else {
 					return Util.newArrayListOfValues("Boosts [style.boldLust(desire)] for the [style.boldFetish("+secondaryModifier.getName()+" fetish)].");
 				}
 				
 			} else if(potency==TFPotency.MINOR_DRAIN) {
 				if(secondaryModifier == TFModifier.NONE) {
-					return Util.newArrayListOfValues("Lowers [style.boldLust(desire)] for a [style.boldFetish(random "+descriptor+" fetish)] (if that fetish is not already owned).");
+					return Util.newArrayListOfValues("Lowers [style.boldLust(desire)] for a [style.boldFetish(random"+descriptor+" fetish)] (if that fetish is not already owned).");
 				} else {
 					return Util.newArrayListOfValues("Lowers [style.boldLust(desire)] for the [style.boldFetish("+secondaryModifier.getName()+" fetish)] (if that fetish is not already owned).");
 				}
 				
 			} else {
 				if(secondaryModifier == TFModifier.NONE) {
-					return Util.newArrayListOfValues("Removes a [style.boldFetish(random "+descriptor+" fetish)].");
+					return Util.newArrayListOfValues("Removes a [style.boldFetish(random"+descriptor+" fetish)].");
 				} else {
 					return Util.newArrayListOfValues("Removes the [style.boldFetish("+secondaryModifier.getName()+" fetish)].");
 				}
@@ -1976,15 +1984,46 @@ public class ItemEffectType {
 		
 		@Override
 		public String itemEffectOverride(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
+			// Completely random:
+			if(primaryModifier==TFModifier.NONE) {
+				List<AbstractFetish> fetishesToAdd = new ArrayList<>();
+				List<AbstractFetish> fetishesToRemove = new ArrayList<>();
+				for(AbstractFetish f : Fetish.getAllFetishes()) {
+					if(!f.isContentEnabled()) {
+						continue;
+					}
+					if(f.getFetishesForAutomaticUnlock().isEmpty()) {
+						if(target.hasFetish(f)) {
+							fetishesToRemove.add(f);
+							
+						} else if(f.isAvailable(target)) {
+							fetishesToAdd.add(f);
+						}
+					}
+				}
+				
+				if((Math.random()>0.33f && !fetishesToAdd.isEmpty()) || fetishesToRemove.isEmpty()) {
+					AbstractFetish f = fetishesToAdd.get(Util.random.nextInt(fetishesToAdd.size()));
+					return target.addFetish(f);
+					
+				} else {
+					AbstractFetish f = fetishesToRemove.get(Util.random.nextInt(fetishesToRemove.size()));
+					return target.removeFetish(f);
+				}
+			}
+			
+			// Based on body part or behaviour fetishes:
+			
 			List<AbstractFetish> availableFetishes = new ArrayList<>();
 			
-			if(primaryModifier == TFModifier.TF_MOD_FETISH_BEHAVIOUR) {
+			if(primaryModifier==TFModifier.TF_MOD_FETISH_BEHAVIOUR) {
 				for(TFModifier mod : TFModifier.getTFBehaviouralFetishList()) {
 					if(mod.getFetish()!=null) {
 						availableFetishes.add(mod.getFetish());
 					}
 				}
-			} else {
+			} 
+			if(primaryModifier==TFModifier.TF_MOD_FETISH_BODY_PART) {
 				for(TFModifier mod : TFModifier.getTFBodyPartFetishList()) {
 					if(mod.getFetish()!=null) {
 						availableFetishes.add(mod.getFetish());
@@ -2201,6 +2240,9 @@ public class ItemEffectType {
 			} else if(primaryModifier == TFModifier.CLOTHING_CONDOM) {
 				return Util.newArrayListOfValues(TFModifier.ARCANE_BOOST);
 				
+			} else if(primaryModifier == TFModifier.CLOTHING_CREAMPIE_RETENTION) {
+				return TFModifier.getClothingCreampieRetentionList();
+				
 			} else {
 				return getClothingTFSecondaryModifiers(primaryModifier);
 			}
@@ -2264,22 +2306,22 @@ public class ItemEffectType {
 			} else if(primaryModifier == TFModifier.TF_MOD_FETISH_BEHAVIOUR
 					|| primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART) {
 				if(potency==TFPotency.MAJOR_BOOST) {
-					effectsList.add("[style.boldExcellent(Grants)] [style.boldFetish("+secondaryModifier.getName()+" fetish)] while worn.");
+					effectsList.add("[style.boldExcellent(Grants)] [style.boldFetish("+secondaryModifier.getName()+" fetish)]");
 					
 				} else if(potency==TFPotency.BOOST) {
-					effectsList.add("[style.boldGood(Increases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)] while worn.");
+					effectsList.add("[style.boldGood(Increases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)]");
 					
 				} else if(potency==TFPotency.MINOR_BOOST) {
-					effectsList.add("[style.boldMinorGood(Slightly increases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)] while worn.");
+					effectsList.add("[style.boldMinorGood(Slightly increases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)]");
 					
 				} else if(potency==TFPotency.MAJOR_DRAIN) {
-					effectsList.add("<b style='color:"+FetishDesire.ZERO_HATE.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(FetishDesire.ZERO_HATE.getNameAsVerb())+"</b> [style.boldFetish("+secondaryModifier.getName()+" fetish)] while worn.");
+					effectsList.add("<b style='color:"+FetishDesire.ZERO_HATE.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(FetishDesire.ZERO_HATE.getNameAsVerb())+"</b> [style.boldFetish("+secondaryModifier.getName()+" fetish)]");
 					
 				} else if(potency==TFPotency.DRAIN) {
-					effectsList.add("[style.boldBad(Decreases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)] while worn.");
+					effectsList.add("[style.boldBad(Decreases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)]");
 					
 				} else if(potency==TFPotency.MINOR_DRAIN) {
-					effectsList.add("[style.boldMinorBad(Slightly decreases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)] while worn.");
+					effectsList.add("[style.boldMinorBad(Slightly decreases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)]");
 				}
 				
 			} else if(primaryModifier == TFModifier.CLOTHING_CONDOM) {
@@ -2311,6 +2353,38 @@ public class ItemEffectType {
 					effectsList.add("[style.boldSex(+5)] [style.boldLust(Resting lust)]");
 					effectsList.add("[style.boldSex(+0.5)] [style.boldArousal(arousal/turn)] [style.boldSex(in sex)]");
 				}
+				
+			} else if(primaryModifier == TFModifier.CLOTHING_CREAMPIE_RETENTION) {
+				String area = "";
+				switch(secondaryModifier) {
+					case TF_FACE:
+						area = "stomach";
+						break;
+					case TF_ASS:
+						area = "ass";
+						break;
+					case TF_VAGINA:
+						area = "pussy";
+						break;
+					case TF_VAGINA_URETHRA:
+						area = "vaginal urethra";
+						break;
+					case TF_PENIS_URETHRA:
+						area = "penile urethra";
+						break;
+					case TF_BREASTS:
+						area = "breasts";
+						break;
+					case TF_BREASTS_CROTCH:
+						area = target.getBreastCrotchShape()==BreastShape.UDDERS?"udders":"crotch boobs";
+						break;
+					case TF_SPINNERET:
+						area = "spinneret";
+						break;
+					default:
+						break;
+				}
+				effectsList.add("[style.colourExcellent(Retains)] "+area+" creampies");
 				
 			} else {
 				return getClothingTFDescriptions(primaryModifier, secondaryModifier, potency, limit, user, target);
@@ -2365,6 +2439,9 @@ public class ItemEffectType {
 			} else if(primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART) {
 				return TFModifier.getTFBodyPartFetishList();
 				
+			} else if(primaryModifier == TFModifier.CLOTHING_CREAMPIE_RETENTION) {
+				return TFModifier.getClothingCreampieRetentionList();
+				
 			} else {
 				return getClothingTFSecondaryModifiers(primaryModifier);
 			}
@@ -2417,6 +2494,38 @@ public class ItemEffectType {
 				} else if(potency==TFPotency.MINOR_DRAIN) {
 					effectsList.add("[style.boldMinorBad(Slightly decreases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)]");
 				}
+				
+			} else if(primaryModifier == TFModifier.CLOTHING_CREAMPIE_RETENTION) {
+				String area = "";
+				switch(secondaryModifier) {
+					case TF_FACE:
+						area = "stomach";
+						break;
+					case TF_ASS:
+						area = "ass";
+						break;
+					case TF_VAGINA:
+						area = "pussy";
+						break;
+					case TF_VAGINA_URETHRA:
+						area = "vaginal urethra";
+						break;
+					case TF_PENIS_URETHRA:
+						area = "penile urethra";
+						break;
+					case TF_BREASTS:
+						area = "breasts";
+						break;
+					case TF_BREASTS_CROTCH:
+						area = target.getBreastCrotchShape()==BreastShape.UDDERS?"udders":"crotch boobs";
+						break;
+					case TF_SPINNERET:
+						area = "spinneret";
+						break;
+					default:
+						break;
+				}
+				effectsList.add("[style.colourExcellent(Retains)] "+area+" creampies");
 				
 			} else {
 				return getClothingTFDescriptions(primaryModifier, secondaryModifier, potency, limit, user, target);

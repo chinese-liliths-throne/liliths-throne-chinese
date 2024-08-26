@@ -191,7 +191,7 @@ public class Evelyx extends NPC {
 		
 		
 		// Body:
-		this.setAgeAppearanceDifferenceToAppearAsAge(18);
+		this.setAgeAppearanceAbsolute(18);
 		this.setTailType(TailType.DEMON_COMMON);
 		this.setWingType(WingType.NONE);
 		this.setLegType(LegType.DEMON_HOOFED);
@@ -1230,7 +1230,7 @@ public class Evelyx extends NPC {
 		princess.setFetishDesire(Fetish.FETISH_SUBMISSIVE, FetishDesire.ZERO_HATE);
 		
 		// Body:
-		princess.setAgeAppearanceDifferenceToAppearAsAge(32);
+		princess.setAgeAppearanceAbsolute(32);
 		princess.setBody(Gender.F_P_V_B_FUTANARI, Subspecies.DEMON, RaceStage.GREATER, false);
 		princess.setWingType(WingType.NONE);
 		princess.setHornType(HornType.CURVED);

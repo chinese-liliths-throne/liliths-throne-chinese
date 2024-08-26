@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.lilithsthrone.game.character.GameCharacter;
 import com.lilithsthrone.game.character.fetishes.Fetish;
@@ -42,8 +43,10 @@ import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
 import com.lilithsthrone.utils.colours.BaseColour;
 import com.lilithsthrone.utils.colours.Colour;
+import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.world.Cell;
 import com.lilithsthrone.world.WorldType;
+import com.lilithsthrone.world.places.AbstractPlaceType;
 import com.lilithsthrone.world.places.AbstractPlaceUpgrade;
 import com.lilithsthrone.world.places.GenericPlace;
 import com.lilithsthrone.world.places.PlaceType;
@@ -69,10 +72,6 @@ public class LilayaHomeGeneric {
 				} else {
 					OccupantDialogue.initDialogue((NPC) slave, false, false);
 				}
-				if(slave.isSleepingAtHour(Main.game.getHourOfDay())) {
-					Main.game.appendToTextEndStringBuilder(UtilText.parse(slave, "<p style='text-align:center;'>[style.italicsMinorBad([npc.Name] doesn't appreciate being woken up...)]</p>"));
-					Main.game.appendToTextEndStringBuilder(slave.incrementAffection(Main.game.getPlayer(), -1));
-				}
 			}
 		};
 		
@@ -97,20 +96,82 @@ public class LilayaHomeGeneric {
 		return charactersPresent;
 	}
 	
+	private static boolean isPlayerHasDolls() {
+		return Main.game.getPlayer().getSlavesOwnedAsCharacters().stream().anyMatch(slave->slave.isDoll());
+	}
+	
 	public static String getLilayasHouseStandardResponseTabs(int i) {
+		AbstractPlaceType playerPlaceType = Main.game.getPlayer().getLocationPlace().getPlaceType();
 		switch(i) {
 			case 0:
 				return "Actions";
 			case 1:
 				return "Fast Travel";
 			case 2:
-				if(Main.game.getPlayer().getLocationPlace().getPlaceType()==PlaceType.LILAYA_HOME_ROOM_PLAYER) {
+				if(playerPlaceType==PlaceType.LILAYA_HOME_ROOM_PLAYER) {
 					return "Bathroom";
+				}
+				if(isPlayerHasDolls()
+						&& (playerPlaceType==PlaceType.LILAYA_HOME_ENTRANCE_HALL
+							|| playerPlaceType==PlaceType.LILAYA_HOME_CORRIDOR
+							|| playerPlaceType==PlaceType.LILAYA_HOME_GARDEN
+							|| playerPlaceType==PlaceType.LILAYA_HOME_FOUNTAIN
+							|| playerPlaceType==PlaceType.LILAYA_HOME_STAIR_DOWN
+							|| playerPlaceType==PlaceType.LILAYA_HOME_STAIR_DOWN_SECONDARY
+							|| playerPlaceType==PlaceType.LILAYA_HOME_STAIR_UP
+							|| playerPlaceType==PlaceType.LILAYA_HOME_STAIR_UP_SECONDARY)) {
+					return "Doll Stations";
 				}
 				break;
 				
 		}
 		return null;
+	}
+	
+	public static Response getLilayasHouseDollStationResponses(int index) {
+		if(index==0) {
+			index = 15;
+		} else if(index<15) {
+			index--;
+		}
+		List<GameCharacter> dolls = Main.game.getPlayer().getSlavesOwnedAsCharacters().stream().filter(slave->slave.isDoll()).collect(Collectors.toList());
+		List<Response> responses = new ArrayList<>();
+		for(int i=0; i<dolls.size(); i++) {
+			GameCharacter doll = dolls.get(i);
+			boolean alreadyActive = doll.getSlaveStationWorldType()==Main.game.getPlayer().getWorldLocation() && Main.game.getPlayer().getLocation().equals(doll.getSlaveStationLocation());
+			responses.add(new Response(
+					UtilText.parse(doll, "[npc.Name]"),
+					UtilText.parse(doll, 
+							"Set this cell as <span style='color:"+doll.getFemininity().getColour().toWebHexString()+"'>[npc.name]"+(doll.hasSurname()?" [npc.surname]'s":"'s")+"</span> station for when [npc.sheIs] working as a statue."
+							+ "<br/>[style.italics("
+							+ (doll.getSlaveStationWorldType()==null
+								?"As [npc.sheHasFull] no station set, [npc.name] will use a random corridor tile as [npc.her] station."
+								:(alreadyActive
+										?"[style.colourExcellent(This tile is already set as [npc.namePos] station.)]"
+										:"[style.colourMinorGood(Although this tile is not [npc.namePos] station, [npc.she] already has one set elsewhere.)]"))
+							+ ")]"),
+					Main.game.getDefaultDialogue(false)) {
+				@Override
+				public Colour getHighlightColour() {
+					if(doll.getSlaveStationWorldType()==null) {
+						return super.getHighlightColour();
+					} else if(!alreadyActive) {
+						return PresetColour.GENERIC_MINOR_GOOD;
+					} else {
+						return PresetColour.GENERIC_EXCELLENT;
+					}
+				}
+				@Override
+				public void effects() {
+					doll.setSlaveStationWorldType(Main.game.getPlayer().getWorldLocation());
+					doll.setSlaveStationLocation(Main.game.getPlayer().getLocation());
+				}
+			});
+		}
+		if(responses.size()<=index) {
+			return null;
+		}
+		return responses.get(index);
 	}
 	
 	public static Response getLilayasHouseFastTravelResponses(int index) {
@@ -223,7 +284,7 @@ public class LilayaHomeGeneric {
 					}
 				};
 			} else {
-				return new Response("Manage room", "You'll either need a slaver license, or permission from Lilaya to house your friends, before you can access this menu!",  null);
+				return new Response("Manage room", "You need a slaver license or permission from Lilaya to house your friends or dolls in order to access this menu!",  null);
 			}
 			
 		}  else if (index == 2) {
@@ -239,7 +300,7 @@ public class LilayaHomeGeneric {
 					}
 				};
 			} else {
-				return new Response("Manage people", "You'll either need a slaver license, or permission from Lilaya to house your friends, before you can access this menu!",  null);
+				return new Response("Manage people", "You need a slaver license or permission from Lilaya to house your friends or dolls in order to access this menu!",  null);
 			}
 		}
 		
@@ -372,8 +433,8 @@ public class LilayaHomeGeneric {
 						
 					} else {
 						sb.append(UtilText.parse(npc, "[style.colourMinorGood(is here)] at the moment,"));
-						if(npc.isSleepingAtHour(Main.game.getHourOfDay())) {
-							sb.append(UtilText.parse(npc, " but [npc.sheIs] currently [style.colourSleep(sleeping)], and will likely be annoyed at being woken up if you wanted to interact with [npc.herHim]..."));
+						if(npc.isAsleep()) {
+							sb.append(UtilText.parse(npc, " but [npc.sheIs] currently [style.colourSleep(sleeping)]..."));
 						} else {
 							sb.append(UtilText.parse(npc, " and so you could interact with [npc.herHim] if you wanted to..."));
 						}
@@ -405,8 +466,8 @@ public class LilayaHomeGeneric {
 						
 					} else  {
 						sb.append(UtilText.parse(npc, "[style.colourMinorGood(is here)] at the moment,"));
-						if(npc.isSleepingAtHour(Main.game.getHourOfDay())) {
-							sb.append(UtilText.parse(npc, " but [npc.sheIs] currently [style.colourSleep(sleeping)], and will likely be annoyed at being woken up if you wanted to interact with [npc.herHim]..."));
+						if(npc.isAsleep()) {
+							sb.append(UtilText.parse(npc, " but [npc.sheIs] currently [style.colourSleep(sleeping)]..."));
 						} else {
 							sb.append(UtilText.parse(npc, " and so you could interact with [npc.herHim] if you wanted to..."));
 						}
@@ -418,7 +479,10 @@ public class LilayaHomeGeneric {
 		}
 		return sb.toString();
 	}
-	
+
+	public static String getSlavePresentDescription(GameCharacter slave) {
+		return getSlavePresentDescription(slave, "", "", "", "", "");
+	}
 	/**
 	 * Descriptions should fit into:<br/>
 	 * <i>'She '</i> + <code>desc</code><br/>
@@ -429,34 +493,68 @@ public class LilayaHomeGeneric {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<p>");
 		
-		sb.append(UtilText.parse(slave, "Having been assigned to work as a "+(slave.getSlaveJob(Main.game.getHourOfDay()).getName(slave))
-				+", <b style='color:"+slave.getFemininity().getColour().toWebHexString()+";'>[npc.name]</b> is present in this area."));
-		
-		if(slave.hasSlavePermissionSetting(SlavePermissionSetting.GENERAL_CRAWLING)) {
-			sb.append(UtilText.parse(slave,
-					" As you've instructed [npc.herHim] to crawl, [npc.sheIs] down on all fours, and "));
+		if(slave.getSlaveJob(Main.game.getHourOfDay())==SlaveJob.DOLL_STATUE) {
+			sb.append(UtilText.parse(slave, "Having been ordered to pose as a statue, <b style='color:"+slave.getFemininity().getColour().toWebHexString()+";'>[npc.name]</b> is present in this area."));
+			
+			for(SlaveJobSetting sjs : slave.getSlaveJobSettings(SlaveJob.DOLL_STATUE)) {
+				switch(sjs) {
+					case DOLL_STATUE_ALL_FOURS:
+						sb.append(UtilText.parse(slave, " [npc.SheIsFull] down on all fours"));
+						break;
+					case DOLL_STATUE_ARTISTIC:
+						sb.append(UtilText.parse(slave, " [npc.SheIsFull] striking an artistic pose"));
+						break;
+					case DOLL_STATUE_ATTENTION:
+						sb.append(UtilText.parse(slave, " [npc.SheIsFull] standing to attention"));
+						break;
+					case DOLL_STATUE_BRIDGE:
+						sb.append(UtilText.parse(slave, " [npc.nameHasFull] bent over backwards to perform a gymnastic brige"));
+						break;
+					case DOLL_STATUE_MISSIONARY:
+						sb.append(UtilText.parse(slave, " [npc.SheIsFull] lying back with [npc.her] [npc.legs] spread"));
+						break;
+					case DOLL_STATUE_SQUATTING:
+						sb.append(UtilText.parse(slave, " [npc.SheIsFull] squatting down with [npc.her] knees spread and [npc.her] [npc.hands] behind [npc.her] head"));
+						break;
+					case DOLL_STATUE_STANDING_SPLIT:
+						sb.append(UtilText.parse(slave, " [npc.SheIsFull] standing one-legged, with [npc.her] other leg held up vertically"));
+						break;
+					default:
+						break;
+				}
+			}
+			sb.append(UtilText.parse(slave, ", and is completely and utterly motionless."));
+			
 		} else {
-			sb.append(UtilText.parse(slave,
-					" [npc.She] "));
+			sb.append(UtilText.parse(slave, "Having been assigned to work as a "+(slave.getSlaveJob(Main.game.getHourOfDay()).getName(slave))
+					+", <b style='color:"+slave.getFemininity().getColour().toWebHexString()+";'>[npc.name]</b> is present in this area."));
+			
+			if(slave.hasSlavePermissionSetting(SlavePermissionSetting.GENERAL_CRAWLING)) {
+				sb.append(UtilText.parse(slave,
+						" As you've instructed [npc.herHim] to crawl, [npc.sheIs] down on all fours, and "));
+			} else {
+				sb.append(UtilText.parse(slave,
+						" [npc.She] "));
+			}
+			switch(slave.getObedience()) {
+				case NEGATIVE_FIVE_REBELLIOUS: case NEGATIVE_FOUR_DEFIANT: case NEGATIVE_THREE_STRONG_INSUBORDINATE:
+					sb.append(UtilText.parse(slave, minimumObedienceText));
+					break;
+				case NEGATIVE_ONE_DISOBEDIENT:  case NEGATIVE_TWO_UNRULY:
+					sb.append(UtilText.parse(slave, lowObedienceText));
+					break;
+				case ZERO_FREE_WILLED:
+					sb.append(UtilText.parse(slave, neutralObedienceText));
+					break;
+				case POSITIVE_ONE_AGREEABLE: case POSITIVE_TWO_OBEDIENT:
+					sb.append(UtilText.parse(slave, highObedienceText));
+					break;
+				case POSITIVE_THREE_DISCIPLINED: case POSITIVE_FOUR_DUTIFUL: case POSITIVE_FIVE_SUBSERVIENT:
+					sb.append(UtilText.parse(slave, maximumObedienceText));
+					break;
+			}
+			sb.append("</p>");
 		}
-		switch(slave.getObedience()) {
-			case NEGATIVE_FIVE_REBELLIOUS: case NEGATIVE_FOUR_DEFIANT: case NEGATIVE_THREE_STRONG_INSUBORDINATE:
-				sb.append(UtilText.parse(slave, minimumObedienceText));
-				break;
-			case NEGATIVE_ONE_DISOBEDIENT:  case NEGATIVE_TWO_UNRULY:
-				sb.append(UtilText.parse(slave, lowObedienceText));
-				break;
-			case ZERO_FREE_WILLED:
-				sb.append(UtilText.parse(slave, neutralObedienceText));
-				break;
-			case POSITIVE_ONE_AGREEABLE: case POSITIVE_TWO_OBEDIENT:
-				sb.append(UtilText.parse(slave, highObedienceText));
-				break;
-			case POSITIVE_THREE_DISCIPLINED: case POSITIVE_FOUR_DUTIFUL: case POSITIVE_FIVE_SUBSERVIENT:
-				sb.append(UtilText.parse(slave, maximumObedienceText));
-				break;
-		}
-		sb.append("</p>");
 		
 		return sb.toString();
 	}
@@ -607,6 +705,8 @@ public class LilayaHomeGeneric {
 								"is looking out for any sign of trouble.",
 								"is alert and on the lookout for any sign of trouble.",
 								"is highly alert and dutifully looking out for any sign of trouble."));
+					} else {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave));
 					}
 				}
 			}
@@ -623,6 +723,9 @@ public class LilayaHomeGeneric {
 		public Response getResponse(int responseTab, int index) {
 			if(responseTab==1) {
 				return LilayaHomeGeneric.getLilayasHouseFastTravelResponses(index);
+			}
+			if(responseTab==2) {
+				return getLilayasHouseDollStationResponses(index);
 			}
 			
 			List<NPC> charactersPresent = getSlavesAndOccupantsPresent();
@@ -799,12 +902,16 @@ public class LilayaHomeGeneric {
 						+ "</p>");
 			} else {
 				for(NPC slave : charactersPresent) {
-					UtilText.nodeContentSB.append(getSlavePresentDescription(slave,
-							"is quite clearly not doing any cooking. To make matters worse, [npc.she] doesn't seem to care that you're watching [npc.herHim], and turns [npc.her] back on you.",
-							"is currently half-heartedly preparing some food on the other side of the kitchen.",
-							"is busy cooking something in one of the kitchen's ovens.",
-							"is currently preparing some food. You can see that [npc.sheIs] putting a lot of effort into making sure that [npc.sheIs] doing a good job.",
-							"is dutifully making Lilaya a meal. You notice that [npc.sheIs] taking care to prepare it just the way your demonic [lilaya.relation(pc)] likes."));
+					if(slave.getSlaveJob(Main.game.getHourOfDay())==SlaveJob.KITCHEN) {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave,
+								"is quite clearly not doing any cooking. To make matters worse, [npc.she] doesn't seem to care that you're watching [npc.herHim], and turns [npc.her] back on you.",
+								"is currently half-heartedly preparing some food on the other side of the kitchen.",
+								"is busy cooking something in one of the kitchen's ovens.",
+								"is currently preparing some food. You can see that [npc.sheIs] putting a lot of effort into making sure that [npc.sheIs] doing a good job.",
+								"is dutifully making Lilaya a meal. You notice that [npc.sheIs] taking care to prepare it just the way your demonic [lilaya.relation(pc)] likes."));
+					} else {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave));
+					}
 				}
 			}
 			
@@ -1032,17 +1139,20 @@ public class LilayaHomeGeneric {
 			
 			if(!charactersPresent.isEmpty()) {
 				for(NPC slave : charactersPresent) {
-					UtilText.nodeContentSB.append(getSlavePresentDescription(slave,
-							"is quite clearly not doing any gardening. To make matters worse, [npc.she] doesn't seem to care that you're watching [npc.herHim], and turns [npc.her] back on you.",
-							"is currently half-heartedly trimming a hedge.",
-							"is busy weeding one of the many paths which wind through the garden.",
-							"is currently dead-heading one of the rose bushes. You can see that [npc.sheIs] putting a lot of effort into making sure that [npc.sheIs] doing a good job.",
-							"is dutifully planting bulbs and pulling out weeds. You notice that [npc.sheIs] taking care to plant each and every bulb in its correct place."));
+					if(slave.getSlaveJob(Main.game.getHourOfDay())==SlaveJob.GARDEN) {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave,
+								"is quite clearly not doing any gardening. To make matters worse, [npc.she] doesn't seem to care that you're watching [npc.herHim], and turns [npc.her] back on you.",
+								"is currently half-heartedly trimming a hedge.",
+								"is busy weeding one of the many paths which wind through the garden.",
+								"is currently dead-heading one of the rose bushes. You can see that [npc.sheIs] putting a lot of effort into making sure that [npc.sheIs] doing a good job.",
+								"is dutifully planting bulbs and pulling out weeds. You notice that [npc.sheIs] taking care to plant each and every bulb in its correct place."));
+					} else {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave));
+					}
 				}
 			}
 			
 			return UtilText.nodeContentSB.toString();
-		
 		}
 		@Override
 		public String getResponseTabTitle(int index) {
@@ -1052,6 +1162,9 @@ public class LilayaHomeGeneric {
 		public Response getResponse(int responseTab, int index) {
 			if(responseTab==1) {
 				return LilayaHomeGeneric.getLilayasHouseFastTravelResponses(index);
+			}
+			if(responseTab==2) {
+				return getLilayasHouseDollStationResponses(index);
 			}
 			List<NPC> charactersPresent = getSlavesAndOccupantsPresent();
 			
@@ -1102,7 +1215,27 @@ public class LilayaHomeGeneric {
 
 		@Override
 		public String getContent() {
-			return UtilText.parseFromXMLFile("places/dominion/lilayasHome/generic", "FOUNTAIN");
+			UtilText.nodeContentSB.setLength(0);
+			List<NPC> charactersPresent = getSlavesAndOccupantsPresent();
+			
+			UtilText.nodeContentSB.append(UtilText.parseFromXMLFile("places/dominion/lilayasHome/generic", "FOUNTAIN"));
+			
+			if(!charactersPresent.isEmpty()) {
+				for(NPC slave : charactersPresent) {
+					if(slave.getSlaveJob(Main.game.getHourOfDay())==SlaveJob.GARDEN) {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave,
+								"is quite clearly not doing any gardening. To make matters worse, [npc.she] doesn't seem to care that you're watching [npc.herHim], and turns [npc.her] back on you.",
+								"is currently half-heartedly trimming a hedge.",
+								"is busy weeding one of the many paths which wind through the garden.",
+								"is currently dead-heading one of the rose bushes. You can see that [npc.sheIs] putting a lot of effort into making sure that [npc.sheIs] doing a good job.",
+								"is dutifully planting bulbs and pulling out weeds. You notice that [npc.sheIs] taking care to plant each and every bulb in its correct place."));
+					} else {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave));
+					}
+				}
+			}
+			
+			return UtilText.nodeContentSB.toString();
 		}
 
 		@Override
@@ -1114,6 +1247,9 @@ public class LilayaHomeGeneric {
 		public Response getResponse(int responseTab, int index) {
 			if(responseTab==1) {
 				return LilayaHomeGeneric.getLilayasHouseFastTravelResponses(index);
+			}
+			if(responseTab==2) {
+				return getLilayasHouseDollStationResponses(index);
 			}
 			if (index == 1 && Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.getDialogueFlagValueFromId("acexp_dungeon_garden_access_found"))) {
 				return new Response("Lilaya's dungeon",
@@ -1147,17 +1283,20 @@ public class LilayaHomeGeneric {
 			
 			if(!charactersPresent.isEmpty()) {
 				for(NPC slave : charactersPresent) {
-					UtilText.nodeContentSB.append(getSlavePresentDescription(slave,
-							"is not even bothering to pretend that [npc.sheIs] looking out for trouble.",
-							"is half-heartedly looking out for trouble.",
-							"is looking out for any sign of trouble.",
-							"is alert and on the lookout for any sign of trouble.",
-							"is highly alert and dutifully looking out for any sign of trouble."));
+					if(slave.getSlaveJob(Main.game.getHourOfDay())==SlaveJob.SECURITY) {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave,
+								"is not even bothering to pretend that [npc.sheIs] looking out for trouble.",
+								"is half-heartedly looking out for trouble.",
+								"is looking out for any sign of trouble.",
+								"is alert and on the lookout for any sign of trouble.",
+								"is highly alert and dutifully looking out for any sign of trouble."));
+					} else {
+						UtilText.nodeContentSB.append(getSlavePresentDescription(slave));
+					}
 				}
 			}
 			
 			return UtilText.nodeContentSB.toString();
-		
 		}
 
 		@Override
@@ -1169,6 +1308,9 @@ public class LilayaHomeGeneric {
 		public Response getResponse(int responseTab, int index) {
 			if(responseTab==1) {
 				return LilayaHomeGeneric.getLilayasHouseFastTravelResponses(index);
+			}
+			if(responseTab==2) {
+				return getLilayasHouseDollStationResponses(index);
 			}
 
 			List<NPC> charactersPresent = getSlavesAndOccupantsPresent();
@@ -1220,6 +1362,9 @@ public class LilayaHomeGeneric {
 			if(responseTab==1) {
 				return LilayaHomeGeneric.getLilayasHouseFastTravelResponses(index);
 			}
+			if(responseTab==2) {
+				return getLilayasHouseDollStationResponses(index);
+			}
 			if (index == 1) {
 				return new Response("Upstairs", "Go upstairs to the first floor.", PlaceType.LILAYA_HOME_STAIR_DOWN.getDialogue(false)){
 					@Override
@@ -1251,6 +1396,9 @@ public class LilayaHomeGeneric {
 			if(responseTab==1) {
 				return LilayaHomeGeneric.getLilayasHouseFastTravelResponses(index);
 			}
+			if(responseTab==2) {
+				return getLilayasHouseDollStationResponses(index);
+			}
 			if (index == 1) {
 				return new Response("Upstairs", "Go upstairs to the first floor.", STAIRCASE_DOWN_SECONDARY){
 					@Override
@@ -1280,6 +1428,9 @@ public class LilayaHomeGeneric {
 		public Response getResponse(int responseTab, int index) {
 			if(responseTab==1) {
 				return LilayaHomeGeneric.getLilayasHouseFastTravelResponses(index);
+			}
+			if(responseTab==2) {
+				return getLilayasHouseDollStationResponses(index);
 			}
 			if (index == 1) {
 				return new Response("Downstairs", "Go back downstairs to the ground floor.",PlaceType.LILAYA_HOME_STAIR_UP.getDialogue(false)){
@@ -1311,6 +1462,9 @@ public class LilayaHomeGeneric {
 		public Response getResponse(int responseTab, int index) {
 			if(responseTab==1) {
 				return LilayaHomeGeneric.getLilayasHouseFastTravelResponses(index);
+			}
+			if(responseTab==2) {
+				return getLilayasHouseDollStationResponses(index);
 			}
 			if (index == 1) {
 				return new Response("Downstairs", "Go back downstairs to the ground floor.", STAIRCASE_UP_SECONDARY){

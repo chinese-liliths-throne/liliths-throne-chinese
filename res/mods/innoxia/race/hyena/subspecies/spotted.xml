@@ -47,6 +47,11 @@
 	Set to false for subspecies like centaurs. -->
 	<bipedalSubspecies>true</bipedalSubspecies>
 	
+	<!-- Whether or not this subspecies' age appearance remains detatched from the passage of time.
+	If set to false (the default), then NPCs of this subspecies will have their age appearance match their true age.
+	Only special subspecies like demons, angels, youko, dolls, slimes, and elementals do not age. -->
+	<!--<doesNotAge>false</doesNotAge>-->
+	
 	<!-- The affinity of the subspecies.
 		Optional.
 		Defaults to AMPHIBIOUS.

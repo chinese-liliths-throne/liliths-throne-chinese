@@ -652,7 +652,13 @@ public class ResponseSex extends Response {
 								}
 							}
 						}
+
+						if(SexManagerLoader.getSexManagerFromId(sexManagerId).isTriggeringNonConWarning()) {
+							return true;
+						}
+						
 					} catch(Exception ex) {
+						ex.printStackTrace();
 					}
 				} else {
 					try {

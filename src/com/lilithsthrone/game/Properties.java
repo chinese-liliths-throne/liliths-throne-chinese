@@ -133,6 +133,13 @@ public class Properties {
 			"Sex action corruption requirements may be bypassed if your corruption level is one level below the required corruption level of the action, but you will gain corruption if you do so.",
 			"All sex action corruption requirements may be bypassed, but you will gain corruption if you do so."};
 
+	public int fullExposureDescriptions = 2;
+	public static String[] fullExposureDescriptionsLabels = new String[] {"Never", "Once", "Always"};
+	public static String[] getFullExposureDescriptionsDescriptions = new String[] {
+			"Full descriptions for revealed body parts will never be shown during sex.",
+			"Full descriptions for revealed body parts will only be shown during sex if it's your first time seeing them.",
+			"Full descriptions for revealed body parts will always be shown during sex."};
+	
 	public int pregnancyDuration = 1;
 	
 	public int forcedTFPercentage = 40;
@@ -333,6 +340,7 @@ public class Properties {
 			createXMLElementWithValue(doc, settings, "udders", String.valueOf(udders));
 			createXMLElementWithValue(doc, settings, "autoSaveFrequency", String.valueOf(autoSaveFrequency));
 			createXMLElementWithValue(doc, settings, "bypassSexActions", String.valueOf(bypassSexActions));
+			createXMLElementWithValue(doc, settings, "fullExposureDescriptions", String.valueOf(fullExposureDescriptions));
 			createXMLElementWithValue(doc, settings, "pregnancyDuration", String.valueOf(pregnancyDuration));
 			createXMLElementWithValue(doc, settings, "forcedTFPercentage", String.valueOf(forcedTFPercentage));
 			createXMLElementWithValue(doc, settings, "randomRacePercentage", String.valueOf(randomRacePercentage)); 
@@ -752,6 +760,9 @@ public class Properties {
 					if(Main.isVersionOlderThan(versionNumber, "0.4.7.7")) {
 						values.add(PropertyValue.muskContent);
 					}
+					if(Main.isVersionOlderThan(versionNumber, "0.4.9.6")) {
+						values.add(PropertyValue.lipLispContent);
+					}
 					
 					
 				} else {
@@ -890,6 +901,12 @@ public class Properties {
 					bypassSexActions = Integer.valueOf(((Element)element.getElementsByTagName("bypassSexActions").item(0)).getAttribute("value"));
 				} else {
 					bypassSexActions = 2;
+				}
+
+				if(element.getElementsByTagName("fullExposureDescriptions").item(0)!=null) {
+					fullExposureDescriptions = Integer.valueOf(((Element)element.getElementsByTagName("fullExposureDescriptions").item(0)).getAttribute("value"));
+				} else {
+					fullExposureDescriptions = 2;
 				}
 				
 				if(element.getElementsByTagName("clothingFemininityLevel").item(0)!=null) {
@@ -1305,6 +1322,7 @@ public class Properties {
 	public void resetContentOptions() {
 		autoSaveFrequency = 0;
 		bypassSexActions = 2;
+		fullExposureDescriptions = 2;
 		multiBreasts = 1;
 		udders = 1;
 		pregnancyDuration = 1;

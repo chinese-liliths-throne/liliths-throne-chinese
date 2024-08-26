@@ -3,6 +3,7 @@ package com.lilithsthrone.game.character.npc.fields;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,6 +59,8 @@ import com.lilithsthrone.game.character.persona.NameTriplet;
 import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
+import com.lilithsthrone.game.character.quests.Quest;
+import com.lilithsthrone.game.character.quests.QuestLine;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
 import com.lilithsthrone.game.combat.spells.Spell;
@@ -74,6 +77,7 @@ import com.lilithsthrone.game.sex.SexAreaOrifice;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
+import com.lilithsthrone.utils.colours.Colour;
 import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.world.Cell;
 import com.lilithsthrone.world.WorldType;
@@ -112,6 +116,9 @@ public class Angelixx extends NPC {
 		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9")) {
 			this.setStartingBody(true);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9.12")) {
+			this.setFetishDesire(Fetish.FETISH_SADIST, FetishDesire.THREE_LIKE);
 		}
 	}
 
@@ -191,13 +198,14 @@ public class Angelixx extends NPC {
 			this.setFetishDesire(Fetish.FETISH_PENIS_RECEIVING, FetishDesire.THREE_LIKE);
 			this.setFetishDesire(Fetish.FETISH_DENIAL, FetishDesire.THREE_LIKE);
 			this.setFetishDesire(Fetish.FETISH_MASOCHIST, FetishDesire.THREE_LIKE);
+			this.setFetishDesire(Fetish.FETISH_SADIST, FetishDesire.THREE_LIKE);
 
 			this.setFetishDesire(Fetish.FETISH_PREGNANCY, FetishDesire.ONE_DISLIKE);
 		}
 		
 		
 		// Body:
-		this.setAgeAppearanceDifferenceToAppearAsAge(18);
+		this.setAgeAppearanceAbsolute(18);
 		this.setTailType(TailType.NONE);
 		this.setWingType(WingType.DEMON_FEATHERED);
 		this.setWingSize(WingSize.ZERO_TINY.getValue());
@@ -334,6 +342,14 @@ public class Angelixx extends NPC {
 	@Override
 	public boolean isUnique() {
 		return true;
+	}
+
+	@Override
+	public String getSpeechColour() {
+		if(Main.game.isLightTheme()) {
+			return PresetColour.BASE_YELLOW_LIGHT.toWebHexString();
+		}
+		return "#fafad8";
 	}
 
 	@Override
@@ -474,4 +490,89 @@ public class Angelixx extends NPC {
 		}
 	}
 	
+	private static List<String> diaryEntries = Util.newArrayListOfValues(
+		"A cat-girl pushed me out of the way today and called me a 'silly little girl'."
+			+ " Luckily my boys were nearby, and so I had them take her down an alley and double-team her."
+			+ " I ordered them to cum all over her and then asked her who the silly one was now."
+			+"<br/>(01/14)",
+		"This evening I got hit on again at the bar. He was a big, handsome zebra-boy, and I kind of have a weakness for all horse-morphs, so I let him take me back to his grotty little apartment and rail me hard on his bed."
+			+ " His fat fucking cock stretched me out so good, and after giving me a creampie he made me suck him off."
+			+ " Fuck, I'm getting horny thinking about it... I think I'll call a slave to come and pound me on the bed..."
+			+"<br/>(02/14)",
+		"Saellatrix wants me to increase the number of kidnappings, but insists that they be loners who won't have friends or family to report their disappearance."
+			+ " My gang's doing all they can, doesn't she know how hard it is?! At this rate I'll have to go back to seducing people in the alleyways, and that'll seriously eat into the time I get to spend with my boys..."
+			+"<br/>(03/14)",
+		"My good boys, Sleip and Nir, captured three refugees today! As a reward, I told them to come to my room at midnight, where I'd dressed up in their favourite lingerie and had a slave tie me to the bed."
+			+ " Fuck, they pounded me so hard for the rest of the night, I can barely walk this morning..."
+			+"<br/>(04/14)",
+		"As I was teleporting the refugees to Saellatrix's shop, one of them called me a stupid little bitch."
+			+ " Fuck, that pissed me off. I got my boys to double-penetrate her dirty little pussy while I carried on teleporting the others."
+			+ " By the time I'd finished, the bitch's cunt was a gaping, cum-filled mess. I promised her that this was just a taste of her new life, before teleporting her too..."
+			+"<br/>(05/14)",
+		"I went to the bank today, and the asshole in the lobby told me to go to the back of the queue. I told him who the fuck I am, and he realised his mistake."
+			+ " Too late! I got the stupid prick fired, and after making a potion that'd turn him into a big-titted, fertile horse-girl, I sent Sleip and Nir after him with instructions to leave 'her' as a naked, pregnant, cum-covered slut..."
+			+"<br/>(06/14)",
+		"That centaur who made me his cock-sleeve yesterday ended up getting me pregnant with triplets... Eugh..."
+			+ " Horse-morphs are one thing, but pushing out demonic centaurs is really fucking tiring."
+			+ " I'll get some Mother's Milk later and get it over and done with. It kind of ruins my whole look when I'm pregnant anyway..."
+			+"<br/>(07/14)",
+		"Mother sent Saellatrix to see me today. That bitch kept on telling me to increase the number of kidnappings."
+			+ " She was so dominant and direct in her behaviour that I couldn't help but get turned on, and when she grew herself a fat cock, I couldn't resist!"
+			+ " She pinned me down and fucked me raw while my boys just stood there and watched..."
+			+"<br/>(08/14)",
+		"Some of my gang members have disappeared... It's got to be the Enforcers who got them, or maybe it's a rival gang?"
+			+ " Fuck, I'm not cut out for some kind of gang war! I'll seduce one of the Enforcers tonight and see what I can learn."
+			+ " Perhaps that big, hunky horse-boy who I've seen doing patrols?"
+			+"<br/>(09/14)",
+		"Tonight I found that big, handsome horse-boy Enforcer I'd seen doing patrols. He was harder to seduce than I expected, and I had to fall back on telepathy to get him aroused."
+			+ " Oh well, I got what I wanted in the end. He didn't have any information on who was responsible for attacking my gang, but I did get his massive, fat cock balls-deep in my hot little pussy..."
+			+"<br/>(10/14)",
+		"I got mugged in the alleyway today! A couple of dog-boys demanded flames from me, and one of them had an Enforcer's pistol!"
+			+ " I know I could have beaten them, but I just couldn't move... After they took my flames, they said they'd give me their knots in exchange."
+			+ " Fuck, that got me wet, and so I let them rail me doggy-style right there on the floor..."
+			+"<br/>(11/14)",
+		"I saw that assistant of Minotallys's today in the Farmer's Market. Alicorns really do it for me, so I ambushed him by the kissing booth stall and seduced him."
+			+ " Sure, I had to use arcane arousal *and* telepathy, but I got him in the end. We found a quiet spot behind a nearby building, where he insisted on starting by eating me out."
+			+ " He actually managed to get me to orgasm with just his tongue, and then a dozen or so more times when his fat horse-cock was balls-deep in my sloppy cunt..."
+			+"<br/>(12/14)",
+		"Mother called me back to Dominion today to see her, and I decided to take a carriage instead of teleporting."
+			+ " The big, hunky centaur who was pulling it was called 'Vronti', and I tried everything to get him to stop and fuck me raw with his massive horse-cock."
+			+ " I could barely get a word out of him, though. Fuck! I had a centaur rail me just now and I was thinking of Vronti the whole time..."
+			+"<br/>(13/14)",
+		"Nir recruited a new member into the gang today. I don't normally pay much attention to new recruits, but this one's a big, dumb brute of a donkey-boy."
+			+ " I wanted him so badly that I let him pull me into that filthy bathroom at our HQ and fuck me hard up against the wall."
+			+ " His fat cock felt as good as I'd hoped, but the dumb, horny idiot tore my favourite pair of panties in two in his haste to get to my pussy..."
+			+"<br/>(14/14)"
+		);
+
+	private static Set<Integer> viewedDiaryIndexes = new HashSet<>();
+	private static Colour[] diaryPageColour = new Colour[] {PresetColour.BASE_BLUE_LIGHT, PresetColour.BASE_ORANGE_LIGHT, PresetColour.BASE_RED_LIGHT, PresetColour.BASE_GREEN_LIME, PresetColour.BASE_PINK_LIGHT};
+	
+	/**
+	 * Does not repeat entries until all are seen, then restarts.
+	 */
+	public String getDiaryEntry() {
+		List<Integer> availableIndexes = new ArrayList<>();
+		for(int i=0; i<diaryEntries.size(); i++) {
+			availableIndexes.add(i);
+		}
+		for(Integer i : viewedDiaryIndexes) {
+			availableIndexes.remove(i);
+		}
+		if(availableIndexes.isEmpty()) {
+			viewedDiaryIndexes = new HashSet<>();
+			return getDiaryEntry();
+		}
+		
+		int index = Util.randomItemFrom(availableIndexes);
+		if(Main.game.getPlayer().getQuest(QuestLine.SIDE_DOLL_FACTORY)==Quest.DOLL_FACTORY_1 && viewedDiaryIndexes.isEmpty()) {
+			index = 4; // Make sure that the 'evidence' entry is the first one to be seen when the player likely checks the diary out for the first time
+		}
+		viewedDiaryIndexes.add(index);
+		
+		Colour colour = diaryPageColour[index%diaryPageColour.length];
+		
+		return "<span style='color:"+colour.toWebHexString()+";'>"+diaryEntries.get(index)+"</spn>";
+		
+	}
 }

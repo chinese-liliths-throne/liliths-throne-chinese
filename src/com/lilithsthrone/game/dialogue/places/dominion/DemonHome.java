@@ -438,10 +438,26 @@ public class DemonHome {
 					};
 					
 				}
-
-			} else {
-				return null;
+				
+			} else if(index==2 && Main.game.getPlayer().getQuest(QuestLine.SIDE_DOLL_FACTORY)==Quest.DOLL_FACTORY_2) {
+				if(!Main.game.isHourBetween(1, 4)) {
+					return new Response("Find Fia",
+							"You need to wait until it's between [units.time(1)]-[units.time(4)] to break into Lovienne's Luxuries with Fia...",
+							null);
+					
+				} else if(Main.game.getCurrentWeather()==Weather.MAGIC_STORM) {
+					return new Response("Find Fia",
+							"Although you're here at the right time, between [units.time(1)]-[units.time(4)], Fia can't show up due to the ongoing arcane storm...",
+							null);
+					
+				} else {
+					return new Response("Find Fia",
+							"Look for Fia so that the two of you can break into Lovienne's Luxuries and search for evidence of where the kidnapped people are being held."
+								+"<br/>[style.italicsCombat(Be prepared, for this will start a lengthy section of the side quest during which there may be difficult fights!)]",
+							DialogueManager.getDialogueFromId("innoxia_places_dominion_sex_shop_factory_meet_fia_start"));
+				}
 			}
+			return null;
 		}
 	};
 }

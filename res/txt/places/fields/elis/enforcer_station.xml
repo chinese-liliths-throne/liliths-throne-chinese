@@ -332,7 +332,7 @@
 					#ENDIF
 				</p>
 				<p>
-					[hammer.speech([pc.SheWill] be ready,)] Hammer grunts, before looking at you from behind his desk and saying, [hammer.speech(We've got other ops to plan, so we'll see you on Tuesday evening.)]
+					[hammer.speech([pc.She]'ll be ready,)] Hammer grunts, before looking at you from behind his desk and saying, [hammer.speech(We've got other ops to plan, so we'll see you on Tuesday evening.)]
 				</p>
 				<p>
 					It seems like you'll have to earn the Enforcers' trust before they'll be comfortable with you being here...
@@ -790,7 +790,7 @@
 		[hammer.speech(You'd think they were just humans, given what they called themselves,)] Hammer replies, [hammer.speech(but they consisted of every race you could think of. Anyone opposed to Lilith's rule, as well as opportunistic criminals, joined the HLF in the hopes that they could overthrow the lilin and create a new system of governance.)]
 	</p>
 	<p>
-		[ghost.speech(The core of the HLF, what we were ended up labelling as the 'regulars' were the real threat, especially during that first year,)] Ghost adds, [ghost.speech(They were the die-hard revolutionaries, utterly committed to the cause, well trained, and completely fearless. The vast majority of them were humans, equipped with stolen Enforcer weapons and having their own uniforms, logistics networks, and command structures. Thankfully there weren't too many of them.)]
+		[ghost.speech(The core of the HLF, what we ended up labelling as the 'regulars', were the real threat, especially during that first year,)] Ghost adds, [ghost.speech(They were the die-hard revolutionaries, utterly committed to the cause, well trained, and completely fearless. The vast majority of them were humans, equipped with stolen Enforcer weapons and having their own uniforms, logistics networks, and command structures. Thankfully there weren't too many of them.)]
 	</p>
 	<p>
 		[hammer.speech(Then they had the irregulars,)] Hammer grunts, [hammer.speech(Committed to the cause, although varying in competence, they were the ones who stuck to guerilla warfare. Blending in with the civilian population before performing hit and run attacks, they left the serious offensive operations to the regulars.)]
@@ -823,23 +823,23 @@
 		[ghost.speech(She's a nasty piece of work,)] Ghost says of the succubus as she walks over to a nearby filing cabinet and produces the diary from within. Holding up the little pink book, she reveals, [ghost.speech(Remember how she tried to act all sweet and innocent when we met her? She's really a massive slut, and treats people like dirt.)]
 	</p>
 	<p>
-		[hammer.speech(There's nothing in there to tell us what's happening to the refugees,)] Hammer grunts, [hammer.speech(but there is an entry which mentions that Angelixx was teleporting them to her mother's shop.)]
+		[hammer.speech(There's nothing in there to tell us what's happening to the refugees,)] Hammer grunts, [hammer.speech(but there is an entry which mentions that Angelixx was teleporting them to her sister's shop in Dominion's Demon Home district.)]
 	</p>
 	<p>
-		[ghost.speech(That'd be 'Lovienne's Luxuries',)] Ghost says, [ghost.speech(As we told you before, Dominion's outside of our jurisdiction, and if we're caught trying to take down another elder lilin's daughter it'd be the end for us. We've stopped Angelixx's operations here in Elis, and that's all we can do.)]
+		[ghost.speech(That'd be 'Lovienne's Luxuries', which is run by Saellatrix; unlike Angelixx, she's a recognised daughter of Lovienne,)] Ghost says, before regretfully sighing, [ghost.speech(Dominion's outside of our jurisdiction, and if we're caught investigating a recognised daughter of an elder lilin then it'd certainly be the end for us. We've stopped Angelixx's operations here in Elis, and that's all we can do.)]
 	</p>
 	<p>
-		[hammer.speech(Perhaps you can do something about it,)] Hammer says to you, before motioning for Ghost to give you the diary. [hammer.speech(We're not asking you to go after Angelixx, but with her diary as proof of her involvement, the opportunity's there.)]
+		[hammer.speech(Perhaps you can do something about it,)] Hammer says to you, before motioning for Ghost to give you the diary. [hammer.speech(We're not asking you to go after Angelixx or confront her sister, but with this diary as proof of Angelixx's deeds, the opportunity's there.)]
 	</p>
 	<p>
-		Holding out the diary towards you, the otter-girl says, [ghost.speech(Be careful if you do decide to take this further. Angelixx is a coward and not much of a physical threat, but she's got others who do the fighting for her. She's also a manipulative bitch; don't trust anything she says.)]
+		Holding out the diary towards you, the otter-girl says, [ghost.speech(Be careful if you do decide to take this further. Angelixx is a coward and not much of a physical threat, but she's got others who do the fighting for her. She's also a manipulative bitch; don't trust anything she says. As for Saellatrix, you don't get to be recognised by an elder lilin without being extremely talented and well connected, so I'd avoid any kind of conflict with her if possible.)]
 	</p>
 	]]>
 	</htmlContent>
 	
 	<htmlContent tag="SWORD_ANGELIXX_DIARY_TAKE"><![CDATA[
 	<p>
-		With no obligation to pursue Angelixx and investigate her mother's store, you decide that there's no harm in taking the diary. Putting the small, pink notebook in your inventory, you tell the Enforcers that you'll look into it if you get the chance.
+		With no obligation to pursue Angelixx and investigate her sister's store, you decide that there's no harm in taking the diary. Putting the small, pink notebook in your inventory, you tell the Enforcers that you'll look into it if you get the chance.
 	</p>
 	<p>
 		[ghost.speech(We won't be there to back you up this time, so don't take any risks,)] Ghost says with a smile.
@@ -848,7 +848,7 @@
 		[hammer.speech([pc.Name] can handle [pc.herself] just fine,)] Hammer grunts, before looking at you and saying, [hammer.speech(If you take Angelixx down, make sure to come back and tell us about it. I'd like to know if the bitch got what was coming to her.)]
 	</p>
 	<p>
-		[ghost.speech(You may have visited it already, but I'd start by taking another look around Lovienne's shop if I were you,)] Ghost suggests, [ghost.speech(We know that the refugees were teleported there, so it's likely that they're either being kept there and used as slave labour or sold off from that location. Either way, there's bound to be signs of them there if you look hard enough.)]
+		[ghost.speech(You may have visited it already, but I'd start by taking a look around 'Lovienne's Luxuries' if I were you,)] Ghost suggests, [ghost.speech(We know that the refugees were teleported there, so it's likely that they're either being kept there and used as slave labour or sold off from that location. Either way, there's bound to be signs of them there if you look hard enough.)]
 	</p>
 	<p>
 		[hammer.speech(Don't bother with the Enforcers in Dominion,)] Hammer warns, [hammer.speech(They won't lift a finger to go after a daughter of an elder lilin unless you've got substantial, concrete evidence of illegal enslavement; that diary won't be enough for them. Worse, they might even report you to Lovienne directly, then it'd all be over for you.)]

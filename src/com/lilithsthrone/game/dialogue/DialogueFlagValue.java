@@ -98,8 +98,6 @@ public class DialogueFlagValue {
 	public static AbstractDialogueFlagValue ashleySexToysDiscovered = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue ashleyAttitude = new AbstractDialogueFlagValue();
 	
-	public static AbstractDialogueFlagValue reactedToKatePregnancy = new AbstractDialogueFlagValue();
-	
 	// Nyan:
 	public static AbstractDialogueFlagValue nyanHiding = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue nyanDating = new AbstractDialogueFlagValue();
@@ -519,6 +517,7 @@ public class DialogueFlagValue {
 		// Removed flags:
 		if(id.equals("ratWarrensRaid")
 				|| id.equals("suppliersTriedConvincing")
+				|| id.equals("reactedToKatePregnancy")
 				// Reset gym flags so that the new gym starts out as a fresh start for versions loaded from prior to 0.4.7.8:
 				|| id.equals("gymIsMember")
 				|| id.equals("gymIntroduced")

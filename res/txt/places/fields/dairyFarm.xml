@@ -365,10 +365,10 @@
 		[dale.speech(Well, I don't really know anything special about Lunette herself, other than what anyone else could tell you about her,)] he replies, before glancing around and lowering his voice to reveal, [dale.speech(As for why this farm isn't attacked like most of the others in the Fields... Well, I probably shouldn't be telling you this, but I heard from one of the other workers that Evelyx has some kind of deal with Lunette...)]
 	</p>
 	<p>
-		Wanting to know more, you ask the donkey-boy what kind of deal that would be. Nervously glancing back over his shoulder to make sure that nobody's eavesdropping, he speculates, [dale.speech(I don't know what goes on in there, but it's definitely got something to do with the fourth barn we have here. I regularly attend to some of the cows in all three of the other barns, but as far as I know, nobody who works here has ever been inside the fourth one. We've know that some of Lunette's daughters are given regular access to it, but what goes on inside, nobody knows...)]
+		Wanting to know more, you ask the donkey-boy what kind of deal that would be. Nervously glancing back over his shoulder to make sure that nobody's eavesdropping, he speculates, [dale.speech(I don't know what goes on in there, but it's definitely got something to do with the fourth barn we have here. I regularly attend to some of the cows in all three of the other barns, but as far as I know, nobody who works here has ever been inside the fourth one. I know that some of Lunette's daughters are given regular access to it, but what goes on inside, nobody knows...)]
 	</p>
 	<p>
-		After taking a moment to think about whether or not to say any more, the donkey-boy runs his hand over his tall ears, before leaning in close to you and practically whispering, [dale.speech(Of course, there's the matter of what happened to the receptionist whose job I took... One of the other workers told me that in the days before she disappeared, this receptionist was asking a lot of questions about that fourth barn. Although everyone calls him crazy, this worker swears that he saw Evelyx leading the receptionist towards the fourth barn on the night that she vanished...)]
+		After taking a moment to think about whether or not to say any more, the donkey-boy runs his hand over his tall ears, before leaning in close to you and practically whispering, [dale.speech(Of course, there's the matter of what happened to the receptionist whose job I took... One of the cows told me that in the days before she disappeared, this receptionist was asking a lot of questions about that fourth barn. Just between us, this cow swore to me that she saw Evelyx leading the receptionist towards the fourth barn on the night that she vanished...)]
 	</p>
 	<p>
 		Clearly thinking that he's already said too much, Dale sits back up and clears his throat, before saying, [dale.speech(Anyway, it's best not to ask too many questions about Lunette. She's bad news, and the less I or anyone else has to do with her, the better.)]
@@ -748,7 +748,7 @@
 			Having changed your mind about your final promotion, you tell Dale that you'd like to have another meeting with Evelyx about it. Although he flashes you a worried look, Dale nevertheless reaches forwards and presses a button on the arcane intercom that's sitting on his desk. After emitting a short, loud buzzing noise, a posh, feminine voice speaks through it and impatiently snaps, [evelyx.speech(What is it, Dale?)]
 		</p>
 		<p>
-			[dale.speech(I have your employee, [pc.name], here in reception again, Ma'am,)] Dale replies,[dale.speech([pc.She] says that [pc.sheHad] changed [pc.her] mind about receiving [pc.her] final promotion, and would like to speak with you about it again.)]
+			[dale.speech(I have your employee, [pc.name], here in reception again, Ma'am,)] Dale replies,[dale.speech([pc.She] says that [pc.she]'d changed [pc.her] mind about receiving [pc.her] final promotion, and would like to speak with you about it again.)]
 		</p>
 		<p>
 			[evelyx.speech(That dumb cow has changed [pc.her] mind, has [pc.she]?)] Evelyx's voice icily crackles out from the intercom, and after letting out a frustrated sigh, she says, [evelyx.speech(Fine, I'll see [pc.herHim] again, but make [pc.herHim] wait another thirty minutes first to put [pc.herHim] in [pc.her] place.)]

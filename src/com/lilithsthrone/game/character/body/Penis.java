@@ -24,7 +24,7 @@ import com.lilithsthrone.utils.Util;
 
 /**
  * @since 0.1.0
- * @version 0.3.8.8
+ * @version 0.4.9.7
  * @author Innoxia
  */
 public class Penis implements BodyPartInterface {
@@ -60,6 +60,20 @@ public class Penis implements BodyPartInterface {
 		this.penisModifiers.addAll(type.getDefaultRacialPenetrationModifiers());
 	}
 
+	public Penis(Penis penisToCopy) {
+		this.type = penisToCopy.type;
+		this.length = penisToCopy.length;
+		this.girth = penisToCopy.girth;
+		this.pierced = penisToCopy.pierced;
+		this.virgin = penisToCopy.virgin;
+		
+		this.testicle = new Testicle(penisToCopy.testicle);
+		
+		this.orificeUrethra = new OrificePenisUrethra(penisToCopy.orificeUrethra);
+		
+		this.penisModifiers = new HashSet<>(penisToCopy.penisModifiers);
+	}
+	
 	@Override
 	public AbstractPenisType getType() {
 		return type;

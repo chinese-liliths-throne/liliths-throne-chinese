@@ -45,6 +45,10 @@ public enum QuestLine {
 			QuestType.SIDE,
 			QuestTree.accommodationTree),
 
+	SIDE_DOLL_STORAGE("Doll Storage", "Lilaya told you that you can use any spare room in which to store any dolls you buy...",
+			QuestType.SIDE,
+			QuestTree.dollStorageTree),
+
 	SIDE_HYPNO_WATCH("Arthur's Experiment", "You helped Arthur to complete his research into an orientation-changing Hypno-Watch, which is now in your possession!",
 			QuestType.SIDE,
 			QuestTree.hypnoWatchTree),

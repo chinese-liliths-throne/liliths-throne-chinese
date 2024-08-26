@@ -1,6 +1,7 @@
 package com.lilithsthrone.game.sex.sexActions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import com.lilithsthrone.game.inventory.enchanting.ItemEffect;
 import com.lilithsthrone.game.inventory.enchanting.TFModifier;
 import com.lilithsthrone.game.sex.ArousalIncrease;
 import com.lilithsthrone.game.sex.CondomFailure;
+import com.lilithsthrone.game.sex.ImmobilisationType;
 import com.lilithsthrone.game.sex.LubricationType;
 import com.lilithsthrone.game.sex.SexAreaInterface;
 import com.lilithsthrone.game.sex.SexAreaOrifice;
@@ -83,10 +85,15 @@ public interface SexActionInterface {
 	/**
 	 * If the performing character is immobilised, then this action is only available if it's a SexActionType of: SPEECH, SPEECH_WITH_ALTERNATIVE, PREPARE_FOR_PARTNER_ORGASM, or ORGASM.
 	 * <br/>ONGOING SexActionTypes are also available, but only so long as the performing areas doesn't include a virginity-taking penetration type.
+	 * <br/><b>COMMAND</b> and <b>SLEEP</b> ImmobilisationTypes prevent SexActionType.ONGOING
+	 * <br/>If any type returns true for isSilence(), then SexActionType.SPEECH and SexActionType.SPEECH_WITH_ALTERNATIVE are banned
 	 * @return
 	 */
-	public default boolean isAvailableDuringImmobilisation() {
+	public default boolean isAvailableDuringImmobilisation(Collection<ImmobilisationType> types) {
 		if(this.getActionType()==SexActionType.ONGOING) {
+			if(types.contains(ImmobilisationType.SLEEP) || types.contains(ImmobilisationType.COMMAND)) {
+				return false;
+			}
 			for(SexAreaInterface sa : this.getPerformingCharacterAreas()) {
 				if(sa.isPenetration() && ((SexAreaPenetration)sa).isTakesVirginity()) {
 					return false;
@@ -94,10 +101,22 @@ public interface SexActionInterface {
 			}
 			return true;
 		}
-		return this.getActionType()==SexActionType.SPEECH
-				|| this.getActionType()==SexActionType.SPEECH_WITH_ALTERNATIVE
+		boolean anySilences = types.stream().anyMatch(type->type.isSilence());
+		return (this.getActionType()==SexActionType.SPEECH && !anySilences)
+				|| (this.getActionType()==SexActionType.SPEECH_WITH_ALTERNATIVE && !anySilences)
 				|| this.getActionType()==SexActionType.PREPARE_FOR_PARTNER_ORGASM
 				|| this.getActionType()==SexActionType.ORGASM;
+	}
+	
+	/**
+	 * @return true if the character who's being targeted by this sex action is immobilised of the type 'COMMAND' or 'SLEEP'
+	 */
+	public default boolean isTargetedCharacterInanimate() {
+		GameCharacter target = Main.sex.getCharacterTargetedForSexAction(this);
+		return target!=null
+				&& Main.game.isInSex()
+				&& Main.sex.isCharacterImmobilised(target)
+				&& Main.sex.isCharacterInanimateFromImmobilisation(target);
 	}
 	
 	/**
@@ -472,6 +491,16 @@ public interface SexActionInterface {
 			}
 		}
 		
+		// Sleeping wake conditions:
+		if(characterTargeted.isAsleep()) {
+			// Wake if oral or not in gentle pace
+			if(Main.sex.getAllOngoingSexAreas(characterTargeted, SexAreaOrifice.MOUTH).stream().anyMatch(penetration->penetration.isPenetration() && ((SexAreaPenetration)penetration).isTakesVirginity())
+					|| (Main.sex.isDom(Main.sex.getCharacterPerformingAction()) && Main.sex.getSexPace(Main.sex.getCharacterPerformingAction())!=SexPace.DOM_GENTLE)) {
+				Main.sex.addCharacterWoken(Main.sex.getCharacterTargetedForSexAction(this));
+			}
+		}
+		
+
 		sb.append(applyEffectsString());
 		
 		return sb.toString();
@@ -520,8 +549,10 @@ public interface SexActionInterface {
 			}
 		}
 		
-		if(Main.sex.isCharacterImmobilised(performingCharacter) && !isAvailableDuringImmobilisation()) {
-			return false;
+		if(Main.sex.isCharacterImmobilised(performingCharacter)) {
+			if(!isAvailableDuringImmobilisation(Main.sex.getImmobilisationTypes(performingCharacter).keySet())) {
+				return false;
+			}
 		}
 		
 		boolean analAllowed = Main.game.isAnalContentEnabled() || (!this.getPerformingCharacterOrifices().contains(SexAreaOrifice.ANUS) && !this.getTargetedCharacterOrifices().contains(SexAreaOrifice.ANUS));

@@ -642,65 +642,99 @@
 				]]></effects>
 			</response>
 			<!-- Prizes: -->
-			<response>
-				<responseTabIndex><![CDATA[0]]></responseTabIndex>
-				<index><![CDATA[6]]></index>
-				<responseTitle><![CDATA[Meat hamper (1 ticket)]]></responseTitle>
-				<responseTooltip><![CDATA[
-					#IF(pc.hasItemType('innoxia_quest_faire_ticket'))
+			<!-- Meat Hamper: -->
+				<response>
+					<availabilityConditional><![CDATA[
+						[#!pc.hasItemType('innoxia_quest_faire_ticket')]
+					]]></availabilityConditional>
+					<responseTabIndex><![CDATA[0]]></responseTabIndex>
+					<index><![CDATA[6]]></index>
+					<responseTitle><![CDATA[Meat hamper (1 ticket)]]></responseTitle>
+					<responseTooltip><![CDATA[You need at least one Faire ticket to be able to get a prize from Moreno...]]></responseTooltip>
+					<nextDialogue><![CDATA[null]]></nextDialogue>
+				</response>
+				<response>
+					<availabilityConditional><![CDATA[
+						[#pc.hasItemType('innoxia_quest_faire_ticket')]
+					]]></availabilityConditional>
+					<responseTabIndex><![CDATA[0]]></responseTabIndex>
+					<index><![CDATA[6]]></index>
+					<responseTitle><![CDATA[Meat hamper (1 ticket)]]></responseTitle>
+					<responseTooltip><![CDATA[
 						Trade in one of your Faire tickets for a meat hamper.
 						<br/><i>Faire tickets in your inventory: [style.boldGood([#pc.getItemCount(ITEM_innoxia_quest_faire_ticket)])]</i>
-					#ELSE
-						You need at least one Faire ticket to be able to get a prize from Moreno...
-					#ENDIF
-				]]></responseTooltip>
-				<nextDialogue stripContent="true" defaultPlaceType="innoxia_fields_elis_market_centre"/>
-				<effects><![CDATA[
-					[#pc.removeItemByType(ITEM_innoxia_quest_faire_ticket, 1, true)]
-					[#game.appendToTextStartStringBuilder(game.parseFromFile('txt/places/fields/elis/market', 'GAME_STRENGTH_PRIZE_MEAT'))]
-					[#game.appendToTextStartStringBuilder(pc.addItem(itemGen.generateItem(ITEM_innoxia_race_panther_panthers_delight)))]
-					[#game.appendToTextStartStringBuilder(pc.addItem(itemGen.generateItem(ITEM_innoxia_race_wolf_meat_and_marrow)))]
-					[#game.appendToTextStartStringBuilder(pc.addItem(itemGen.generateItem(ITEM_innoxia_race_horse_equine_cider)))]
-				]]></effects>
-			</response>
-			<response>
-				<responseTabIndex><![CDATA[0]]></responseTabIndex>
-				<index><![CDATA[7]]></index>
-				<responseTitle><![CDATA[Wooden bat (1 ticket)]]></responseTitle>
-				<responseTooltip><![CDATA[
-					#IF(pc.hasItemType('innoxia_quest_faire_ticket'))
+					]]></responseTooltip>
+					<nextDialogue stripContent="true" defaultPlaceType="innoxia_fields_elis_market_centre"/>
+					<effects><![CDATA[
+						[#pc.removeItemByType(ITEM_innoxia_quest_faire_ticket, 1, true)]
+						[#game.appendToTextStartStringBuilder(game.parseFromFile('txt/places/fields/elis/market', 'GAME_STRENGTH_PRIZE_MEAT'))]
+						[#game.appendToTextStartStringBuilder(pc.addItem(itemGen.generateItem(ITEM_innoxia_race_panther_panthers_delight)))]
+						[#game.appendToTextStartStringBuilder(pc.addItem(itemGen.generateItem(ITEM_innoxia_race_wolf_meat_and_marrow)))]
+						[#game.appendToTextStartStringBuilder(pc.addItem(itemGen.generateItem(ITEM_innoxia_race_horse_equine_cider)))]
+					]]></effects>
+				</response>
+			<!-- Wooden bat: -->
+				<response>
+					<availabilityConditional><![CDATA[
+						[#!pc.hasItemType('innoxia_quest_faire_ticket')]
+					]]></availabilityConditional>
+					<responseTabIndex><![CDATA[0]]></responseTabIndex>
+					<index><![CDATA[7]]></index>
+					<responseTitle><![CDATA[Wooden bat (1 ticket)]]></responseTitle>
+					<responseTooltip><![CDATA[You need at least one Faire ticket to be able to get a prize from Moreno...]]></responseTooltip>
+					<nextDialogue><![CDATA[null]]></nextDialogue>
+				</response>
+				<response>
+					<availabilityConditional><![CDATA[
+						[#pc.hasItemType('innoxia_quest_faire_ticket')]
+					]]></availabilityConditional>
+					<responseTabIndex><![CDATA[0]]></responseTabIndex>
+					<index><![CDATA[7]]></index>
+					<responseTitle><![CDATA[Wooden bat (1 ticket)]]></responseTitle>
+					<responseTooltip><![CDATA[
 						Trade in one of your Faire tickets for a wooden bat.
 						<br/><i>Faire tickets in your inventory: [style.boldGood([#pc.getItemCount(ITEM_innoxia_quest_faire_ticket)])]</i>
-					#ELSE
-						You need at least one Faire ticket to be able to get a prize from Moreno...
-					#ENDIF
-				]]></responseTooltip>
-				<nextDialogue stripContent="true" defaultPlaceType="innoxia_fields_elis_market_centre"/>
-				<effects><![CDATA[
-					[#pc.removeItemByType(ITEM_innoxia_quest_faire_ticket, 1, true)]
-					[#game.appendToTextStartStringBuilder(game.parseFromFile('txt/places/fields/elis/market', 'GAME_STRENGTH_PRIZE_BAT_WOODEN'))]
-					[#game.appendToTextStartStringBuilder(pc.addWeapon(itemGen.generateWeapon(WEAPON_innoxia_bat_wooden, DAMAGE_TYPE_PHYSICAL)))]
-				]]></effects>
-			</response>
-			<response>
-				<responseTabIndex><![CDATA[0]]></responseTabIndex>
-				<index><![CDATA[8]]></index>
-				<responseTitle><![CDATA[Metal bat (1 ticket)]]></responseTitle>
-				<responseTooltip><![CDATA[
-					#IF(pc.hasItemType('innoxia_quest_faire_ticket'))
-						Trade in one of your Faire tickets for a metal bat.
-						<br/><i>Faire tickets in your inventory: [style.boldGood([#pc.getItemCount(ITEM_innoxia_quest_faire_ticket)])]</i>
-					#ELSE
-						You need at least one Faire ticket to be able to get a prize from Moreno...
-					#ENDIF
-				]]></responseTooltip>
-				<nextDialogue stripContent="true" defaultPlaceType="innoxia_fields_elis_market_centre"/>
-				<effects><![CDATA[
-					[#pc.removeItemByType(ITEM_innoxia_quest_faire_ticket, 1, true)]
-					[#game.appendToTextStartStringBuilder(game.parseFromFile('txt/places/fields/elis/market', 'GAME_STRENGTH_PRIZE_BAT_METAL'))]
-					[#game.appendToTextStartStringBuilder(pc.addWeapon(itemGen.generateWeapon(WEAPON_innoxia_bat_metal, DAMAGE_TYPE_PHYSICAL)))]
-				]]></effects>
-			</response>
+					]]></responseTooltip>
+					<nextDialogue stripContent="true" defaultPlaceType="innoxia_fields_elis_market_centre"/>
+					<effects><![CDATA[
+						[#pc.removeItemByType(ITEM_innoxia_quest_faire_ticket, 1, true)]
+						[#game.appendToTextStartStringBuilder(game.parseFromFile('txt/places/fields/elis/market', 'GAME_STRENGTH_PRIZE_BAT_WOODEN'))]
+						[#game.appendToTextStartStringBuilder(pc.addWeapon(itemGen.generateWeapon(WEAPON_innoxia_bat_wooden, DAMAGE_TYPE_PHYSICAL), 1, false, true))]
+					]]></effects>
+				</response>
+			<!-- Metal bat: -->
+				<response>
+					<availabilityConditional><![CDATA[
+						[#!pc.hasItemType('innoxia_quest_faire_ticket')]
+					]]></availabilityConditional>
+					<responseTabIndex><![CDATA[0]]></responseTabIndex>
+					<index><![CDATA[8]]></index>
+					<responseTitle><![CDATA[Metal bat (1 ticket)]]></responseTitle>
+					<responseTooltip><![CDATA[You need at least one Faire ticket to be able to get a prize from Moreno...]]></responseTooltip>
+					<nextDialogue><![CDATA[null]]></nextDialogue>
+				</response>
+				<response>
+					<availabilityConditional><![CDATA[
+						[#pc.hasItemType('innoxia_quest_faire_ticket')]
+					]]></availabilityConditional>
+					<responseTabIndex><![CDATA[0]]></responseTabIndex>
+					<index><![CDATA[8]]></index>
+					<responseTitle><![CDATA[Metal bat (1 ticket)]]></responseTitle>
+					<responseTooltip><![CDATA[
+						#IF(pc.hasItemType('innoxia_quest_faire_ticket'))
+							Trade in one of your Faire tickets for a metal bat.
+							<br/><i>Faire tickets in your inventory: [style.boldGood([#pc.getItemCount(ITEM_innoxia_quest_faire_ticket)])]</i>
+						#ELSE
+							You need at least one Faire ticket to be able to get a prize from Moreno...
+						#ENDIF
+					]]></responseTooltip>
+					<nextDialogue stripContent="true" defaultPlaceType="innoxia_fields_elis_market_centre"/>
+					<effects><![CDATA[
+						[#pc.removeItemByType(ITEM_innoxia_quest_faire_ticket, 1, true)]
+						[#game.appendToTextStartStringBuilder(game.parseFromFile('txt/places/fields/elis/market', 'GAME_STRENGTH_PRIZE_BAT_METAL'))]
+						[#game.appendToTextStartStringBuilder(pc.addWeapon(itemGen.generateWeapon(WEAPON_innoxia_bat_metal, DAMAGE_TYPE_PHYSICAL), 1, false, true))]
+					]]></effects>
+				</response>
 		</responses>
 	</scene>
 	
@@ -3121,7 +3155,7 @@
 				<responseTabIndex><![CDATA[0]]></responseTabIndex>
 				<index><![CDATA[1]]></index>
 				<responseTitle><![CDATA[Stay calm]]></responseTitle>
-				<responseTooltip><![CDATA[Stay clam and do your best to endure Mistress Yui's teasing.]]></responseTooltip>
+				<responseTooltip><![CDATA[Stay calm and do your best to endure Mistress Yui's teasing.]]></responseTooltip>
 				<secondsPassed minutes="true"><![CDATA[10]]></secondsPassed>
 				<nextDialogue stripContent="true"><![CDATA[innoxia_places_fields_elis_market_toys_demonstration_end]]></nextDialogue>
 				<effects><![CDATA[

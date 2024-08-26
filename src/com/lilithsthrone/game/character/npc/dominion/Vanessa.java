@@ -254,9 +254,6 @@ public class Vanessa extends NPC {
 	
 	@Override
 	public String getArtworkFolderName() {
-		if(this.isVisiblyPregnant()) {
-			return "VanessaPregnant";
-		}
 		return "Vanessa";
 	}
 	

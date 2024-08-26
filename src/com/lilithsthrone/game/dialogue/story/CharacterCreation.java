@@ -10,6 +10,7 @@ import com.lilithsthrone.game.Game;
 import com.lilithsthrone.game.PropertyValue;
 import com.lilithsthrone.game.character.GameCharacter;
 import com.lilithsthrone.game.character.PlayerCharacter;
+import com.lilithsthrone.game.character.attributes.Attribute;
 import com.lilithsthrone.game.character.body.coverings.BodyCoveringType;
 import com.lilithsthrone.game.character.body.coverings.Covering;
 import com.lilithsthrone.game.character.body.valueEnums.BodyHair;
@@ -44,6 +45,7 @@ import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.responses.ResponseEffectsOnly;
 import com.lilithsthrone.game.dialogue.utils.BodyChanging;
 import com.lilithsthrone.game.dialogue.utils.CharacterModificationUtils;
+import com.lilithsthrone.game.dialogue.utils.CosmeticsDialogue;
 import com.lilithsthrone.game.dialogue.utils.InventoryDialogue;
 import com.lilithsthrone.game.dialogue.utils.InventoryInteraction;
 import com.lilithsthrone.game.dialogue.utils.OptionsDialogue;
@@ -509,7 +511,7 @@ public class CharacterCreation {
 
 				generateClothingOnFloor("innoxia_finger_ring", PresetColour.CLOTHING_SILVER);
 				generateClothingOnFloor("innoxia_neck_heart_necklace", PresetColour.CLOTHING_SILVER);
-				generateClothingOnFloor(ClothingType.WRIST_BANGLE, PresetColour.CLOTHING_SILVER);
+				generateClothingOnFloor("innoxia_wrist_bangle", PresetColour.CLOTHING_SILVER);
 				generateClothingOnFloor("innoxia_ankle_anklet", PresetColour.CLOTHING_SILVER);
 				
 				generateClothingOnFloor("innoxia_eye_glasses", PresetColour.CLOTHING_BLACK_STEEL);
@@ -571,7 +573,7 @@ public class CharacterCreation {
 				
 				generateClothingOnFloor("innoxia_torsoOver_open_front_cardigan", PresetColour.CLOTHING_BLACK);
 				
-				generateClothingOnFloor(ClothingType.WRIST_BANGLE, PresetColour.CLOTHING_GOLD);
+				generateClothingOnFloor("innoxia_wrist_bangle", PresetColour.CLOTHING_GOLD);
 				generateClothingOnFloor("innoxia_ankle_anklet", PresetColour.CLOTHING_GOLD);
 				break;
 		}
@@ -1238,6 +1240,14 @@ public class CharacterCreation {
 						}
 					};
 				}
+			
+			} else if(index==2) {
+				return new Response("Save/Load", "Save/Load tattoo presets.", CosmeticsDialogue.TATTOO_SAVE_LOAD) {
+					@Override
+					public void effects() {
+						CosmeticsDialogue.initTattooSaveLoadDialogue(CHOOSE_ADVANCED_APPEARANCE_TATTOOS_ADD);
+					}
+				};
 			
 			} else if(index==0) {
 				return new Response("Back", "Decide not to get this tattoo and return to the main selection screen.", CHOOSE_ADVANCED_APPEARANCE_TATTOOS);
@@ -1934,6 +1944,11 @@ public class CharacterCreation {
 						applyGameStart();
 						applySkipPrologueStart(false);
 						Main.game.getPlayer().setLocation(WorldType.LILAYAS_HOUSE_FIRST_FLOOR, PlaceType.LILAYA_HOME_ROOM_PLAYER);
+
+						Main.game.getPlayer().setHealth(Main.game.getPlayer().getAttributeValue(Attribute.HEALTH_MAXIMUM));
+						Main.game.getPlayer().setMana(Main.game.getPlayer().getAttributeValue(Attribute.MANA_MAXIMUM));
+						Main.game.getPlayer().setLustNoText(Main.game.getPlayer().getRestingLust());
+						
 						Main.game.setContent(new Response("", "", Main.game.getDefaultDialogue(false)));
 					}
 				};

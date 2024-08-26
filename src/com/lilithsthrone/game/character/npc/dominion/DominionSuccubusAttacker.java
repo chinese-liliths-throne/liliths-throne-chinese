@@ -89,7 +89,7 @@ public class DominionSuccubusAttacker extends NPC {
 
 			setSexualOrientation(SexualOrientation.AMBIPHILIC);
 			
-			this.setAgeAppearanceDifferenceToAppearAsAge(18+Util.random.nextInt(10));
+			this.setAgeAppearanceAbsolute(18+Util.random.nextInt(10));
 			
 			this.setVaginaVirgin(false);
 			this.setAssVirgin(false);
@@ -140,7 +140,7 @@ public class DominionSuccubusAttacker extends NPC {
 			this.setFetishDesire(Fetish.FETISH_NON_CON_DOM, FetishDesire.TWO_NEUTRAL);
 		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.2.11")) {
-			this.setAgeAppearanceDifferenceToAppearAsAge(18+Util.random.nextInt(10));
+			this.setAgeAppearanceAbsolute(18+Util.random.nextInt(10));
 		}
 	}
 

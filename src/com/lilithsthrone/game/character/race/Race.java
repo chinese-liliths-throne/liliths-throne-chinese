@@ -150,7 +150,7 @@ public class Race {
 			Disposition.CIVILIZED,
 			RacialClass.MAMMAL,
 			CombatBehaviour.SEDUCE,
-			0.75f,
+			0.1f,
 			2,
 			3,
 			FurryPreference.MAXIMUM,

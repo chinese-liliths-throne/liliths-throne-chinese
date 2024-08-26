@@ -112,7 +112,7 @@ public class Lilaya extends NPC {
 			resetBodyAfterVersion_2_10_5();
 		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.2.12")) {
-			this.setAgeAppearanceDifferenceToAppearAsAge(32);
+			this.setAgeAppearanceAbsolute(32);
 			this.equipClothing(EquipClothingSetting.getAllClothingSettings());
 			this.setStartingBody(true);
 			this.setLegType(LegType.HUMAN);
@@ -223,7 +223,7 @@ public class Lilaya extends NPC {
 
 		// Core:
 		this.setSubspeciesOverride(Subspecies.HALF_DEMON);
-		this.setAgeAppearanceDifferenceToAppearAsAge(32);
+		this.setAgeAppearanceAbsolute(32);
 		this.setWingType(WingType.DEMON_COMMON);
 		this.setWingSize(WingSize.THREE_LARGE.getValue());
 		this.setHornType(HornType.SWEPT_BACK);

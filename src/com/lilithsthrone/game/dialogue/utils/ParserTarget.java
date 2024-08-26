@@ -21,6 +21,7 @@ import com.lilithsthrone.game.character.npc.dominion.CandiReceptionist;
 import com.lilithsthrone.game.character.npc.dominion.Daddy;
 import com.lilithsthrone.game.character.npc.dominion.Elle;
 import com.lilithsthrone.game.character.npc.dominion.Felicia;
+import com.lilithsthrone.game.character.npc.dominion.Fiammetta;
 import com.lilithsthrone.game.character.npc.dominion.Finch;
 import com.lilithsthrone.game.character.npc.dominion.Hannah;
 import com.lilithsthrone.game.character.npc.dominion.HarpyBimbo;
@@ -1546,6 +1547,16 @@ public class ParserTarget {
 		@Override
 		public GameCharacter getCharacter(String tag, List<GameCharacter> specialNPCList) {
 			return Main.game.getNpc(Saellatrix.class);
+		}
+	};
+
+	public static AbstractParserTarget FIAMMETTA = new AbstractParserTarget(Util.newArrayListOfValues("fiammetta", "fia"), "") {
+		public String getDescription() {
+			return Main.game.getNpc(Fiammetta.class).getDescription();
+		}
+		@Override
+		public GameCharacter getCharacter(String tag, List<GameCharacter> specialNPCList) {
+			return Main.game.getNpc(Fiammetta.class);
 		}
 	};
 	

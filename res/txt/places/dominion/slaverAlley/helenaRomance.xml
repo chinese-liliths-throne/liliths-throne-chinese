@@ -14,9 +14,9 @@
 	<p>
 		Pushing open the front door and entering the shop, you're greeted once again by the sight of the stunningly-beautiful matriarch sitting down behind the shop's counter.
 		#IF(pc.hasCompanion(scarlett))
-			 Betraying no sign of emotion on her gorgeous face, she pointedly stares at [scarlett.name] for a moment, before looking back at you and stating in her clam, melodic voice, 
+			 Betraying no sign of emotion on her gorgeous face, she pointedly stares at [scarlett.name] for a moment, before looking back at you and stating in her calm, melodic voice, 
 		#ELSE
-			 Betraying no sign of emotion on her gorgeous face, she states in her clam, melodic voice, 
+			 Betraying no sign of emotion on her gorgeous face, she states in her calm, melodic voice, 
 		#ENDIF
 		 [helena.speech(I do so hope that you aren't daring to return to me without being in possession of the paint which I ordered you to retrieve.)]
 	</p>

@@ -179,7 +179,7 @@ public class Elemental extends NPC {
 		}
 		
 		// Body:
-		this.setAgeAppearanceDifferenceToAppearAsAge(summoner.getAppearsAsAgeValue());
+		this.setAgeAppearanceAbsolute(summoner.getAppearsAsAgeValue());
 		this.setTailType(TailType.DEMON_COMMON);
 		this.setWingType(WingType.DEMON_COMMON);
 		this.setWingSize(WingSize.THREE_LARGE.getValue());
@@ -448,6 +448,8 @@ public class Elemental extends NPC {
 	public void setSummoner(GameCharacter summoner) {
 		if(summoner!=null) {
 			this.summonerID = summoner.getId();
+			this.setBirthday(summoner.getBirthday());
+			this.setAgeAppearanceAbsolute(summoner.getAppearsAsAgeValue());
 		}
 	}
 

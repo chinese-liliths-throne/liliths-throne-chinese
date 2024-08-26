@@ -1111,13 +1111,14 @@ public class CharacterInventory implements XMLSaving {
 		if(getClothingInSlot(slot)!=null) {
 			visibleClothing.add(getClothingInSlot(slot));
 		}
-		
+
 		if(getInventorySlotsConcealed(character).get(slot)!=null) {
 			visibleClothing.addAll(getInventorySlotsConcealed(character).get(slot));
 		}
-		
+
 		if(!visibleClothing.isEmpty()) {
 			List<InventorySlot> slotsToCheck = visibleClothing.stream().map(c -> c.getSlotEquippedTo()).collect(Collectors.toList());
+			Set<InventorySlot> slotsAlreadyChecked = new HashSet<>(slotsToCheck);
 			
 			while(!slotsToCheck.isEmpty()) {
 				for(InventorySlot checkSlot : new ArrayList<>(slotsToCheck)) {
@@ -1126,7 +1127,10 @@ public class CharacterInventory implements XMLSaving {
 						visibleClothing = visibleClothing.stream().filter(cl -> cl.getSlotEquippedTo()!=checkSlot).collect(Collectors.toList()); // Remove clothing which is concealed
 						for(AbstractClothing c : checkClothingSlot) {
 							visibleClothing.add(c);
-							slotsToCheck.add(c.getSlotEquippedTo());
+							if(!slotsAlreadyChecked.contains(c.getSlotEquippedTo())) {
+								slotsToCheck.add(c.getSlotEquippedTo());
+								slotsAlreadyChecked.add(c.getSlotEquippedTo());
+							}
 						}
 					}
 					slotsToCheck.remove(checkSlot);

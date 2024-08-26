@@ -970,14 +970,17 @@ public class CharacterModificationUtils {
 	public static String getAgeAppearanceChoiceDiv() {
 		return applyFullVariableWrapper(
 				"Age Appearance",
-				UtilText.parse(BodyChanging.getTarget(), "Change how old [npc.name] [npc.verb(appear)] to be. [npc.She] [npc.is] limited to looking as young as 18, or up to ten years older than [npc.her] real age."
+				UtilText.parse(BodyChanging.getTarget(),
+						"Change how old [npc.name] [npc.verb(appear)] to be. [npc.She] [npc.is] limited to looking as young as 18, or up to "
+						+ Util.intToString(BodyChanging.getTarget().getAgeDifferenceUpperLimit())
+						+ " years older than [npc.her] real age."
 						+ "<br/><i>This is purely a cosmetic change, and doesn't affect any in-game choices.</i>"),
 				"AGE_APPEARANCE",
 				"1",
 				"5",
 				String.valueOf(BodyChanging.getTarget().getAppearsAsAgeValue()),
 				BodyChanging.getTarget().getAppearsAsAgeValue()<=18,
-				BodyChanging.getTarget().getAppearsAsAgeValue()>=(BodyChanging.getTarget().getAgeValue()+10))
+				BodyChanging.getTarget().getAppearsAsAgeValue()>=(BodyChanging.getTarget().getAgeValue()+BodyChanging.getTarget().getAgeDifferenceUpperLimit()))
 				
 				+ applyWrapper("Birthday",
 						UtilText.parse(BodyChanging.getTarget(), "[npc.NamePos] birthday can not ever be changed, but by transforming [npc.her] body, [npc.she] may appear to be younger or older than [npc.she] really [npc.is]."),
@@ -2273,20 +2276,22 @@ public class CharacterModificationUtils {
 			if(BodyChanging.getTarget().getLipSize() == lipSize) {
 				contentSB.append(
 						"<div class='cosmetics-button active'>"
-							+ "<span style='color:"+PresetColour.TRANSFORMATION_GENERIC.toWebHexString()+";'>"+Util.capitaliseSentence(lipSize.getName())+(lipSize.isImpedesSpeech()?"*":"")+"</span>"
+							+ "<span style='color:"+PresetColour.TRANSFORMATION_GENERIC.toWebHexString()+";'>"+Util.capitaliseSentence(lipSize.getName())+(lipSize.isImpedesSpeech()&&Main.game.isLipLispEnabled()?"*":"")+"</span>"
 						+ "</div>");
 				
 			} else {
 				contentSB.append(
 						"<div id='LIP_SIZE_"+lipSize+"' class='cosmetics-button'>"
-							+ "<span style='color:"+PresetColour.TRANSFORMATION_GENERIC.getShades()[0]+";'>"+Util.capitaliseSentence(lipSize.getName())+(lipSize.isImpedesSpeech()?"*":"")+"</span>"
+							+ "<span style='color:"+PresetColour.TRANSFORMATION_GENERIC.getShades()[0]+";'>"+Util.capitaliseSentence(lipSize.getName())+(lipSize.isImpedesSpeech()&&Main.game.isLipLispEnabled()?"*":"")+"</span>"
 						+ "</div>");
 			}
 		}
 
 		return applyWrapper("Lip Size",
 				UtilText.parse(BodyChanging.getTarget(), "Change the size of [npc.namePos] lips."
-						+ "<br/><i>While mostly a cosmetic transformation, very large lip sizes (marked by an asterisk) will also cause [npc.name] to speak with a lisp.</i>"),
+						+ (Main.game.isLipLispEnabled()
+								?"<br/><i>While mostly a cosmetic transformation, very large lip sizes (marked by an asterisk) will also cause [npc.name] to speak with a lisp.</i>"
+								:"<br/><i>This is a purely cosmetic transformation, as 'Lip lisps' content is turned off.</i>")),
 				"LIP_SIZE",
 				contentSB.toString(),
 				false);
@@ -4968,7 +4973,7 @@ public class CharacterModificationUtils {
 						+ "<div class='cosmetics-inner-container right'>");
 		
 		for(LipSize ls : LipSize.values()) {
-			if(!ls.isImpedesSpeech()) {
+			if(!ls.isImpedesSpeech() || !Main.game.isLipLispEnabled()) {
 				if(BodyChanging.getTarget().getLipSize() == ls) {
 					contentSB.append(
 							"<div class='cosmetics-button active'>"
@@ -6118,7 +6123,7 @@ public class CharacterModificationUtils {
 				sb.append("<div class='container-full-width' style='width:100%; padding:0; margin:0; text-align:center; "+border+"'>");
 					sb.append("<p style='padding:0;margin:0;text-align:center;'>Modifiers:</p>");
 					if(activeCovering.getType().getNaturalModifiers().size() + activeCovering.getType().getExtraModifiers().size()>1) {
-						sb.append("<div class='container-full-width'>");
+//						sb.append("<div class='container-full-width'>");
 						for(CoveringModifier mod : activeCovering.getType().getNaturalModifiers()) {
 							if (activeCovering.getModifier() == mod) {
 								sb.append(
@@ -6149,7 +6154,7 @@ public class CharacterModificationUtils {
 										+ "</div>");
 							}
 						}
-						sb.append("</div>");
+//						sb.append("</div>");
 						
 					} else {
 						sb.append("<p style='padding:0;margin:0;text-align:center;'>[style.italicsDisabled(None Available)]</p>");
@@ -6184,7 +6189,7 @@ public class CharacterModificationUtils {
 													?"<div class='phone-item-colour' style='background: repeating-linear-gradient(135deg, " + c.toWebHexString() + ", " + c.getShades()[4] + " 10px);"
 													:(c.getRainbowColours()!=null
 														?"<div class='phone-item-colour' style='background: "+rainbow
-														:"<div class='phone-item-colour' style='background-color:" + (c.getCoveringIconColour()) + ";"))
+														:"<div class='phone-item-colour' style='background"+(c==PresetColour.COVERING_CLEAR?"-image":"-color")+":" + (c.getCoveringIconColour()) + ";"))
 												+(c==PresetColour.COVERING_NONE
 													?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X"
 													:"'>")
@@ -6236,7 +6241,7 @@ public class CharacterModificationUtils {
 														?"<div class='phone-item-colour' style='background: repeating-linear-gradient(135deg, " + c.toWebHexString() + ", " + c.getShades()[4] + " 10px);"
 														:(c.getRainbowColours()!=null
 															?"<div class='phone-item-colour' style='background: "+rainbow
-															:"<div class='phone-item-colour' style='background-color:" + (c.getCoveringIconColour()) + ";"))
+															:"<div class='phone-item-colour' style='background"+(c==PresetColour.COVERING_CLEAR?"-image":"-color")+":" + (c.getCoveringIconColour()) + ";"))
 													+(c==PresetColour.COVERING_NONE
 														?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X"
 														:"'>")
@@ -6529,7 +6534,7 @@ public class CharacterModificationUtils {
 						+ "<div class='overlay no-pointer' id='TATTOO_INFO_"+invSlot.toString()+"'></div>"
 					+ "</div>")
 				
-				+ "<div class='container-half-width inner' style='width:48%;margin:1%;'>"
+				+ "<div class='container-half-width inner' style='width:48%;margin:0 1%;padding:0;'>"
 					+ "<div style='float:left; width:98%; margin:0 1%; padding:0;'>"
 						+ "<div class='normal-button"+(disabled?" disabled":"")+"' "+(!disabled?"id='TATTOO_ADD_REMOVE_"+invSlot.toString()+"'":"")+" style='width:100%;'>"
 							+(tattooInSlot==null
@@ -6537,6 +6542,11 @@ public class CharacterModificationUtils {
 								:(SuccubisSecrets.invSlotTattooToRemove==invSlot || !Main.getProperties().hasValue(PropertyValue.tattooRemovalConfirmations)?"[style.colourBad(Remove)]":"Remove"))
 						+"</div>"
 					+ "</div>"
+					+ (Main.game.isInNewWorld()
+							?"<div style='float:left; width:98%; margin:0 1%; padding:0;'>"
+									+ "<div class='normal-button"+(disabled || tattooInSlot==null?" disabled":"")+"' "+(!disabled && tattooInSlot!=null?"id='TATTOO_MODIFY_"+invSlot.toString()+"'":"")+" style='width:100%;'>Modify</div>"
+								+ "</div>"
+							:"")
 					+ (Main.game.isInNewWorld()
 						?"<div style='float:left; width:98%; margin:0 1%; padding:0;'>"
 								+ "<div class='normal-button"+(disabled || tattooInSlot==null?" disabled":"")+"' "+(!disabled && tattooInSlot!=null?"id='TATTOO_ENCHANT_"+invSlot.toString()+"'":"")+" style='width:100%;'>Enchant</div>"
@@ -6637,7 +6647,7 @@ public class CharacterModificationUtils {
 				for (Colour c : tattoo.getType().getAvailablePrimaryColours()) {
 					contentSB.append("<div class='normal-button"+(tattoo.getPrimaryColour()==c?" selected":"")+"' id='TATTOO_COLOUR_PRIMARY_"+c.getId()+"'"
 											+ " style='width:auto; margin-right:4px;"+(tattoo.getPrimaryColour()==c?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";":"")+"'>"
-										+ "<div class='phone-item-colour' style='background-color:" + c.toWebHexString() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
+										+ "<div class='phone-item-colour' style='background-color:" + c.getCoveringIconColour() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
 									+ "</div>");
 				}
 			contentSB.append("</div>");
@@ -6652,7 +6662,7 @@ public class CharacterModificationUtils {
 				for (Colour c : tattoo.getType().getAvailableSecondaryColours()) {
 					contentSB.append("<div class='normal-button"+(tattoo.getSecondaryColour()==c?" selected":"")+"' id='TATTOO_COLOUR_SECONDARY_"+c.getId()+"'"
 											+ " style='width:auto; margin-right:4px;"+(tattoo.getSecondaryColour()==c?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";":"")+"'>"
-										+ "<div class='phone-item-colour' style='background-color:" + c.toWebHexString() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
+										+ "<div class='phone-item-colour' style='background-color:" + c.getCoveringIconColour() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
 									+ "</div>");
 				}
 			}
@@ -6668,7 +6678,7 @@ public class CharacterModificationUtils {
 				for (Colour c : tattoo.getType().getAvailableTertiaryColours()) {
 					contentSB.append("<div class='normal-button"+(tattoo.getTertiaryColour()==c?" selected":"")+"' id='TATTOO_COLOUR_TERTIARY_"+c.getId()+"'"
 											+ " style='width:auto; margin-right:4px;"+(tattoo.getTertiaryColour()==c?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";":"")+"'>"
-										+ "<div class='phone-item-colour' style='background-color:" + c.toWebHexString() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
+										+ "<div class='phone-item-colour' style='background-color:" + c.getCoveringIconColour() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
 									+ "</div>");
 				}
 			}
@@ -6723,7 +6733,7 @@ public class CharacterModificationUtils {
 				for (Colour c : TattooWriting.getAvailableColours()) {
 					contentSB.append("<div class='normal-button"+(tattoo.getWriting().getColour()==c?" selected":"")+"' id='TATTOO_WRITING_COLOUR_"+c.getId()+"'"
 											+ " style='width:auto; margin-right:4px;"+(tattoo.getWriting().getColour()==c?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";":"")+"'>"
-										+ "<div class='phone-item-colour' style='background-color:" + c.toWebHexString() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
+										+ "<div class='phone-item-colour' style='background-color:" + c.getCoveringIconColour() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
 									+ "</div>");
 				}
 				if(Main.game.isInNewWorld()) {
@@ -6765,7 +6775,7 @@ public class CharacterModificationUtils {
 					for (Colour c : TattooCounter.getAvailableColours()) {
 						contentSB.append("<div class='normal-button"+(tattoo.getCounter().getColour()==c?" selected":"")+"' id='TATTOO_COUNTER_COLOUR_"+c.getId()+"'"
 												+ " style='width:auto; margin-right:4px;"+(tattoo.getCounter().getColour()==c?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";":"")+"'>"
-											+ "<div class='phone-item-colour' style='background-color:" + c.toWebHexString() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
+											+ "<div class='phone-item-colour' style='background-color:" + c.getCoveringIconColour() + ";"+(c==PresetColour.COVERING_NONE?" color:"+PresetColour.BASE_RED.toWebHexString()+";'>X":"'>")+"</div>"
 										+ "</div>");
 					}
 					contentSB.append("<br/>");

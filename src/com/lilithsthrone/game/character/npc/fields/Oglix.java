@@ -171,7 +171,7 @@ public class Oglix extends NPC {
 		this.setLegType(LegType.DEMON_COMMON);
 
 		// Core:
-		this.setAgeAppearanceDifferenceToAppearAsAge(36);
+		this.setAgeAppearanceAbsolute(36);
 		this.setHeight(222);
 		this.setFemininity(75);
 		this.setMuscle(Muscle.FOUR_RIPPED.getMedianValue());

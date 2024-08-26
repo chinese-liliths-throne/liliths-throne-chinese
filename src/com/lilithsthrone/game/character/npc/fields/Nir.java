@@ -1,11 +1,13 @@
 package com.lilithsthrone.game.character.npc.fields;
 
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.lilithsthrone.game.Game;
 import com.lilithsthrone.game.character.CharacterImportSetting;
 import com.lilithsthrone.game.character.EquipClothingSetting;
 import com.lilithsthrone.game.character.body.coverings.BodyCoveringType;
@@ -33,6 +35,7 @@ import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
+import com.lilithsthrone.game.combat.CombatBehaviour;
 import com.lilithsthrone.game.combat.DamageType;
 import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.inventory.CharacterInventory;
@@ -62,7 +65,7 @@ public class Nir extends NPC {
 	public Nir(boolean isImported) {
 		super(isImported, new NameTriplet("Nir"), "Loviennemartu",
 				"Nir is one of two nightmare bodyguards who protect Angelixx at all times.",
-				28, Month.AUGUST, 28,
+				28, Month.SEPTEMBER, 9,
 				20, Gender.M_P_MALE, Subspecies.HORSE_MORPH, RaceStage.GREATER,
 				new CharacterInventory(30),
 				WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL,
@@ -76,6 +79,14 @@ public class Nir extends NPC {
 	@Override
 	public void loadFromXML(Element parentElement, Document doc, CharacterImportSetting... settings) {
 		loadNPCVariablesFromXML(this, null, parentElement, doc, settings);
+
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9.13")) {
+			this.setBirthday(LocalDateTime.of(birthday.getYear(), Month.SEPTEMBER, 9, 0, 0, 0));
+			this.setSkinCovering(new Covering(BodyCoveringType.DEMON_COMMON, PresetColour.SKIN_DARK), true);
+			this.setSkinCovering(new Covering(BodyCoveringType.HORSE_HAIR, PresetColour.COVERING_BROWN), true);
+			this.setSkinCovering(new Covering(BodyCoveringType.HUMAN, PresetColour.SKIN_DARK), false);
+			this.setSkinCovering(new Covering(BodyCoveringType.PENIS, PresetColour.SKIN_DARK), false);
+		}
 	}
 
 	@Override
@@ -93,7 +104,6 @@ public class Nir extends NPC {
 
 	@Override
 	public void setStartingBody(boolean setPersona) {
-		
 		// Persona:
 
 		if(setPersona) {
@@ -139,8 +149,10 @@ public class Nir extends NPC {
 		// Coverings:
 		this.setEyeCovering(new Covering(BodyCoveringType.EYE_DEMON_COMMON, PresetColour.EYE_ORANGE));
 		this.setEyeCovering(new Covering(BodyCoveringType.EYE_HORSE_MORPH, PresetColour.EYE_ORANGE));
+		this.setSkinCovering(new Covering(BodyCoveringType.DEMON_COMMON, PresetColour.SKIN_DARK), true);
 		this.setSkinCovering(new Covering(BodyCoveringType.HORSE_HAIR, PresetColour.COVERING_BROWN), true);
-		this.setSkinCovering(new Covering(BodyCoveringType.HUMAN, PresetColour.SKIN_DARK), true);
+		this.setSkinCovering(new Covering(BodyCoveringType.HUMAN, PresetColour.SKIN_DARK), false);
+		this.setSkinCovering(new Covering(BodyCoveringType.PENIS, PresetColour.SKIN_DARK), false);
 
 		this.setHairCovering(new Covering(BodyCoveringType.HAIR_HORSE_HAIR, PresetColour.COVERING_BROWN_DARK), true);
 		this.setHairLength(HairLength.TWO_SHORT);
@@ -251,11 +263,29 @@ public class Nir extends NPC {
 	public boolean isUnique() {
 		return true;
 	}
+
+	@Override
+	public String getSpeechColour() {
+		if(Main.game.isLightTheme()) {
+			return "#2f2b27";
+		}
+		return "#ae9f93";
+	}
 	
 	@Override
 	public boolean isAbleToBeImpregnated() {
 		return true;
 	}
+	
+//	@Override
+//	public Set<Relationship> getRelationshipsTo(GameCharacter character, Relationship... excludedRelationships) {
+//		if(character instanceof Sleip) {
+//			Set<Relationship> result = new LinkedHashSet<>();
+//			result.add(Relationship.Sibling);
+//			return result;
+//		}
+//		return super.getRelationshipsTo(character, excludedRelationships);
+//	}
 	
 	@Override
 	public void changeFurryLevel(){
@@ -270,4 +300,9 @@ public class Nir extends NPC {
 	public void endSex() {
 	}
 
+	// combat behaviour is attacking
+	@Override
+	public CombatBehaviour getCombatBehaviour() {
+		return CombatBehaviour.ATTACK;
+	}
 }

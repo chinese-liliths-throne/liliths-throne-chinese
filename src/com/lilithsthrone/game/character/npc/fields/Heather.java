@@ -393,7 +393,7 @@ public class Heather extends NPC {
 		cage.setName("Heather's Destiny");
 		this.addClothing(cage, false);
 
-		AbstractClothing bangle = Main.game.getItemGen().generateClothing(ClothingType.WRIST_BANGLE,
+		AbstractClothing bangle = Main.game.getItemGen().generateClothing(ClothingType.getClothingTypeFromId("innoxia_wrist_bangle"),
 				Util.newArrayListOfValues(PresetColour.CLOTHING_SILVER),
 				Util.newArrayListOfValues(
 						new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_SPECIAL, TFModifier.CLOTHING_SEALING, TFPotency.DRAIN, 0),

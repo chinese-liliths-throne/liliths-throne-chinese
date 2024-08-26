@@ -9,7 +9,7 @@
 	<colour>BASE_PURPLE_DARK</colour>
 	<backgroundColour>MAP_BACKGROUND</backgroundColour>
 	<encounterType>null</encounterType>
-	<dialogue>innoxia_places_dominion_sex_shop_generic_counter</dialogue>
+	<dialogue>innoxia_places_dominion_sex_shop_generic_doll_machine_storage</dialogue>
 	<populationPresent>
 		<population>
 			<populationType plural="true" density="DOZENS">DOLL</populationType>

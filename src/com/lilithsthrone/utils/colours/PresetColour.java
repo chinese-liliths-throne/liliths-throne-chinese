@@ -257,6 +257,7 @@ public class PresetColour {
 
 	public static Colour STAMINA = new Colour(false, BaseColour.BLUE_LIGHT, "light blue", Util.newArrayListOfValues("stamina")) {};
 	public static Colour SLEEP = new Colour(false, BaseColour.PURPLE_LIGHT, "light purple", Util.newArrayListOfValues("sleep", "sleeping")) {};
+	public static Colour SLEEP_HEAVY = new Colour(false, BaseColour.PURPLE, "purple", Util.newArrayListOfValues("sleepHeavy", "sleepingHeavy")) {};
 	
 	public static Colour AFFECTION = new Colour(false, BaseColour.PINK_LIGHT, "light pink", Util.newArrayListOfValues("affection")) {};
 	public static Colour OBEDIENCE = new Colour(false, BaseColour.PURPLE_LIGHT, "light purple", Util.newArrayListOfValues("obedience")) {};
@@ -538,7 +539,7 @@ public class PresetColour {
 	public static Colour SKIN_PURPLE_DARK = new Colour(false, BaseColour.PURPLE_DARK, "dark purple") {}.setLinkedColourLighter(SKIN_PURPLE);
 	
 	// Orifices:
-	public static Colour ORIFICE_INTERIOR = new Colour(false, BaseColour.ROSE, "fleshy-pink") {};
+	public static Colour ORIFICE_INTERIOR = new Colour(false, Util.newColour(0xfaa9ae), Util.newColour(0xfaa9ae), "flesh") {};
 
 	// Misc:
 	public static Colour TONGUE = new Colour(false, BaseColour.ROSE, "pink") {};
@@ -607,7 +608,11 @@ public class PresetColour {
 	
 	
 	// Specials:
-	public static Colour COVERING_CLEAR = new Colour(false, BaseColour.WHITE, "clear") {}; // For nail-polish
+	public static Colour COVERING_CLEAR = new Colour(false, BaseColour.WHITE, "transparent") {
+		public String getCoveringIconColour() {
+			return "-webkit-radial-gradient(#ffffff00, #ffffff00, #ffffffff)";
+		}
+	}; // Mostly for makeup but also used for chitin and doll covering option
 	public static Colour COVERING_RAINBOW = new Colour(false, BaseColour.BLUE_LIGHT,
 			"<span style='color:#E64C4C;'>r</span>"
 			+ "<span style='color:#E6854C;'>a</span>"

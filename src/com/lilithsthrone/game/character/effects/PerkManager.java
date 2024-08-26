@@ -79,6 +79,7 @@ public enum PerkManager {
 		
 		leftA = addPerkEntry(perkTree, PerkCategory.PHYSICAL, 2, Perk.PHYSIQUE_BOOST, physical1);
 		addPerkEntry(perkTree, PerkCategory.PHYSICAL, 2, Perk.OBSERVANT, physical1);
+		addPerkEntry(perkTree, PerkCategory.PHYSICAL, 2, Perk.HEAVY_SLEEPER, physical1);
 
 		leftC = addPerkEntry(perkTree, PerkCategory.PHYSICAL, 2, Perk.ENCHANTMENT_STABILITY, physical1);
 		
@@ -630,6 +631,7 @@ public enum PerkManager {
 				deniedPerks.add(Perk.HYPERMOBILITY);
 				if(character.isUnique()) {
 					deniedPerks.add(Perk.AHEGAO);
+					deniedPerks.add(Perk.HEAVY_SLEEPER);
 				}
 				if(character.getEnchantmentPointsUsedTotal()<=character.getAttributeValue(Attribute.ENCHANTMENT_LIMIT) || !Main.game.isEnchantmentCapacityEnabled()) {
 					deniedPerks.add(Perk.ENCHANTMENT_STABILITY);

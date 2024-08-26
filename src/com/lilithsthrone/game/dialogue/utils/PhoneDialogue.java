@@ -3732,10 +3732,12 @@ public class PhoneDialogue {
 			
 			UtilText.nodeContentSB.append(PerkManager.MANAGER.getPerkTreeDisplay(Main.game.getPlayer(), true));
 			
-			UtilText.nodeContentSB.append("</div>"
-					+ "<div class='container-full-width' style='padding:8px; text-align:center;'>"
-						+ "[style.italicsBad(Please note that this perk tree is a work-in-progress. This is not the final version, and is just a proof of concept!)]"
-					+ "</div>");
+			if(!Main.game.getPlayer().isDoll()) {
+				UtilText.nodeContentSB.append("</div>"
+						+ "<div class='container-full-width' style='padding:8px; text-align:center;'>"
+							+ "[style.italicsBad(Please note that this perk tree is a work-in-progress. This is not the final version, and is just a proof of concept!)]"
+						+ "</div>");
+			}
 			
 			return UtilText.nodeContentSB.toString();
 		}

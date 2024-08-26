@@ -22,6 +22,10 @@ public class TattooCounter implements XMLSaving {
 	private TattooCountType countType;
 	private Colour colour;
 	private boolean glow;
+
+	public TattooCounter(TattooCounter counterToCopy) {
+		this(counterToCopy.type, counterToCopy.countType, counterToCopy.colour, counterToCopy.glow);
+	}
 	
 	public TattooCounter(TattooCounterType type, TattooCountType countType, Colour colour, boolean glow) {
 		this.type = type;

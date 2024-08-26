@@ -1684,6 +1684,32 @@
 	</htmlContent>
 	
 	
+	<htmlContent tag="LILAYA_DOLL_STORAGE"><![CDATA[
+	<p>
+		Wanting to find out if Lilaya would be ok with you storing sex dolls here in her mansion, you start by asking her if she's ever visited Lovienne's Luxuries before.
+	</p>
+	<p>
+		[lilaya.speech(Yes, I've been there before; Saellatrix and I know each other,)] Lilaya responds, before revealing, [lilaya.speech(I first met her when I attended her recognition ceremony. She had quite a vulgar display set up in the centre of the ballroom; about twenty or so of her unrecognised sisters were stripped naked and presenting themselves to us, and once Lovienne had finished her vow, Saellatrix invited all of the guests to use them in any way they wanted. Of course I didn't partake in that...)]
+	</p>
+	<p>
+		[rose.speech(And yet I seem to recall that you didn't come home that night,)] Rose quips, causing Lilaya to blush.
+	</p>
+	<p>
+		[lilaya.speech(Saellatrix was very charming,)] your [lilaya.relation(pc)] says in a defensive tone, before admitting in embarrassment, [lilaya.speech(Y-Yes, I spent the night with her, ok? She stood up for me when some of the other guests called me 'imp-fucker' to my face, and the next thing I knew we were in her bedroom and she'd grown a huge... W-Well... Anyway! Why were you asking about her shop, [pc.name]?)]
+	</p>
+	<p>
+		You tell Lilaya that you've seen the sex dolls which Saellatrix sells there, and was wondering if you could use one of the spare rooms in the mansion in which to store them if you decided to buy any.
+	</p>
+	<p>
+		[lilaya.speech(Oh, well of course,)] Lilaya replies, [lilaya.speech(Saellatrix almost talked me into buying some when I was last there; they're very impressive, but with Rose I simply have no need for them. Now, was there anything else?)]
+	</p>
+	<p style='text-align:center;'>
+		[style.italicsGood(You can now buy sex dolls from Lovienne's Luxuries! To move them into the mansion, you'll need to upgrade one of the empty rooms into a 'Doll Closet' for them to live in.)]
+	</p>
+	]]>
+	</htmlContent>
+	
+	
 	<htmlContent tag="LILAYA_SLAVER_RECOMMENDATION"><![CDATA[
 	<p>
 		You tell Lilaya that you're trying to obtain a slaver license, and that during your attempts to acquire one you were informed that you'd need a letter of recommendation from someone who's already got a license. With that, you lead into asking your [lilaya.relation(pc)] if she could write a letter of recommendation for you.

@@ -9,7 +9,14 @@
 	<backgroundColour>MAP_BACKGROUND</backgroundColour>
 	<encounterType>null</encounterType>
 	<dialogue>innoxia_places_dominion_sex_shop_generic_doll_machine_a</dialogue>
-	<populationPresent/>
+	<populationPresent>
+		<population>
+			<populationType plural="false" density="ONE">DOLL</populationType>
+			<subspeciesPresent>
+				<subspecies>DOLL</subspecies>
+			</subspeciesPresent>
+		</population>
+	</populationPresent>
 	<furniturePresent>true</furniturePresent>
 	<globalMapTile>false</globalMapTile>
 	<dangerous><![CDATA[false]]></dangerous>

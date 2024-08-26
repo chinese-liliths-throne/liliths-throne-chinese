@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.lilithsthrone.game.Game;
@@ -20,6 +21,7 @@ import com.lilithsthrone.game.character.attributes.Attribute;
 import com.lilithsthrone.game.character.attributes.CorruptionLevel;
 import com.lilithsthrone.game.character.attributes.IntelligenceLevel;
 import com.lilithsthrone.game.character.attributes.ObedienceLevelBasic;
+import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.effects.StatusEffect;
 import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
@@ -40,6 +42,8 @@ import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.occupantManagement.slave.SlaveJob;
 import com.lilithsthrone.game.occupantManagement.slave.SlaveJobSetting;
 import com.lilithsthrone.game.occupantManagement.slave.SlavePermissionSetting;
+import com.lilithsthrone.game.sex.ImmobilisationType;
+import com.lilithsthrone.game.sex.SexPace;
 import com.lilithsthrone.game.sex.managers.universal.SMBath;
 import com.lilithsthrone.game.sex.managers.universal.SMGeneric;
 import com.lilithsthrone.game.sex.managers.universal.SMShower;
@@ -191,7 +195,7 @@ public class RoomPlayer {
 						}
 					};
 				} else {
-					return new Response("Manage people", "You'll either need a slaver license, or permission from Lilaya to house your friends, before you can access this menu!",  null);
+					return new Response("Manage people", "You need a slaver license or permission from Lilaya to house your friends or dolls in order to access this menu!",  null);
 				}
 				
 			} else if (index == 8) {
@@ -1656,18 +1660,46 @@ public class RoomPlayer {
 					boolean soloHornySex = hornySlaves.size()==1;
 					List<String> hornyNames = new ArrayList<>();
 					hornySlaves.stream().forEach((npc) -> hornyNames.add(npc.getName()));
-					sb.append(UtilText.parse(hornySlaves,
-							"<p>"
-								+ "[npc.speech(~Mmm!~ That's right... I've got you now...)]"
-							+ "</p>"
-							+ "<p>"
-								+ "For a moment, you aren't quite sure if you're dreaming or not, but then you suddenly feel a strange weight shifting on top of you, which instantly jolts you awake."
-								+ (soloHornySex
-										?" Opening your eyes, you see [npc.name] sitting on your chest, grinning hungrily down at you."
-										:" Opening your eyes, you see "+Util.stringsToStringList(hornyNames, false)+" leaning over you, each of them with a hungry grin on their faces.")
-								+ " With a horny [npc.moan], [npc.name] is the first to speak again, and says,"
-								+ " [npc.speech(Good "+morningString+", [pc.name]! I hope you're ready to fuck!)]"
-							+ "</p>"));
+					if(Main.game.getPlayer().hasTrait(Perk.HEAVY_SLEEPER, true)) {
+						if(!hornySlaves.get(0).isMute()) {
+							sb.append(UtilText.parse(hornySlaves,
+									"<p>"
+										+ "[npc.speech(~Mmm!~ That's right... Don't wake up...)]"
+									+ "</p>"
+									+ "<p>"
+										+ "Being such a deep sleeper, these words uttered by [npc.name] don't even come close to waking you up."
+										+ (soloHornySex
+												?" Sliding onto your bed, [npc.name] grins hungrily down at you."
+												:" Sliding onto your bed, "+Util.stringsToStringList(hornyNames, false)+" grin hungrily down at you.")
+										+ " With a horny [npc.moan], the [npc.race] starts gently groping you, eagerly panting as [npc.she] does so,"
+										+ " [npc.speech(I'm going to fuck you, [pc.name], and you'll never even know...)]"
+									+ "</p>"));
+						} else {
+							sb.append(UtilText.parse(hornySlaves,
+									"<p>"
+										+ "Quietly sneaking over to your bed, [npc.name] looks down at you as you sleep and lets out an excited moan."
+										+ " Being such a deep sleeper, this noise doesn't even come close to waking you up."
+										+ (soloHornySex
+												?" Sliding onto your bed, [npc.name] grins hungrily down at you."
+												:" Sliding onto your bed, "+Util.stringsToStringList(hornyNames, false)+" grin hungrily down at you.")
+										+ " Licking [npc.her] [npc.lips], the [npc.race] starts gently groping you, eagerly panting as [npc.she] prepares to fuck you in your sleep..."
+									+ "</p>"));
+						}
+						
+					} else {
+						sb.append(UtilText.parse(hornySlaves,
+								"<p>"
+									+ "[npc.speech(~Mmm!~ That's right... I've got you now...)]"
+								+ "</p>"
+								+ "<p>"
+									+ "For a moment, you aren't quite sure if you're dreaming or not, but then you suddenly feel a strange weight shifting on top of you, which instantly jolts you awake."
+									+ (soloHornySex
+											?" Opening your eyes, you see [npc.name] sitting on your chest, grinning hungrily down at you."
+											:" Opening your eyes, you see "+Util.stringsToStringList(hornyNames, false)+" leaning over you, each of them with a hungry grin on their faces.")
+									+ " With a horny [npc.moan], [npc.name] is the first to speak again, and says,"
+									+ " [npc.speech(Good "+morningString+", [pc.name]! I hope you're ready to fuck!)]"
+								+ "</p>"));
+					}
 					return sb.toString();
 				}
 				
@@ -1710,30 +1742,69 @@ public class RoomPlayer {
 					
 					List<GameCharacter> spectators = new ArrayList<>(slavesInRoom(Main.game.getHourOfDay()));
 					spectators.removeAll(hornySlaves);
+
+					UtilText.addSpecialParsingString(String.valueOf(soloSex), true);
+					UtilText.addSpecialParsingString(Util.stringsToStringList(names, false), false);
 					
-					return new ResponseSex("Sex",
-							(soloSex
-								?UtilText.parse(hornySlaves.get(0), "[npc.Name] forces [npc.herself] on you...")
-								:Util.stringsToStringList(names, false)+" force themselves on you..."),
-							false,
-							false,
-							new SMGeneric(
-									hornySlaves,
-									Util.newArrayListOfValues(Main.game.getPlayer()),
-									spectators,
-									null,
-									ResponseTag.PREFER_MISSIONARY),
-							POST_WAKE_UP_SEX,
-							"<p>"
-								+ UtilText.parse(hornySlaves,
-									(soloSex
-										?"Before you can react, [npc.name] lowers [npc.herself] down over the top of you, pressing [npc.her] [npc.lips+] against yours and pulling you into a passionate kiss."
-											+ " Breaking it off a moment later, [npc.her] [npc.hands] start to roam down and grope your body as your horny slave [npc.moans],"
-											+ " [npc.speech(Don't worry, [pc.name], I'll make this good for you as well...)]"
-										:Util.stringsToStringList(names, false)+" had obviously conspired to wait until you'd gone to sleep before pinning you down and having their way with you."
-												+ " Before you can react to the situation, [npc.name] lowers [npc.herself] down over the top of you, pressing [npc.her] [npc.lips+] against yours and pulling you into a passionate kiss."
-												+ " Leaning in on one side of you, [npc2.name] [npc2.moans], [npc2.speech(Don't worry, [pc.name], we'll make this good for you as well...)]"))
-							+ "</p>");
+					if(Main.game.getPlayer().hasTrait(Perk.HEAVY_SLEEPER, true)) {
+						return new ResponseSex("Sleep sex",
+								(soloSex
+									?UtilText.parse(hornySlaves.get(0), "[npc.Name] fucks you in your sleep...")
+									:Util.stringsToStringList(names, false)+" fuck you in your sleep..."),
+								false,
+								false,
+								new SMGeneric(
+										hornySlaves,
+										Util.newArrayListOfValues(Main.game.getPlayer()),
+										null,
+										null,
+										ResponseTag.PREFER_MISSIONARY){
+									@Override
+									public SexPace getStartingSexPaceModifier(GameCharacter character) {
+										if(!character.isPlayer()) {
+											return SexPace.DOM_GENTLE;
+										}
+										return super.getStartingSexPaceModifier(character);
+									}
+									@Override
+									public SexPace getForcedSexPace(GameCharacter character) {
+										if(!character.isPlayer()) {
+											return SexPace.DOM_GENTLE;
+										}
+										return super.getForcedSexPace(character);
+									}
+									@Override
+									public Map<ImmobilisationType, Map<GameCharacter, Set<GameCharacter>>> getStartingCharactersImmobilised() {
+										Map<ImmobilisationType, Map<GameCharacter, Set<GameCharacter>>> map = new HashMap<>();
+										map.put(ImmobilisationType.SLEEP, new HashMap<>());
+										map.get(ImmobilisationType.SLEEP).put(hornySlaves.get(0), Util.newHashSetOfValues(Main.game.getPlayer()));
+										return map;
+									}
+								},
+								POST_WAKE_UP_SEX,
+								UtilText.parseFromXMLFile("places/dominion/lilayasHome/playersRoom", "BED_SEX_START_SLEEP", hornySlaves)) {
+							@Override
+							public void effects() {
+								Main.game.getPlayer().addStatusEffect(StatusEffect.SLEEPING_HEAVY, -1);
+							}
+						};
+						
+					} else {
+						return new ResponseSex("Sex",
+								(soloSex
+									?UtilText.parse(hornySlaves.get(0), "[npc.Name] forces [npc.herself] on you...")
+									:Util.stringsToStringList(names, false)+" force themselves on you..."),
+								false,
+								false,
+								new SMGeneric(
+										hornySlaves,
+										Util.newArrayListOfValues(Main.game.getPlayer()),
+										spectators,
+										null,
+										ResponseTag.PREFER_MISSIONARY),
+								POST_WAKE_UP_SEX,
+								UtilText.parseFromXMLFile("places/dominion/lilayasHome/playersRoom", "BED_SEX_START", hornySlaves));
+					}
 				}
 				return null;
 			}
@@ -1746,54 +1817,31 @@ public class RoomPlayer {
 		}
 	};
 	
-	public static final DialogueNode POST_WAKE_UP_SEX = new DialogueNode("Finished", "You collapse back onto your bed...", false) {
-
+	public static final DialogueNode POST_WAKE_UP_SEX = new DialogueNode("Finished", "", false) {
 		@Override
-		public String getContent() {
-			UtilText.nodeContentSB.setLength(0);
-			
+		public void applyPreParsingEffects() {
 			List<GameCharacter> hornySlaves = new ArrayList<>(Main.sex.getDominantParticipants(false).keySet());
 			boolean soloSex = hornySlaves.size()==1;
 			List<String> names = new ArrayList<>();
 			hornySlaves.stream().forEach((npc) -> names.add(npc.getName()));
 			
+			UtilText.addSpecialParsingString(String.valueOf(soloSex), true);
+			UtilText.addSpecialParsingString(Util.stringsToStringList(names, false), false);
 			
-			if(soloSex) {
-				UtilText.nodeContentSB.append(
-						UtilText.parse(hornySlaves,
-						"<p>"
-							+ "Having had [npc.her] fun with you, [npc.name] allows you to collapse back onto your bed."
-							+ " Letting out a very satisfied sigh, [npc.she] [npc.moans],"
-							+ " [npc.speech(See, that was fun for both of us, wasn't it?)]"
-						+ "</p>"
-						+ "<p>"
-							+ "Interpreting your heavy breathing as a positive sign, [npc.name] smiles and asks,"
-							+ " [npc.speech(Weren't you meant to be waking up at this time anyway?)]"
-						+ "</p>"
-						+ "<p>"
-							+ "Realising that [npc.sheIs] right, you decide that you'd better get out of bed, and so, after a minute of lying back and catching your breath, you do just that."
-							+ " With a sigh and stretch of your [pc.arms], you allow "+ Util.stringsToStringList(names, false)+" to assist you as you gather your things, and with one final stretch, you get ready to set out once more..."
-						+ "</p>"));
-				
-			} else {
-				UtilText.nodeContentSB.append(
-						UtilText.parse(hornySlaves,
-						"<p>"
-							+ "Having had their fun with you, "+ Util.stringsToStringList(names, false)+" allow you to collapse back onto your bed."
-							+ " Letting out a very satisfied sigh, [npc.name] [npc.moans],"
-							+ " [npc.speech(See, that was fun for all of us, wasn't it?)]"
-						+ "</p>"
-						+ "<p>"
-							+ "Interpreting your heavy breathing as a positive sign, [npc2.name] smiles and asks,"
-							+ " [npc2.speech(Weren't you meant to be waking up at this time anyway?)]"
-						+ "</p>"
-						+ "<p>"
-							+ "Realising that [npc2.sheIs] right, you decide that you'd better get out of bed, and so, after a minute of lying back and catching your breath, you do just that."
-							+ " With a sigh and stretch of your [pc.arms], you allow "+ Util.stringsToStringList(names, false)+" to assist you as you gather your things, and with one final stretch, you get ready to set out once more..."
-						+ "</p>"));
+			Main.game.appendToTextStartStringBuilder(UtilText.parseFromXMLFile("places/dominion/lilayasHome/playersRoom", "POST_WAKE_UP_SEX", hornySlaves));
+			
+			Main.game.getPlayer().wakeUp();
+		}
+		@Override
+		public String getDescription() {
+			if(Main.game.getPlayer().isAsleep()) {
+				return "You continue to sleep...";
 			}
-			
-			return UtilText.nodeContentSB.toString();
+			return "You collapse back onto your bed...";
+		}
+		@Override
+		public String getContent() {
+			return "";
 		}
 
 		@Override

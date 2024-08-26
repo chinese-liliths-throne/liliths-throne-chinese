@@ -16,6 +16,9 @@ import com.lilithsthrone.game.character.npc.dominion.Natalya;
 import com.lilithsthrone.game.character.npc.dominion.Wes;
 import com.lilithsthrone.game.character.npc.submission.DarkSiren;
 import com.lilithsthrone.game.character.npc.submission.Elizabeth;
+import com.lilithsthrone.game.character.npc.submission.FortressAlphaLeader;
+import com.lilithsthrone.game.character.npc.submission.FortressFemalesLeader;
+import com.lilithsthrone.game.character.npc.submission.FortressMalesLeader;
 import com.lilithsthrone.game.character.quests.Quest;
 import com.lilithsthrone.game.character.quests.QuestLine;
 import com.lilithsthrone.game.character.race.AbstractSubspecies;
@@ -28,11 +31,11 @@ import com.lilithsthrone.game.dialogue.encounters.AbstractEncounter;
 import com.lilithsthrone.game.dialogue.encounters.Encounter;
 import com.lilithsthrone.game.dialogue.npcDialogue.dominion.DaddyDialogue;
 import com.lilithsthrone.game.dialogue.places.dominion.DemonHome;
+import com.lilithsthrone.game.dialogue.places.dominion.DominionPark;
 import com.lilithsthrone.game.dialogue.places.dominion.DominionPlaces;
 import com.lilithsthrone.game.dialogue.places.dominion.EnforcerWarehouse;
 import com.lilithsthrone.game.dialogue.places.dominion.HomeImprovements;
 import com.lilithsthrone.game.dialogue.places.dominion.LilithsTower;
-import com.lilithsthrone.game.dialogue.places.dominion.DominionPark;
 import com.lilithsthrone.game.dialogue.places.dominion.RedLightDistrict;
 import com.lilithsthrone.game.dialogue.places.dominion.cityHall.CityHall;
 import com.lilithsthrone.game.dialogue.places.dominion.cityHall.CityHallDemographics;
@@ -1045,6 +1048,10 @@ public class PlaceType {
 				return PresetColour.BASE_GREEN_LIGHT;
 			}
 			return PresetColour.BASE_CRIMSON;
+		} 
+		@Override
+		public List<Population> getPopulation() {
+			return Util.newArrayListOfValues(new Population(false, PopulationType.ENFORCER, PopulationDensity.ONE, Util.newHashMapOfValues(new Value<>(Subspecies.HORSE_MORPH, SubspeciesSpawnRarity.TEN))));
 		}
 	}.initWeatherImmune();
 	
@@ -1074,8 +1081,7 @@ public class PlaceType {
 			PresetColour.BASE_CRIMSON,
 			EnforcerHQDialogue.LOCKED_DOOR,
 			Darkness.ALWAYS_LIGHT,
-			null, "in the Enforcer HQ")
-			.initWeatherImmune();
+			null, "in the Enforcer HQ").initWeatherImmune();
 
 	public static final AbstractPlaceType ENFORCER_HQ_LOCKED_DOOR_EDGE = new AbstractPlaceType(
 			WorldRegion.DOMINION,
@@ -4303,7 +4309,7 @@ public class PlaceType {
 			null, "in Submission") {
 		@Override
 		public String getSVGString(Set<AbstractPlaceUpgrade> upgrades) {
-			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.impFortressAlphaDefeated)) {
+			if(Main.game.getNpc(FortressAlphaLeader.class).getWorldLocation()!=WorldType.IMP_FORTRESS_ALPHA) {
 				return getSVGOverride("submission/impFortress1", PresetColour.BASE_GREEN_LIGHT);
 			}
 			return getSVGOverride("submission/impFortress1", PresetColour.BASE_CRIMSON);
@@ -4570,7 +4576,7 @@ public class PlaceType {
 			null, "in Submission") {
 		@Override
 		public String getSVGString(Set<AbstractPlaceUpgrade> upgrades) {
-			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.impFortressFemalesDefeated)) {
+			if(Main.game.getNpc(FortressFemalesLeader.class).getWorldLocation()!=WorldType.IMP_FORTRESS_FEMALES) {
 				return getSVGOverride("submission/impFortress3", PresetColour.BASE_GREEN_LIGHT);
 			}
 			return getSVGOverride("submission/impFortress3", PresetColour.BASE_PINK);
@@ -4646,7 +4652,7 @@ public class PlaceType {
 			null, "in Submission") {
 		@Override
 		public String getSVGString(Set<AbstractPlaceUpgrade> upgrades) {
-			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.impFortressMalesDefeated)) {
+			if(Main.game.getNpc(FortressMalesLeader.class).getWorldLocation()!=WorldType.IMP_FORTRESS_MALES) {
 				return getSVGOverride("submission/impFortress4", PresetColour.BASE_GREEN_LIGHT);
 			}
 			return getSVGOverride("submission/impFortress4", PresetColour.BASE_BLUE);

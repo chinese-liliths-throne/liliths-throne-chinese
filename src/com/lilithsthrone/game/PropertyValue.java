@@ -55,6 +55,7 @@ public enum PropertyValue {
 	feminineBeardsContent(false),
 	furryHairContent(true),
 	scalyHairContent(false),
+	lipLispContent(false),
 	
 	nonConContent(true, true),
 	incestContent(true, true),

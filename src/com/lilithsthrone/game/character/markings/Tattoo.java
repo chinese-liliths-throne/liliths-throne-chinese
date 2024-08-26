@@ -56,6 +56,18 @@ public class Tattoo extends AbstractCoreItem implements XMLSaving {
 	
 	private static Map<Colour, String> SVGGlowMap = new HashMap<>();
 
+	public Tattoo(Tattoo tattooToCopy) {
+		this(tattooToCopy.type,
+				tattooToCopy.primaryColour,
+				tattooToCopy.secondaryColour,
+				tattooToCopy.tertiaryColour,
+				tattooToCopy.glowing,
+				new TattooWriting(tattooToCopy.writing),
+				new TattooCounter(tattooToCopy.counter));
+		this.effects = new ArrayList<>(tattooToCopy.effects);
+		this.attributeModifiers = new HashMap<>(tattooToCopy.attributeModifiers);
+	}
+	
 	public Tattoo(String typeId,
 			boolean glowing,
 			TattooWriting writing,
@@ -225,8 +237,8 @@ public class Tattoo extends AbstractCoreItem implements XMLSaving {
 			} catch(Exception ex) {
 			}
 			
-			Element element = (Element)parentElement.getElementsByTagName("effects").item(0);
-			if(element!=null) {
+			if(parentElement.getElementsByTagName("effects").item(0)!=null) {
+				Element element = (Element)parentElement.getElementsByTagName("effects").item(0);
 				NodeList nodeList = element.getElementsByTagName("effect");
 				for(int i = 0; i < nodeList.getLength(); i++){
 					Element e = ((Element)nodeList.item(i));
@@ -241,6 +253,7 @@ public class Tattoo extends AbstractCoreItem implements XMLSaving {
 			
 		} catch(Exception ex) {
 			System.err.println("Warning: An instance of Tattoo was unable to be imported!");
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -346,6 +359,9 @@ public class Tattoo extends AbstractCoreItem implements XMLSaving {
 					
 				} else if(ie.getSecondaryModifier() == TFModifier.CLOTHING_SEALING) {
 					return "of "+(coloured?"<"+tag+" style='color:"+PresetColour.SEALED.toWebHexString()+";'>sealing</"+tag+">":"sealing");
+					
+				} else if(ie.getPrimaryModifier() == TFModifier.CLOTHING_CREAMPIE_RETENTION) {
+					return "of "+(coloured?"<"+tag+" style='color:"+PresetColour.CUM.toWebHexString()+";'>plugging</"+tag+">":"plugging");
 					
 				} else {
 					return "of "+(coloured?"<"+tag+" style='color:"+PresetColour.TRANSFORMATION_GENERIC.toWebHexString()+";'>transformation</"+tag+">":"transformation");
@@ -491,7 +507,9 @@ public class Tattoo extends AbstractCoreItem implements XMLSaving {
 	 * For examples.
 	 */
 	public String getFormattedCounterOutput(int input) {
-		return "<span style='color:"+getCounter().getColour().toWebHexString()+";'>"+(getCounter().isGlow()?UtilText.applyGlow(getCounter().getCountType().convertInt(input), getCounter().getColour()):getCounter().getCountType().convertInt(input))+"</span>";
+		return "<span style='color:"+getCounter().getColour().toWebHexString()+";'>"
+					+(getCounter().isGlow()?UtilText.applyGlow(getCounter().getCountType().convertInt(input), getCounter().getColour()):getCounter().getCountType().convertInt(input))
+				+"</span>";
 	}
 	
 	public String getFormattedCounterOutput(GameCharacter equippedToCharacter) {

@@ -148,10 +148,10 @@ public class ArcaneArts {
 				Main.game.getTextStartStringBuilder().append(UtilText.parseFromXMLFile("places/dominion/shoppingArcade/arcaneArts", "SHOP_WEAPONS"));
 			}
 			if(Main.game.getPlayer().isVisiblyPregnant()) {
-				getVicky().setCharacterReactedToPregnancy(Main.game.getPlayer(), true);
+				Main.game.getPlayer().setCharacterReactedToPregnancy(getVicky(), true);
 			}
 			if(getVicky().isVisiblyPregnant()) {
-				Main.game.getPlayer().setCharacterReactedToPregnancy(getVicky(), true);
+				getVicky().setCharacterReactedToPregnancy(Main.game.getPlayer(), true);
 			}
 		}
 		@Override

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.lilithsthrone.game.PropertyValue;
+import com.lilithsthrone.game.character.EquipClothingSetting;
 import com.lilithsthrone.game.character.GameCharacter;
 import com.lilithsthrone.game.character.attributes.Attribute;
 import com.lilithsthrone.game.character.body.BodyPartInterface;
@@ -16,6 +17,7 @@ import com.lilithsthrone.game.character.body.types.BodyPartType;
 import com.lilithsthrone.game.character.body.valueEnums.BodyMaterial;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringModifier;
 import com.lilithsthrone.game.character.body.valueEnums.CupSize;
+import com.lilithsthrone.game.character.body.valueEnums.LegConfiguration;
 import com.lilithsthrone.game.character.effects.AbstractPerk;
 import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.fetishes.AbstractFetish;
@@ -28,6 +30,7 @@ import com.lilithsthrone.game.character.npc.dominion.Brax;
 import com.lilithsthrone.game.character.npc.dominion.DominionAlleywayAttacker;
 import com.lilithsthrone.game.character.npc.dominion.Lilaya;
 import com.lilithsthrone.game.character.npc.fields.ElisAlleywayAttacker;
+import com.lilithsthrone.game.character.npc.misc.BasicDoll;
 import com.lilithsthrone.game.character.npc.misc.GenericSexualPartner;
 import com.lilithsthrone.game.character.npc.misc.OffspringSeed;
 import com.lilithsthrone.game.character.npc.submission.SubmissionAttacker;
@@ -38,6 +41,9 @@ import com.lilithsthrone.game.character.race.AbstractSubspecies;
 import com.lilithsthrone.game.character.race.Race;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
+import com.lilithsthrone.game.combat.moves.AbstractCombatMove;
+import com.lilithsthrone.game.combat.moves.CombatMove;
+import com.lilithsthrone.game.combat.moves.CombatMoveCategory;
 import com.lilithsthrone.game.combat.spells.SpellSchool;
 import com.lilithsthrone.game.dialogue.DialogueFlags;
 import com.lilithsthrone.game.dialogue.DialogueNode;
@@ -53,6 +59,8 @@ import com.lilithsthrone.game.inventory.clothing.AbstractClothingType;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
 import com.lilithsthrone.game.inventory.item.AbstractItemType;
 import com.lilithsthrone.game.inventory.item.ItemType;
+import com.lilithsthrone.game.inventory.outfit.AbstractOutfit;
+import com.lilithsthrone.game.inventory.outfit.OutfitType;
 import com.lilithsthrone.game.inventory.weapon.AbstractWeaponType;
 import com.lilithsthrone.game.inventory.weapon.WeaponType;
 import com.lilithsthrone.game.sex.SexAreaOrifice;
@@ -75,6 +83,8 @@ import com.lilithsthrone.world.places.PlaceType;
  */
 public class DebugDialogue {
 
+	private static String dollID;
+	
 	public static final DialogueNode DEBUG_MENU = new DialogueNode("A powerful tool", "Open debug menu.", false) {
 		
 		@Override
@@ -124,6 +134,9 @@ public class DebugDialogue {
 				return new Response("Back", "", DEBUG_MENU){
 					@Override
 					public DialogueNode getNextDialogue() {
+						if(Main.game.isInSex()) {
+							return Main.sex.SEX_DIALOGUE;
+						}
 						return Main.game.getDefaultDialogue(false);
 					}
 				};
@@ -491,7 +504,9 @@ public class DebugDialogue {
 						};
 						
 				}
-//				else if (index == 5) {
+				else if (index == 5) {
+					return new Response("Combat moves", "View a list of all combat moves available in the game.", COMBAT_MOVES);
+					
 //					if(!Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.DOMINION_BACK_ALLEYS)) {
 //						return new Response("Lumi test", "Lumi can only be spawned in alleyway tiles.", null);
 //						
@@ -507,8 +522,8 @@ public class DebugDialogue {
 //							Main.game.setContent(new Response("", "", LumiDialogue.LUMI_APPEARS));
 //						}
 //					};
-//					
-//				} 
+					
+				} 
 				else if (index == 6) {
 					return new Response("Brax's revenge", "Brax cums in your vagina!", DEBUG_MENU){
 						@Override
@@ -831,6 +846,10 @@ public class DebugDialogue {
 							viewItemVariablesReset();
 							viewAll = true;
 						}
+						@Override
+						public Colour getHighlightColour() {
+							return PresetColour.GENERIC_EXCELLENT;
+						}
 					};
 					
 				} else if(index==2) {
@@ -840,6 +859,10 @@ public class DebugDialogue {
 						@Override
 						public void effects() {
 							viewItemVariablesReset();
+						}
+						@Override
+						public Colour getHighlightColour() {
+							return PresetColour.BASE_BLUE_LIGHT;
 						}
 					};
 					
@@ -852,6 +875,10 @@ public class DebugDialogue {
 							viewItemVariablesReset();
 							itemViewSlot = InventorySlot.WEAPON_MAIN_1;
 						}
+						@Override
+						public Colour getHighlightColour() {
+							return PresetColour.BASE_CRIMSON;
+						}
 					};
 					
 				} else if(index==4) {
@@ -863,9 +890,38 @@ public class DebugDialogue {
 							viewItemVariablesReset();
 							viewAllClothing = true;
 						}
+						@Override
+						public Colour getHighlightColour() {
+							return PresetColour.BASE_YELLOW;
+						}
+					};
+					
+				} else if(index==5) {
+					return new Response("Outfits",
+							"Enter the outfit generator, allowing you to test all of the in-game outfits.",
+							OUTFIT_VIEWER) {
+						@Override
+						public void effects() {
+							BasicDoll doll = new BasicDoll();
+							try {
+								dollID = Main.game.addNPC(doll, false);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							doll.setBody(Gender.F_P_V_B_FUTANARI, Subspecies.HUMAN, RaceStage.GREATER, true);
+							doll.setBodyMaterial(BodyMaterial.SILICONE);
+							doll.setName("Dress-up doll");
+							doll.setLocation(Main.game.getPlayer());
+							Main.game.setActiveNPC(doll);
+						}
+						@Override
+						public Colour getHighlightColour() {
+							return PresetColour.BASE_PINK_SALMON;
+						}
 					};
 					
 				} else {
+					int indexOffset = 6;
 					List<InventorySlot> clothingSlots = new ArrayList<>(Arrays.asList(InventorySlot.values()));
 					clothingSlots.remove(InventorySlot.WEAPON_MAIN_1);
 					clothingSlots.remove(InventorySlot.WEAPON_MAIN_2);
@@ -874,8 +930,8 @@ public class DebugDialogue {
 					clothingSlots.remove(InventorySlot.WEAPON_OFFHAND_2);
 					clothingSlots.remove(InventorySlot.WEAPON_OFFHAND_3);
 					
-					if(index-5 < clothingSlots.size()) {
-						InventorySlot is = clothingSlots.get(index-5);
+					if(index-indexOffset < clothingSlots.size()) {
+						InventorySlot is = clothingSlots.get(index-indexOffset);
 						return new Response(Util.capitaliseSentence(is.getName()),
 								"View icons and ids of all the clothing in the slot '"+is.getName()+"'. You can also spawn these items by clicking on their icons. <i>Warning: May be very sluggish and slow to load.</i>",
 								ITEM_VIEWER) {
@@ -885,7 +941,7 @@ public class DebugDialogue {
 								itemViewSlot = is;
 							}
 						};
-					} else if(index-5 == clothingSlots.size()) {
+					} else if(index-indexOffset == clothingSlots.size()) {
 						return new Response("Tattoos",
 								"View icons and ids of all the tattoos in the game. <i>Warning: May be sluggish and slow to load.</i>",
 								ITEM_VIEWER) {
@@ -967,11 +1023,25 @@ public class DebugDialogue {
 						+ " F:"+(npc.getFather()!=null?npc.getFather().getName(true):"Deleted NPC")+"<br/>");
 			}
 			for(OffspringSeed os : Main.game.getOffspringNotSpawned(os -> true,true)) {
-				UtilText.nodeContentSB.append("Not yet"+(os.isBorn()?" met ":" born ")+"<span style='color:"+os.getFemininity().getColour().toWebHexString()+";'>"+os.getName()+" "+os.getSurname()+"</span>"
-						+ " ("+os.getSubspecies().getName(os.getBody())+" | "+os.getHalfDemonSubspecies().getName(os.getBody())+")"
-						+ " ("+os.getBody().getCovering(os.getBody().getTorsoType().getBodyCoveringType(os.getBody()), true).getPrimaryColour().getName()+")" // Primary covering colour
-						+ " M:"+(os.getMother()!=null?os.getMother().getName(true):"Deleted NPC")
-						+ " F:"+(os.getFather()!=null?os.getFather().getName(true):"Deleted NPC")+"<br/>");
+				if(!os.isBorn()) {
+					UtilText.nodeContentSB.append("[style.colourBad(Not yet born)] ");
+				} else {
+					UtilText.nodeContentSB.append("Not yet met ");
+				}
+				
+				UtilText.nodeContentSB.append("<span style='color:"+os.getFemininity().getColour().toWebHexString()+";'>"+os.getName()+" "+os.getSurname()+"</span>");
+				
+				UtilText.nodeContentSB.append(" ("+os.getSubspecies().getName(os.getBody()));
+				if(os.getSubspecies()==Subspecies.HALF_DEMON) {
+					UtilText.nodeContentSB.append("/"+os.getHalfDemonSubspecies().getName(os.getBody()));
+				}
+				UtilText.nodeContentSB.append(")");
+				
+				Colour primaryCoveringColour = os.getBody().getCovering(os.getBody().getTorsoType().getBodyCoveringType(os.getBody()), true).getPrimaryColour();
+				UtilText.nodeContentSB.append(" (<span style='color:"+primaryCoveringColour.toWebHexString()+";'>"+primaryCoveringColour.getName()+"</span>)"); // Primary covering colour
+				
+				UtilText.nodeContentSB.append(" M:"+(os.getMother()!=null?os.getMother().getName(true):"Deleted NPC"));
+				UtilText.nodeContentSB.append(" F:"+(os.getFather()!=null?os.getFather().getName(true):"Deleted NPC")+"<br/>");
 			}
 			if(activeOffspring!=null) {
 				for(AbstractFetish f : activeOffspring.getFetishes(true)) {
@@ -1343,6 +1413,99 @@ public class DebugDialogue {
 			return DEBUG_MENU.getResponse(responseTab, index);
 		}
 	};
+	
+	
+	public static final DialogueNode OUTFIT_VIEWER = new DialogueNode("Outfit Viewer", "", true) {
+		@Override
+		public String getContent() {
+			inventorySB.setLength(0);
+			
+			inventorySB.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
+					+ "<h5>Outfits: "+OutfitType.getAllOutfits().size()+"</h5>");
+			int i=0;
+			for(AbstractOutfit outfit : OutfitType.getAllOutfits()) {
+				String id = OutfitType.getIdFromOutfitType(outfit);
+				inventorySB.append("<div class='container-full-width' style='width:95%; padding:4px; margin:4px 2.5% 4px 2.5%; background-color:"+(i%2==0?PresetColour.BACKGROUND:PresetColour.BACKGROUND_ALT).toWebHexString()+";'>");
+
+					inventorySB.append("<div class='container-full-width' style='position:relative; padding:0; margin:0; width:100%; background-color:#00000000; -webkit-user-select:auto; text-align:left;'>");
+							inventorySB.append("<b>"+outfit.getName()+":</b> <i>"+outfit.getDescription()+"</i>");
+							inventorySB.append("<br/>");
+							inventorySB.append("ID: "+id);
+							inventorySB.append("<br/>");
+							inventorySB.append("Femininity: <span style='color:"+outfit.getFemininity().getColour().toWebHexString()+";'>"+outfit.getFemininity().toString()+"</span>");
+							inventorySB.append("<br/>");
+							inventorySB.append("Conditional: <span style='font-family:monospace; font-size:0.75em;'>"+outfit.getConditional()+"</span>");
+							
+							inventorySB.append("<br/>");
+							inventorySB.append("Leg configurations: ");
+							if(outfit.getAcceptableLegConfigurations()!=null && !outfit.getAcceptableLegConfigurations().isEmpty()) {
+								List<String> lcNames = new ArrayList<>();
+								for(LegConfiguration lc : outfit.getAcceptableLegConfigurations()) {
+									lcNames.add(lc.toString());
+								}
+								inventorySB.append(Util.stringsToStringList(lcNames, false));
+							} else {
+								inventorySB.append("[style.colourMinorGood(ANY)]");
+							}
+							
+							inventorySB.append("<br/>");
+							inventorySB.append("Outfit types: ");
+							if(outfit.getOutfitTypes()!=null && !outfit.getOutfitTypes().isEmpty()) {
+								List<String> otNames = new ArrayList<>();
+								for(OutfitType ot : outfit.getOutfitTypes()) {
+									otNames.add(ot.toString());
+								}
+								inventorySB.append(Util.stringsToStringList(otNames, false));
+							} else {
+								inventorySB.append("[style.colourBad(NONE!)]");
+							}
+							inventorySB.append("<div class='normal-button' id='OUTFIT_"+id+"'"
+									+ " style='position:absolute; text-align:center; width:18%; margin:1%; right:2px; bottom:2px; padding:2px; font-size:0.9em; color:"+PresetColour.GENERIC_MINOR_GOOD.toWebHexString()+";'>Apply</div>");
+					inventorySB.append("</div>");
+					
+					
+				inventorySB.append("</div>");
+				i++;
+			}
+			inventorySB.append("</div>");
+			
+			return inventorySB.toString();
+		}
+		@Override
+		public Response getResponse(int responseTab, int index) {
+			if(index==1) {
+				return new Response("Back", "Return to the main debug menu.", DEBUG_MENU) {
+					@Override
+					public void effects() {
+						Main.game.banishNPC(dollID);
+					}
+				};
+			}
+			return null;
+		}
+	};
+	
+	public static void applyOutfitToDoll(AbstractOutfit outfit) {
+		try {
+			NPC doll = (NPC) Main.game.getNPCById(dollID);
+			
+			doll.resetInventory(true);
+			if(outfit.getAcceptableLegConfigurations()!=null
+					&& !outfit.getAcceptableLegConfigurations().isEmpty()
+					&& !outfit.getAcceptableLegConfigurations().contains(doll.getLegConfiguration())) {
+				doll.setLegConfiguration(outfit.getAcceptableLegConfigurations().get(0), true);
+			}
+			if(doll.getLegConfiguration()!=LegConfiguration.BIPEDAL && (outfit.getAcceptableLegConfigurations()==null || outfit.getAcceptableLegConfigurations().isEmpty())) {
+				doll.setLegConfiguration(LegConfiguration.BIPEDAL, true);
+			}
+			
+			outfit.applyOutfit(doll, EquipClothingSetting.getAllClothingSettings());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public static final DialogueNode BODY_PART_MATERIAL = new DialogueNode("Set body material", "Set body material.", false) {
 
@@ -1911,7 +2074,7 @@ public class DebugDialogue {
 						+ " leans back in [<i style='color:"+PresetColour.CLOTHING_BLUE_LIGHT.toWebHexString()+";'>brax</i>.<i style='color:"+PresetColour.CLOTHING_PINK_LIGHT.toWebHexString()+";'>his</i>]"
 						+ " chair, wondering what happened to [<i style='color:"+PresetColour.CLOTHING_BLUE_LIGHT.toWebHexString()+";'>arthur</i>.<i style='color:"+PresetColour.CLOTHING_PINK_LIGHT.toWebHexString()+";'>name</i>]"
 						+ " after [<i style='color:"+PresetColour.CLOTHING_BLUE_LIGHT.toWebHexString()+";'>brax</i>.<i style='color:"+PresetColour.CLOTHING_PINK_LIGHT.toWebHexString()+";'>he</i>]"
-						+ " handed [[<i style='color:"+PresetColour.CLOTHING_BLUE_LIGHT.toWebHexString()+";'>arthur</i>.<i style='color:"+PresetColour.CLOTHING_PINK_LIGHT.toWebHexString()+";'>him</i>]] over to Scarlett.<br/>"
+						+ " handed [<i style='color:"+PresetColour.CLOTHING_BLUE_LIGHT.toWebHexString()+";'>arthur</i>.<i style='color:"+PresetColour.CLOTHING_PINK_LIGHT.toWebHexString()+";'>him</i>] over to Scarlett.<br/>"
 					+ "outputs:<br/>"
 					+ "'Brax leans back in his chair, wondering what happened to Arthur after he handed him over to Scarlett.'<br/><br/>"
 					
@@ -2325,6 +2488,49 @@ public class DebugDialogue {
 		@Override
 		public String getContent() {
 			return spawnrateSB.toString();
+		}
+		@Override
+		public String getResponseTabTitle(int index) {
+			return DEBUG_MENU.getResponseTabTitle(index);
+		}
+		@Override
+		public Response getResponse(int responseTab, int index) {
+			return DEBUG_MENU.getResponse(responseTab, index);
+		}
+	};
+
+	public static final DialogueNode COMBAT_MOVES = new DialogueNode("", "", false) {
+		@Override
+		public String getContent() {
+			StringBuilder sb = new StringBuilder();
+			
+			for(CombatMoveCategory cat : CombatMoveCategory.values()) {
+				sb.append("<h4>"+cat.toString()+":</h4>");
+				int i=0;
+				List<AbstractCombatMove> categoryMoves = new ArrayList<>(CombatMove.getAllCombatMovesInCategory(cat));
+				Collections.sort(categoryMoves, (m1, m2) ->
+					m1.getType().compareTo(m2.getType())==0 && cat==CombatMoveCategory.SPELL
+						?m1.getAssociatedSpell().getSpellSchool().compareTo(m2.getAssociatedSpell().getSpellSchool())
+						:m1.getType().compareTo(m2.getType()));
+				
+				for(AbstractCombatMove move : categoryMoves) {
+					sb.append("<div class='container-full-width' style='width:95%; padding:4px; margin:4px 2.5% 4px 2.5%; background-color:"+(i%2==0?PresetColour.BACKGROUND:PresetColour.BACKGROUND_ALT).toWebHexString()+";'>");
+						sb.append("<p style='span:0; margin:0; -webkit-user-select:auto;'>");
+							sb.append("<b style='color:"+move.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(move.getName(0, Main.game.getPlayer()))+"</b>: "+move.getDescription(0, Main.game.getPlayer()));
+							sb.append("<br/>");
+							if(cat==CombatMoveCategory.SPELL) {
+								sb.append("Type: <span style='color:"+move.getAssociatedSpell().getSpellSchool().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(move.getAssociatedSpell().getSpellSchool().getName())+" Spell</span> | ");
+							} else {
+								sb.append("Type: <span style='color:"+move.getType().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(move.getType().getName())+"</span> | ");
+							}
+							sb.append("ID: <span style='font-family:monospace;'>"+move.getIdentifier()+"</span>");
+						sb.append("</p>");
+					sb.append("</div>");
+					i++;
+				}
+			}
+			
+			return sb.toString();
 		}
 		@Override
 		public String getResponseTabTitle(int index) {

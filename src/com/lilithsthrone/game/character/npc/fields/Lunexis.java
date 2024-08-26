@@ -63,6 +63,7 @@ import com.lilithsthrone.game.character.persona.NameTriplet;
 import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
+import com.lilithsthrone.game.character.pregnancy.FertilisationType;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
 import com.lilithsthrone.game.combat.DamageType;
@@ -98,10 +99,10 @@ public class Lunexis extends NPC {
 	}
 	
 	public Lunexis(boolean isImported) {
-		super(isImported, new NameTriplet("Lunexis"), "Lunettemartu",
+		super(isImported, new NameTriplet("Lunexis"), "Lunettemartuilani",
 				"One of Lunette's recognised daughters, Lunexis is particularly strong, dominant, and brutal."
 						+ " Delighting in destruction, chaos, and mayhem, she is used by her elder lilin mother as a living weapon, who tasks her with destroying towns and villages which have displeased her.",
-				48, Month.JANUARY, 15,
+				517, Month.JANUARY, 15,
 				35,
 				null, null, null,
 				new CharacterInventory(10_000),
@@ -119,6 +120,16 @@ public class Lunexis extends NPC {
 		loadNPCVariablesFromXML(this, null, parentElement, doc, settings);
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.4.5")) {
 			setupPerks(true);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9.8")) {
+			this.setAge(517);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9.13")) {
+			this.setBreastRows(2);
+			this.setPiercedPenis(true);
+			this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_piercing_penis_ring", PresetColour.CLOTHING_GOLD, false), true, this);
+			this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_wrist_thin_bangles", PresetColour.CLOTHING_GOLD, false), InventorySlot.TAIL, true, this);
+			this.setSurname("Lunettemartuilani");
 		}
 	}
 
@@ -169,7 +180,7 @@ public class Lunexis extends NPC {
 		
 		
 		// Body:
-		this.setAgeAppearanceDifferenceToAppearAsAge(28);
+		this.setAgeAppearanceAbsolute(28);
 		this.setBody(Gender.F_P_V_B_FUTANARI, Subspecies.DEMON, RaceStage.GREATER, false);
 		this.setWingType(WingType.NONE);
 		this.setHornType(HornType.CURVED);
@@ -224,7 +235,7 @@ public class Lunexis extends NPC {
 		// Chest:
 		this.setNippleVirgin(false);
 		this.setBreastSize(CupSize.F.getMeasurement());
-		this.setBreastRows(3);
+		this.setBreastRows(2);
 		this.setBreastShape(BreastShape.ROUND);
 		this.setNippleSize(NippleSize.THREE_LARGE);
 		this.setAreolaeSize(AreolaeSize.THREE_LARGE);
@@ -299,8 +310,9 @@ public class Lunexis extends NPC {
 
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_head_circlet", PresetColour.CLOTHING_GOLD, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_hand_wraps", PresetColour.CLOTHING_BLACK, false), true, this);
-		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_wrist_thin_bangles", PresetColour.CLOTHING_GOLD, false), true, this);
 		
+		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_wrist_thin_bangles", PresetColour.CLOTHING_GOLD, false), InventorySlot.WRIST, true, this);
+		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_wrist_thin_bangles", PresetColour.CLOTHING_GOLD, false), InventorySlot.TAIL, true, this);
 		
 		// Piercings:
 		
@@ -315,6 +327,9 @@ public class Lunexis extends NPC {
 		nippleChains.setSticker("third_chain", "add2");
 		this.equipClothingFromNowhere(nippleChains, true, this);
 
+		this.setPiercedPenis(true);
+		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_piercing_penis_ring", PresetColour.CLOTHING_GOLD, false), true, this);
+		
 		this.setPiercedTongue(true);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_piercing_basic_barbell", PresetColour.CLOTHING_GOLD, false), true, this);
 
@@ -328,6 +343,11 @@ public class Lunexis extends NPC {
 	@Override
 	public boolean isUnique() {
 		return true;
+	}
+
+	@Override
+	public String getArtworkFolderName() {
+		return "Lunexis";
 	}
 	
 	@Override
@@ -758,7 +778,7 @@ public class Lunexis extends NPC {
 			applyTrainingSexCounts(meraxis, new SexType(SexAreaOrifice.ARMPITS, SexAreaPenetration.PENIS), 0.05f);
 			for(int i=0; i<2+Util.random.nextInt(3); i++) {
 				meraxis.guaranteePregnancyOnNextRoll();
-				meraxis.rollForPregnancy(Subspecies.DEMON, Subspecies.HORSE_MORPH, 2500, true);
+				meraxis.rollForPregnancy(Subspecies.DEMON, Subspecies.HORSE_MORPH, 2500, true, FertilisationType.NORMAL);
 				meraxis.endPregnancy(true);
 			}
 	}
@@ -802,7 +822,7 @@ public class Lunexis extends NPC {
 			applyTrainingSexCountsAurokaris(aurokaris, new SexType(SexAreaOrifice.MOUTH, SexAreaPenetration.PENIS), 0.1f);
 			
 			aurokaris.guaranteePregnancyOnNextRoll();
-			aurokaris.rollForPregnancy(Subspecies.DEMON, Subspecies.HORSE_MORPH, 2500, true);
+			aurokaris.rollForPregnancy(Subspecies.DEMON, Subspecies.HORSE_MORPH, 2500, true, FertilisationType.NORMAL);
 			ItemEffectType.MOTHERS_MILK.applyEffect(null, null, null, 0, aurokaris, aurokaris, null);
 			ItemEffectType.MOTHERS_MILK.applyEffect(null, null, null, 0, aurokaris, aurokaris, null);
 			ItemEffectType.MOTHERS_MILK.applyEffect(null, null, null, 0, aurokaris, aurokaris, null);

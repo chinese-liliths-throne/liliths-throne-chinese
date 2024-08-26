@@ -6,6 +6,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.lilithsthrone.game.Game;
 import com.lilithsthrone.game.character.CharacterImportSetting;
 import com.lilithsthrone.game.character.EquipClothingSetting;
 import com.lilithsthrone.game.character.body.coverings.BodyCoveringType;
@@ -33,6 +34,7 @@ import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
+import com.lilithsthrone.game.combat.CombatBehaviour;
 import com.lilithsthrone.game.combat.DamageType;
 import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.inventory.CharacterInventory;
@@ -77,6 +79,12 @@ public class Sleip extends NPC {
 	@Override
 	public void loadFromXML(Element parentElement, Document doc, CharacterImportSetting... settings) {
 		loadNPCVariablesFromXML(this, null, parentElement, doc, settings);
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9.13")) {
+			this.setSkinCovering(new Covering(BodyCoveringType.DEMON_COMMON, PresetColour.SKIN_EBONY), true);
+			this.setSkinCovering(new Covering(BodyCoveringType.HORSE_HAIR, PresetColour.COVERING_BLACK), true);
+			this.setSkinCovering(new Covering(BodyCoveringType.HUMAN, PresetColour.SKIN_EBONY), false);
+			this.setSkinCovering(new Covering(BodyCoveringType.PENIS, PresetColour.SKIN_EBONY), false);
+		}
 	}
 
 	@Override
@@ -141,8 +149,10 @@ public class Sleip extends NPC {
 		// Coverings:
 		this.setEyeCovering(new Covering(BodyCoveringType.EYE_DEMON_COMMON, PresetColour.EYE_RED));
 		this.setEyeCovering(new Covering(BodyCoveringType.EYE_HORSE_MORPH, PresetColour.EYE_RED));
+		this.setSkinCovering(new Covering(BodyCoveringType.DEMON_COMMON, PresetColour.SKIN_EBONY), true);
 		this.setSkinCovering(new Covering(BodyCoveringType.HORSE_HAIR, PresetColour.COVERING_BLACK), true);
-		this.setSkinCovering(new Covering(BodyCoveringType.HUMAN, PresetColour.SKIN_EBONY), true);
+		this.setSkinCovering(new Covering(BodyCoveringType.HUMAN, PresetColour.SKIN_EBONY), false);
+		this.setSkinCovering(new Covering(BodyCoveringType.PENIS, PresetColour.SKIN_EBONY), false);
 
 		this.setHairCovering(new Covering(BodyCoveringType.HAIR_HORSE_HAIR, PresetColour.COVERING_JET_BLACK), true);
 		this.setHairLength(HairLength.TWO_SHORT);
@@ -260,11 +270,29 @@ public class Sleip extends NPC {
 	public boolean isUnique() {
 		return true;
 	}
+
+	@Override
+	public String getSpeechColour() {
+		if(Main.game.isLightTheme()) {
+			return "#242120";
+		}
+		return "#a0a2b1";
+	}
 	
 	@Override
 	public boolean isAbleToBeImpregnated() {
 		return true;
 	}
+	
+//	@Override
+//	public Set<Relationship> getRelationshipsTo(GameCharacter character, Relationship... excludedRelationships) {
+//		if(character instanceof Nir) {
+//			Set<Relationship> result = new LinkedHashSet<>();
+//			result.add(Relationship.Sibling);
+//			return result;
+//		}
+//		return super.getRelationshipsTo(character, excludedRelationships);
+//	}
 	
 	@Override
 	public void changeFurryLevel(){
@@ -279,4 +307,9 @@ public class Sleip extends NPC {
 	public void endSex() {
 	}
 
+	// combat behaviour is attacking
+	@Override
+	public CombatBehaviour getCombatBehaviour() {
+		return CombatBehaviour.ATTACK;
+	}
 }
