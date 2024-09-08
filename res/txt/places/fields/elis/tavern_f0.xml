@@ -799,6 +799,7 @@
 			As you approach Meraxis, you hear that she's just finished the story which she was telling to her minions, allowing you to make a dramatic entrance without interrupting her. [pc.Stepping] forwards so as to stand right in front of your nemesis, you strike an intimidating pose and ask, [pc.speech(What dark acts of sorcery have you prepared for me this time, my arch-nemesis?)]
 		</p>
 		#IF(siren.isVisiblyPregnant())
+			<p>
 			[meraxis.speech(Mwhahaha!)] Meraxis laughs, before jumping up to her feet and matching your pose with one of her own. As she moves, you see that she's using one hand to cradle her conspicuously-swollen belly, and she sighs,
 			#IF(!siren.isCharacterReactedToPregnancy(pc))
 				#IF(siren.getPregnantLitter().getFather().equals(pc))
@@ -821,6 +822,7 @@
 					#ENDIF
 				#ENDIF
 			#ENDIF
+			</p>
 		#ELSE
 			<p>
 				[meraxis.speech(Mwhahaha!)] Meraxis laughs, before jumping up to her feet and matching your pose with one of her own. Flashing you a sinister smirk, she exclaims,
@@ -836,6 +838,7 @@
 			As you approach Meraxis, you hear that she's just finished the story which she was telling to her minions, allowing you to make your entrance without interrupting her. [pc.Stepping] forwards so as to catch her attention, you offer Meraxis a friendly greeting and ask her if she has a moment to talk.
 		</p>
 		#IF(siren.isVisiblyPregnant())
+			<p>
 			[meraxis.speech(Mwhahaha!)] Meraxis laughs, before jumping up to her feet and striking what she must think is an intimidating pose. As she moves, you see that she's using one hand to cradle her conspicuously-swollen belly, and she sighs,
 			#IF(!siren.isCharacterReactedToPregnancy(pc))
 				#IF(siren.getPregnantLitter().getFather().equals(pc))
@@ -858,6 +861,7 @@
 					#ENDIF
 				#ENDIF
 			#ENDIF
+			</p>
 		#ELSE
 			<p>
 				[meraxis.speech(Mwhahaha!)] Meraxis laughs, before jumping up to her feet and striking what she must think is an intimidating pose. Flashing you a sinister smirk, she exclaims,
