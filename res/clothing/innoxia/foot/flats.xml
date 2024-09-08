@@ -47,13 +47,13 @@
 
 	<replacementText type="REMOVE_OR_EQUIP">
 		<self>
-			<![CDATA[[npc.Name] [npc.verb(slip)] [npc.her] [npc.feet] into the heels.]]>
+			<![CDATA[[npc.Name] [npc.verb(slip)] [npc.her] [npc.feet] into the flats.]]>
 		</self>
 		<other>
-			<![CDATA[[npc.Name] [npc.verb(slip)] [npc2.namePos] [npc2.feet] into the heels.]]>
+			<![CDATA[[npc.Name] [npc.verb(slip)] [npc2.namePos] [npc2.feet] into the flats.]]>
 		</other>
 		<otherRough>
-			<![CDATA[[npc.Name] roughly [npc.verb(push)] [npc2.namePos] [npc2.feet] into the heels.]]>
+			<![CDATA[[npc.Name] roughly [npc.verb(push)] [npc2.namePos] [npc2.feet] into the flats.]]>
 		</otherRough>
 	</replacementText>
 
