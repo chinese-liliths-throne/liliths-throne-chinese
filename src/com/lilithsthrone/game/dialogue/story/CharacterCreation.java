@@ -447,8 +447,6 @@ public class CharacterCreation {
 	}
 	
 	private static void spawnClothingInArea() {
-		
-		
 		switch(Main.game.getPlayer().getFemininity()) {
 			case MASCULINE:
 			case MASCULINE_STRONG:

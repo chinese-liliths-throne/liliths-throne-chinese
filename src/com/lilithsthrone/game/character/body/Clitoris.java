@@ -548,6 +548,10 @@ public class Clitoris implements BodyPartInterface {
 		return "<p style='text-align:center;'>[style.colourDisabled(Nothing happens...)]</p>";
 	}
 
+	public void resetClitorisModifiers() {
+		clitModifiers = new HashSet<>();
+	}
+	
 	@Override
 	public boolean isFeral(GameCharacter owner) {
 		if(owner==null) {

@@ -17,6 +17,7 @@ import com.lilithsthrone.game.character.body.types.BodyPartType;
 import com.lilithsthrone.game.character.body.valueEnums.BodyMaterial;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringModifier;
 import com.lilithsthrone.game.character.body.valueEnums.CupSize;
+import com.lilithsthrone.game.character.body.valueEnums.Femininity;
 import com.lilithsthrone.game.character.body.valueEnums.LegConfiguration;
 import com.lilithsthrone.game.character.effects.AbstractPerk;
 import com.lilithsthrone.game.character.effects.Perk;
@@ -84,6 +85,8 @@ import com.lilithsthrone.world.places.PlaceType;
 public class DebugDialogue {
 
 	private static String dollID;
+	
+	private static Femininity filterFemininity = Femininity.ANDROGYNOUS;
 	
 	public static final DialogueNode DEBUG_MENU = new DialogueNode("A powerful tool", "Open debug menu.", false) {
 		
@@ -838,19 +841,44 @@ public class DebugDialogue {
 				
 			} else if(responseTab == 3) {
 				if(index==1) {
-					return new Response("All",
-							"View icons and ids of all the clothing, weapons, and items in the game. You can also spawn these items by clicking on their icons. <i>Warning: Very sluggish and slow to load.</i>",
-							ITEM_VIEWER) {
+					String femName = "None";
+					if(filterFemininity==Femininity.FEMININE) {
+						femName = "Feminine";
+					} else if(filterFemininity==Femininity.MASCULINE) {
+						femName = "Masculine";
+					}
+					return new Response("Filter: <span style='color:"+(filterFemininity.getColour().toWebHexString())+";'>"+femName+"</span>",
+							"Toggle the femininity filter for clothing.",
+							Main.game.getCurrentDialogueNode()==DEBUG_MENU
+								?DEBUG_MENU
+								:ITEM_VIEWER) {
 						@Override
 						public void effects() {
-							viewItemVariablesReset();
-							viewAll = true;
-						}
-						@Override
-						public Colour getHighlightColour() {
-							return PresetColour.GENERIC_EXCELLENT;
+							if(filterFemininity==Femininity.ANDROGYNOUS) {
+								filterFemininity = Femininity.FEMININE;
+							} else if(filterFemininity==Femininity.FEMININE) {
+								filterFemininity = Femininity.MASCULINE;
+							} else {
+								filterFemininity = Femininity.ANDROGYNOUS;
+							}
 						}
 					};
+
+					// The StringBuilder gets too big and throws: java.lang.OutOfMemoryError: Java heap space
+					// So replaced with filter above view
+//					return new Response("All",
+//							"View icons and ids of all the clothing, weapons, and items in the game. You can also spawn these items by clicking on their icons. <i>Warning: Very sluggish and slow to load.</i>",
+//							ITEM_VIEWER) {
+//						@Override
+//						public void effects() {
+//							viewItemVariablesReset();
+//							viewAll = true;
+//						}
+//						@Override
+//						public Colour getHighlightColour() {
+//							return PresetColour.GENERIC_EXCELLENT;
+//						}
+//					};
 					
 				} else if(index==2) {
 					return new Response("Items",
@@ -882,17 +910,28 @@ public class DebugDialogue {
 					};
 					
 				} else if(index==4) {
-					return new Response("All clothing",
-							"View icons and ids of all the clothing in the game. You can also spawn these items by clicking on their icons. <i>Warning: Very sluggish and slow to load.</i>",
+					// The StringBuilder gets too big and throws: java.lang.OutOfMemoryError: Java heap space
+					// So replaced with tattoo view
+//					return new Response("All clothing",
+//							"View icons and ids of all the clothing in the game. You can also spawn these items by clicking on their icons. <i>Warning: Very sluggish and slow to load.</i>",
+//							ITEM_VIEWER) {
+//						@Override
+//						public void effects() {
+//							viewItemVariablesReset();
+//							viewAllClothing = true;
+//						}
+//						@Override
+//						public Colour getHighlightColour() {
+//							return PresetColour.BASE_YELLOW;
+//						}
+//					};
+					return new Response("Tattoos",
+							"View icons and ids of all the tattoos in the game. <i>Warning: May be sluggish and slow to load.</i>",
 							ITEM_VIEWER) {
 						@Override
 						public void effects() {
 							viewItemVariablesReset();
-							viewAllClothing = true;
-						}
-						@Override
-						public Colour getHighlightColour() {
-							return PresetColour.BASE_YELLOW;
+							viewAllTattoos = true;
 						}
 					};
 					
@@ -941,17 +980,19 @@ public class DebugDialogue {
 								itemViewSlot = is;
 							}
 						};
-					} else if(index-indexOffset == clothingSlots.size()) {
-						return new Response("Tattoos",
-								"View icons and ids of all the tattoos in the game. <i>Warning: May be sluggish and slow to load.</i>",
-								ITEM_VIEWER) {
-							@Override
-							public void effects() {
-								viewItemVariablesReset();
-								viewAllTattoos = true;
-							}
-						};
+						
 					}
+//					else if(index-indexOffset == clothingSlots.size()) {
+//						return new Response("Tattoos",
+//								"View icons and ids of all the tattoos in the game. <i>Warning: May be sluggish and slow to load.</i>",
+//								ITEM_VIEWER) {
+//							@Override
+//							public void effects() {
+//								viewItemVariablesReset();
+//								viewAllTattoos = true;
+//							}
+//						};
+//					}
 				}
 				
 			} else if(responseTab==4) {
@@ -1300,7 +1341,7 @@ public class DebugDialogue {
 
 		@Override
 		public String getContent() {
-			inventorySB.setLength(0);
+			StringBuilder sb = new StringBuilder();
 			
 			int width = 33;
 			if(Main.primaryStage.getWidth()>=1900) {
@@ -1309,7 +1350,7 @@ public class DebugDialogue {
 			int imgWidth = 15;
 			
 			if(!viewAllClothing && !viewAllTattoos && (viewAll || itemViewSlot == null)) {
-				inventorySB.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
+				sb.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
 						+ "<h5>Total items: "+itemsTotal.size()+"</h5>");
 				for(AbstractItemType itemType : itemsTotal) {
 					if((itemTag==null
@@ -1320,7 +1361,7 @@ public class DebugDialogue {
 							|| (itemTag!=null
 								&& (itemType.getItemTags().contains(itemTag)
 										|| (itemTag==ItemTag.SPELL_BOOK && itemType.getItemTags().contains(ItemTag.SPELL_SCROLL))))) {
-						inventorySB.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
+						sb.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
 												+ "<div class='inventory-item-slot unequipped' style='width:"+imgWidth+"%; box-sizing: border-box; padding:0; margin:0; background-color:"+itemType.getRarity().getBackgroundColour().toWebHexString()+";'>"
 													+ "<div class='inventory-icon-content'>"+itemType.getSVGString()+"</div>"
 													+ "<div class='overlay' id='" + itemType.getId() + "_SPAWN'></div>"
@@ -1329,14 +1370,14 @@ public class DebugDialogue {
 											+ "</div>");
 					}
 				}
-				inventorySB.append("</div>");
+				sb.append("</div>");
 			}
 
 			if(viewAll || (itemViewSlot!=null && itemViewSlot.isWeapon())) {
-				inventorySB.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
+				sb.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
 						+ "<h5>Total weapons: "+weaponsTotal.size()+"</h5>");
 				for(AbstractWeaponType weaponType : weaponsTotal) {
-					inventorySB.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
+					sb.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
 											+ "<div class='inventory-item-slot unequipped' style='width:"+imgWidth+"%; box-sizing: border-box; padding:0; margin:0; background-color:"+weaponType.getRarity().getBackgroundColour().toWebHexString()+";'>"
 												+ "<div class='inventory-icon-content'>"+weaponType.getSVGImage()
 												+"</div>"
@@ -1345,14 +1386,16 @@ public class DebugDialogue {
 											+ WeaponType.getIdFromWeaponType(weaponType)
 										+ "</div>");
 				}
-				inventorySB.append("</div>");
+				sb.append("</div>");
 			}
 
 			if(viewAll || viewAllClothing) {
-				inventorySB.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
-						+ "<h5>Total clothing: "+clothingTotal.size()+"</h5>");
+				sb.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>");
+				sb.append("<h5>");
+					sb.append("Total clothing: "+clothingTotal.size());
+				sb.append("</h5>");
 				for(AbstractClothingType clothingType : clothingTotal) {
-					inventorySB.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
+					sb.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
 										+ "<div class='inventory-item-slot unequipped' style='width:"+imgWidth+"%; box-sizing: border-box; padding:0; margin:0; background-color:"+clothingType.getRarity().getBackgroundColour().toWebHexString()+";'>"
 											+ "<div class='inventory-icon-content'>"
 												+clothingType.getSVGImage()
@@ -1364,13 +1407,13 @@ public class DebugDialogue {
 												:ClothingType.getIdFromClothingType(clothingType))
 									+ "</div>");
 				}
-				inventorySB.append("</div>");
+				sb.append("</div>");
 				
 			} else if(viewAllTattoos) {
-				inventorySB.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
+				sb.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
 						+ "<h5>Total tattoos: "+tattoosTotal.size()+"</h5>");
 				for(AbstractTattooType tattooType : tattoosTotal) {
-					inventorySB.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
+					sb.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
 											+ "<div class='inventory-item-slot unequipped' style='width:"+imgWidth+"%; box-sizing: border-box; padding:0; margin:0; background-color:"+tattooType.getRarity().getBackgroundColour().toWebHexString()+";'>"
 												+ "<div class='inventory-icon-content'>"
 													+tattooType.getSVGImage(Main.game.getPlayer())
@@ -1380,14 +1423,31 @@ public class DebugDialogue {
 											+ TattooType.getIdFromTattooType(tattooType)
 										+ "</div>");
 				}
-				inventorySB.append("</div>");
+				sb.append("</div>");
 				
 			} else if(itemViewSlot!=null && !itemViewSlot.isWeapon()) {
 				List<AbstractClothingType> clothingToDisplay = clothingTotal.stream().filter((c) -> c.getEquipSlots().get(0)==itemViewSlot).collect(Collectors.toList());
-				inventorySB.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>"
-						+ "<h5>Total '"+itemViewSlot.getName()+"' slot clothing: "+clothingToDisplay.size()+"</h5>");
+				int maxItems = clothingToDisplay.size();
+				for(AbstractClothingType clothingType : new ArrayList<>(clothingToDisplay)) {
+					if(clothingType.getCoreFemininityRestriction()!=null) {
+						if(filterFemininity==Femininity.FEMININE && (!clothingType.getCoreFemininityRestriction().isFeminine() && clothingType.getCoreFemininityRestriction()!=Femininity.ANDROGYNOUS)) {
+							clothingToDisplay.remove(clothingType);
+						} else if(filterFemininity==Femininity.MASCULINE && (clothingType.getCoreFemininityRestriction().isFeminine() && clothingType.getCoreFemininityRestriction()!=Femininity.ANDROGYNOUS)) {
+							clothingToDisplay.remove(clothingType);
+						}
+					}
+				}
+				
+				sb.append("<div class='inventory-not-equipped' style='-webkit-user-select:auto;'>");
+				sb.append("<h5>");
+					sb.append("Total '"+itemViewSlot.getName()+"' slot clothing: "+clothingToDisplay.size()+(filterFemininity!=Femininity.ANDROGYNOUS?"/"+maxItems:""));
+					if(filterFemininity!=Femininity.ANDROGYNOUS) {
+						sb.append("<br/>");
+						sb.append("(<span style='color:"+filterFemininity.getColour().toWebHexString()+";'>"+(filterFemininity.isFeminine()?"Feminine":"Masculine")+" Filter</span>)");
+					}
+				sb.append("</h5>");
 				for(AbstractClothingType clothingType : clothingToDisplay) {
-					inventorySB.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
+					sb.append("<div class='container-full-width' style='width:"+width+"%; white-space: nowrap; word-wrap: break-word; font-size:0.75em; -webkit-user-select:auto; padding:0; margin:0;'>"
 							+ "<div class='inventory-item-slot unequipped' style='width:"+imgWidth+"%; box-sizing: border-box; padding:0; margin:0; background-color:"+clothingType.getRarity().getBackgroundColour().toWebHexString()+";'>"
 								+ "<div class='inventory-icon-content'>"
 									+clothingType.getSVGImage()
@@ -1397,10 +1457,10 @@ public class DebugDialogue {
 							+ ClothingType.getIdFromClothingType(clothingType)
 						+ "</div>");
 				}
-				inventorySB.append("</div>");
+				sb.append("</div>");
 			}
 			
-			return inventorySB.toString();
+			return sb.toString();
 		}
 
 		@Override

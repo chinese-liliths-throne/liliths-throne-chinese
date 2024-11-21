@@ -1,5 +1,6 @@
 package com.lilithsthrone.game.dialogue.utils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.lilithsthrone.game.Game;
 import com.lilithsthrone.game.PropertyValue;
 import com.lilithsthrone.game.character.GameCharacter;
 import com.lilithsthrone.game.character.attributes.AbstractAttribute;
@@ -78,6 +80,8 @@ import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
 import com.lilithsthrone.utils.colours.Colour;
 import com.lilithsthrone.utils.colours.PresetColour;
+import com.lilithsthrone.utils.time.DateAndTime;
+import com.lilithsthrone.utils.time.SolarElevationAngle;
 import com.lilithsthrone.world.AbstractWorldType;
 import com.lilithsthrone.world.WorldRegion;
 import com.lilithsthrone.world.WorldType;
@@ -3731,10 +3735,10 @@ public class PhoneDialogue {
 					+ "</details>");
 			
 			UtilText.nodeContentSB.append(PerkManager.MANAGER.getPerkTreeDisplay(Main.game.getPlayer(), true));
+			UtilText.nodeContentSB.append("</div>");
 			
 			if(!Main.game.getPlayer().isDoll()) {
-				UtilText.nodeContentSB.append("</div>"
-						+ "<div class='container-full-width' style='padding:8px; text-align:center;'>"
+				UtilText.nodeContentSB.append("<div class='container-full-width' style='padding:8px; text-align:center;'>"
 							+ "[style.italicsBad(Please note that this perk tree is a work-in-progress. This is not the final version, and is just a proof of concept!)]"
 						+ "</div>");
 			}
@@ -4174,7 +4178,35 @@ public class PhoneDialogue {
 						loiter(60*24);
 					}
 				};
+				
+			} else if(index==11) {
+				int timeUntilChange = Main.game.getMinutesUntilNextSunrise() + 5; // Add 5 minutes so that if the days are drawing in, you don't get stuck in a loop of always loitering to sunset/sunrise
+				LocalDateTime[] sunriseSunset = DateAndTime.getTimeOfSolarElevationChange(Main.game.getDateNow(), SolarElevationAngle.SUN_ALTITUDE_SUNRISE_SUNSET, Game.DOMINION_LATITUDE, Game.DOMINION_LONGITUDE);
+				return new ResponseEffectsOnly("Next sunrise",
+						"Loiter in this area for " + (timeUntilChange >= 60 ?timeUntilChange / 60 + " hours " : " ")
+							+ (timeUntilChange % 60 != 0 ? timeUntilChange % 60 + " minutes" : "")
+							+ " until five minutes past sunrise ("+Units.time(sunriseSunset[0].plusMinutes(5))+")."){
+					@Override
+					public void effects() {
+						loiter(timeUntilChange);
+					}
+				};
+				
+			} else if(index==12) {
+				int timeUntilChange = Main.game.getMinutesUntilNextSunset() + 5; // Add 5 minutes so that if the days are drawing in, you don't get stuck in a loop of always loitering to sunset/sunrise
+				LocalDateTime[] sunriseSunset = DateAndTime.getTimeOfSolarElevationChange(Main.game.getDateNow(), SolarElevationAngle.SUN_ALTITUDE_SUNRISE_SUNSET, Game.DOMINION_LATITUDE, Game.DOMINION_LONGITUDE);
+				return new ResponseEffectsOnly("Next sunset",
+						"Loiter in this area for " + (timeUntilChange >= 60 ?timeUntilChange / 60 + " hours " : " ")
+							+ (timeUntilChange % 60 != 0 ? timeUntilChange % 60 + " minutes" : "")
+							+ " until five minutes past sunrise ("+Units.time(sunriseSunset[1].plusMinutes(5))+")."){
+					@Override
+					public void effects() {
+						loiter(timeUntilChange);
+					}
+				};
+				
 			}
+			
 			return null;
 		}
 

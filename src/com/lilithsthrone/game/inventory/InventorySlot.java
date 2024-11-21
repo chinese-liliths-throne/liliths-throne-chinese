@@ -98,6 +98,10 @@ public enum InventorySlot {
 		protected String getNameForParsing(GameCharacter character) {
 			return "[npc.breasts]";
 		}
+		@Override
+		public boolean isPlural(GameCharacter character) {
+			return character.hasBreasts();
+		}
 	},
 
 	/** Clothing slot "nipples". Used for nipple shields, plugs.<br/>
@@ -699,7 +703,7 @@ public enum InventorySlot {
 	
 	protected abstract String getNameForParsing(GameCharacter character);
 
-	public boolean isPlural() {
+	public boolean isPlural(GameCharacter character) {
 		return plural;
 	}
 

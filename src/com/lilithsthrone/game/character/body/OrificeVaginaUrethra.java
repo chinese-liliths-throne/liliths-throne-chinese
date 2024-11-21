@@ -435,4 +435,7 @@ public class OrificeVaginaUrethra implements OrificeInterface {
 		return orificeModifiers;
 	}
 
+	public void clearOrificeModifiers() {
+		orificeModifiers.clear();
+	}
 }

@@ -694,7 +694,6 @@ public class ItemEffectType {
 					"",
 					"",
 					BodyChanging.BODY_CHANGING_CORE
-//					MiscDialogue.getDollCustomisationDialogue()
 					));
 			return "";
 		}

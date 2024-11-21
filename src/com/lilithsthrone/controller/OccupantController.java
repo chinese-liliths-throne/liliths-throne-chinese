@@ -513,7 +513,8 @@ public class OccupantController {
 									+" [style.italicsMinorGood(Click to apply this permission.)]"
 									+(permission.isMutuallyExclusiveSettings()
 									?" [style.italicsMinorBad(Only one permission in this category can be active at once.)]"
-									:"")));
+									:""),
+							91 + (setting.getAdditionalDescriptionLines()*16)));
 				}
 				
 				id = setting+"_REMOVE";
@@ -525,7 +526,8 @@ public class OccupantController {
 					MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation(
 							"<b style='color:"+permission.getColour().toWebHexString()+";'>"+permission.getName()+":</b> "+setting.getName(),
 							setting.getDescription()
-									+" [style.italicsMinorBad(Click to revoke this permission.)]"));
+									+" [style.italicsMinorBad(Click to revoke this permission.)]",
+							91 + (setting.getAdditionalDescriptionLines()*16)));
 				}
 				
 				id = setting+"_REMOVE_ME";
@@ -533,7 +535,8 @@ public class OccupantController {
 					MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation(
 							"<b style='color:"+permission.getColour().toWebHexString()+";'>"+permission.getName()+":</b> "+setting.getName(),
 							setting.getDescription()
-									+" [style.italicsMinorBad(You cannot revoke permissions in this category. Select a different one instead.)]"));
+									+" [style.italicsMinorBad(You cannot revoke permissions in this category. Select a different one instead.)]",
+							91 + (setting.getAdditionalDescriptionLines()*16)));
 				}
 			}
 		}

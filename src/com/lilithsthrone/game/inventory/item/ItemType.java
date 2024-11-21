@@ -1249,6 +1249,10 @@ public class ItemType {
 			Util.newArrayListOfValues(new ItemEffect(ItemEffectType.DOLL_CONSOLE)),
 			Util.newArrayListOfValues()) {
 		@Override
+		public boolean isAbleToBeSold() {
+			return true;
+		}
+		@Override
 		public boolean isAbleToBeUsedInSex() {
 			return false;
 		}
