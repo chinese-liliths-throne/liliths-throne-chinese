@@ -601,7 +601,7 @@
 				 past the orgasming slimes, your tormentor giggles, [sister.speech(I bet you wish you were one of them, don't you, #IF(pc.isTaur())slut#ELSEbitch#ENDIF? Well, I think Angelixx has enough slimes, so it's a different fate for you!)]
 			</p>
 		#ENDIF
-		</p>
+		<p>
 			Quickly passing through this area, you
 			#IF(pc.isTaur())
 				 carry your rider down a short section of corridor and finally come to a halt in front of a door marked 'Restricted Area'. Remaining on your back
@@ -688,7 +688,7 @@
 				 past the orgasming slimes, your tormentor giggles, [sister.speech(I bet you wish you were one of them, don't you, #IF(pc.isTaur())slut#ELSEbitch#ENDIF? Well, I think Angelixx has enough slimes, so it's a different fate for you!)]
 			</p>
 		#ENDIF
-		</p>
+		<p>
 			Quickly passing through this area, you 
 			#IF(pc.isTaur())
 				 carry your rider down a short section of corridor and finally come to a halt in front of a door marked 'Restricted Area'. Remaining on your back,
