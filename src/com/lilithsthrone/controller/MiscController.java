@@ -498,7 +498,9 @@ public class MiscController {
 					id = "SPELL_UPGRADE_"+upgrade.getEntry();
 					if (MainController.document.getElementById(id) != null) {
 						((EventTarget) MainController.document.getElementById(id)).addEventListener("click", event->{
-							if (Spell.isSpellUpgradeAvailable(SpellManagement.getSpellOwner(), s, upgrade) && SpellManagement.getSpellOwner().getSpellUpgradePoints(upgrade.getCategory())>=upgrade.getEntry().getPointCost()) {
+							if (Spell.isSpellUpgradeAvailable(SpellManagement.getSpellOwner(), s, upgrade)
+									&& SpellManagement.getSpellOwner().getSpellUpgradePoints(upgrade.getCategory())>=upgrade.getEntry().getPointCost()
+									&& !SpellManagement.getSpellOwner().hasSpellUpgrade(upgrade.getEntry())) {
 								SpellManagement.getSpellOwner().addSpellUpgrade(upgrade.getEntry());
 								SpellManagement.getSpellOwner().incrementSpellUpgradePoints(upgrade.getCategory(), -upgrade.getEntry().getPointCost());
 								Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
@@ -631,7 +633,7 @@ public class MiscController {
 					if (Main.game.getPlayer().getEssenceCount()>=f.getCost()
 							&& f.getFetishesForAutomaticUnlock().isEmpty()
 							&& !targetedCharacter.hasFetish(f)
-							&& !targetedCharacter.isDoll()) {
+							&& !targetedCharacter.hasPerkAnywhereInTree(Perk.DOLL_LUST_3)) {
 						targetedCharacter.addFetish(f);
 						targetedCharacter.incrementEssenceCount(-f.getCost(), false);
 						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
@@ -651,7 +653,7 @@ public class MiscController {
 					((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
 						if (Main.game.getPlayer().getEssenceCount()>=FetishDesire.getCostToChange()
 								&& targetedCharacter.getBaseFetishDesire(f) != desire
-								&& !targetedCharacter.isDoll()) {
+								&& !targetedCharacter.hasPerkAnywhereInTree(Perk.DOLL_LUST_3)) {
 							targetedCharacter.incrementEssenceCount(-FetishDesire.getCostToChange(), false);
 							targetedCharacter.setFetishDesire(f, desire);
 							Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));

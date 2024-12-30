@@ -93,7 +93,8 @@ public enum PropertyValue {
 	newWeaponDiscovered(false),
 	newClothingDiscovered(false),
 	newItemDiscovered(false),
-	newRaceDiscovered(false);
+	newRaceDiscovered(false),
+	mapZoomedIn(true);
 
 	private boolean defaultValue;
 	private boolean fetishRelated;

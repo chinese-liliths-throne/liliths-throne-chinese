@@ -369,14 +369,63 @@ public abstract class AbstractLegType implements BodyPartTypeInterface {
 	
 	
 	public String getFootNameSingular(GameCharacter gc) {
+		switch(gc.getLegConfiguration()) {
+			case ARACHNID:
+			case AVIAN:
+			case BIPEDAL:
+			case QUADRUPEDAL:
+			case WINGED_BIPED:
+				break;
+			case CEPHALOPOD:
+				return FootType.TENTACLE.getFootName();
+			case TAIL:
+				return "fin";
+			case TAIL_LONG:
+				return "tail";
+		}
 		return this.getFootType().getFootName();
 	}
 	
 	public String getFootNamePlural(GameCharacter gc) {
+		switch(gc.getLegConfiguration()) {
+			case ARACHNID:
+			case AVIAN:
+			case BIPEDAL:
+			case QUADRUPEDAL:
+			case WINGED_BIPED:
+				break;
+			case CEPHALOPOD:
+				return FootType.TENTACLE.getFootNamePlural();
+			case TAIL:
+				return "fins";
+			case TAIL_LONG:
+				return "tail";
+		}
 		return this.getFootType().getFootNamePlural();
 	}
 
 	public String getFootDescriptor(GameCharacter gc) {
+		switch(gc.getLegConfiguration()) {
+			case ARACHNID:
+			case AVIAN:
+			case BIPEDAL:
+			case QUADRUPEDAL:
+			case WINGED_BIPED:
+				break;
+			case CEPHALOPOD:
+				if (gc.isFeminine()) {
+					return Util.randomItemFrom(Util.mergeLists(FootType.TENTACLE.getFootDescriptorsFeminine(), footDescriptorsFeminine));
+				} else {
+					return Util.randomItemFrom(Util.mergeLists(FootType.TENTACLE.getFootDescriptorsMasculine(), footDescriptorsMasculine));
+				}
+			case TAIL:
+			case TAIL_LONG:
+				if (gc.isFeminine()) {
+					return Util.randomItemFrom(Util.newArrayListOfValues("masculine","strong"));
+				} else {
+					return Util.randomItemFrom(Util.newArrayListOfValues("feminine", "strong", "slender"));
+				}
+		}
 		if (gc.isFeminine()) {
 			return Util.randomItemFrom(Util.mergeLists(this.getFootType().getFootDescriptorsFeminine(), footDescriptorsFeminine));
 		} else {
@@ -386,14 +435,63 @@ public abstract class AbstractLegType implements BodyPartTypeInterface {
 	
 
 	public String getToeNameSingular(GameCharacter gc) {
+		switch(gc.getLegConfiguration()) {
+			case ARACHNID:
+			case AVIAN:
+			case BIPEDAL:
+			case QUADRUPEDAL:
+			case WINGED_BIPED:
+				break;
+			case CEPHALOPOD:
+				return FootType.TENTACLE.getToeSingularName();
+			case TAIL:
+				return "tip";
+			case TAIL_LONG:
+				return "tip";
+		}
 		return this.getFootType().getToeSingularName();
 	}
 	
 	public String getToeNamePlural(GameCharacter gc) {
+		switch(gc.getLegConfiguration()) {
+			case ARACHNID:
+			case AVIAN:
+			case BIPEDAL:
+			case QUADRUPEDAL:
+			case WINGED_BIPED:
+				break;
+			case CEPHALOPOD:
+				return FootType.TENTACLE.getToePluralName();
+			case TAIL:
+				return "tip";
+			case TAIL_LONG:
+				return "tip";
+		}
 		return this.getFootType().getToePluralName();
 	}
 
 	public String getToeDescriptor(GameCharacter gc) {
+		switch(gc.getLegConfiguration()) {
+			case ARACHNID:
+			case AVIAN:
+			case BIPEDAL:
+			case QUADRUPEDAL:
+			case WINGED_BIPED:
+				break;
+			case CEPHALOPOD:
+				if (gc.isFeminine()) {
+					return Util.randomItemFrom(Util.mergeLists(FootType.TENTACLE.getToeDescriptorsFeminine(), footDescriptorsFeminine));
+				} else {
+					return Util.randomItemFrom(Util.mergeLists(FootType.TENTACLE.getToeDescriptorsFeminine(), footDescriptorsMasculine));
+				}
+			case TAIL:
+			case TAIL_LONG:
+				if (gc.isFeminine()) {
+					return Util.randomItemFrom(Util.newArrayListOfValues("masculine","strong"));
+				} else {
+					return Util.randomItemFrom(Util.newArrayListOfValues("feminine", "strong", "slender"));
+				}
+		}
 		if (gc.isFeminine()) {
 			return Util.randomItemFrom(Util.mergeLists(this.getFootType().getToeDescriptorsFeminine(), toeDescriptorsFeminine));
 		} else {

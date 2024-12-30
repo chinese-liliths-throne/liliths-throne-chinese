@@ -85,6 +85,7 @@ import com.lilithsthrone.game.character.body.valueEnums.FootStructure;
 import com.lilithsthrone.game.character.body.valueEnums.GenitalArrangement;
 import com.lilithsthrone.game.character.body.valueEnums.HairLength;
 import com.lilithsthrone.game.character.body.valueEnums.HairStyle;
+import com.lilithsthrone.game.character.body.valueEnums.Height;
 import com.lilithsthrone.game.character.body.valueEnums.HipSize;
 import com.lilithsthrone.game.character.body.valueEnums.HornLength;
 import com.lilithsthrone.game.character.body.valueEnums.LabiaSize;
@@ -568,7 +569,9 @@ public class CharacterModificationUtils {
 				
 				int i=0;
 				for(AbstractFetish fetish : Fetish.getAllFetishes()) {
-					if(fetish.isAvailable(BodyChanging.getTarget()) && fetish.getFetishesForAutomaticUnlock().isEmpty()) {
+					if((fetish.isAvailable(BodyChanging.getTarget()) || (fetish==Fetish.FETISH_PURE_VIRGIN && Main.game.getPlayer().hasVagina())) // Always allow virgin fetish so that players can start as broken virgin
+							&& fetish.isContentEnabled()
+							&& fetish.getFetishesForAutomaticUnlock().isEmpty()) {
 						contentSB.append("<div class='container-full-width inner' style='width:100%; margin:0; padding:0; background:"+(i%2==0?PresetColour.BACKGROUND:PresetColour.BACKGROUND_ALT).toWebHexString()+";'>");
 						
 							contentSB.append("<div class='container-full-width inner' style='margin:0; padding:0 0 0 20px; width:25%; text-align:center;background:transparent;'>");
@@ -884,11 +887,20 @@ public class CharacterModificationUtils {
 	}
 
 	private static String applyFullVariableWrapper(String title, String description, String id, String minorStep, String majorStep, String value, boolean decreaseDisabled, boolean increaseDisabled) {
-		return applyFullVariableWrapper(title, description, id, minorStep, majorStep, value, decreaseDisabled, increaseDisabled, null);
+		return applyFullVariableWrapper(title, description, id, minorStep, majorStep, value, decreaseDisabled, increaseDisabled, null, false);
 	}
 	
+	private static String applyFullVariableWrapper(String title, String description, String id, String minorStep, String majorStep, String value, boolean decreaseDisabled, boolean increaseDisabled, boolean fullWidth) {
+		return applyFullVariableWrapper(title, description, id, minorStep, majorStep, value, decreaseDisabled, increaseDisabled, null, fullWidth);
+	}
+	
+
 	private static String applyFullVariableWrapper(String title, String description, String id, String minorStep, String majorStep, String value, boolean decreaseDisabled, boolean increaseDisabled, String additionalDescription) {
-			return "<div class='cosmetics-inner-container' style='margin:1% 1%; width:48%; padding:1%; box-sizing:border-box; position:relative;'>"
+		return applyFullVariableWrapper(title, description, id, minorStep, majorStep, value, decreaseDisabled, increaseDisabled, additionalDescription, false);
+	}
+	
+	private static String applyFullVariableWrapper(String title, String description, String id, String minorStep, String majorStep, String value, boolean decreaseDisabled, boolean increaseDisabled, String additionalDescription, boolean fullWidth) {
+			return "<div class='cosmetics-inner-container' style='margin:1% 1%; width:"+(fullWidth?"98":"48")+"%; padding:1%; box-sizing:border-box; position:relative;'>"
 						+ "<p style='margin:0; padding:0;'>"
 							+ getInformationDiv(id, new TooltipInformationEventListener().setInformation(title, description))
 							+ "<b>"+title+"</b>"
@@ -919,9 +931,9 @@ public class CharacterModificationUtils {
 	}
 
 
-	private static String applyFullVariableWrapperSizes(String title, String description, String id, double value, boolean decreaseDisabled, boolean increaseDisabled) {
+	private static String applyFullVariableWrapperSizes(String title, String description, String id, double value, boolean decreaseDisabled, boolean increaseDisabled, boolean fullWidth) {
 		return applyFullVariableWrapper(title, description, id, Units.size(1), Units.size(5),
-				Units.size(value, Units.ValueType.PRECISE, Units.UnitType.SHORT),decreaseDisabled, increaseDisabled);
+				Units.size(value, Units.ValueType.PRECISE, Units.UnitType.SHORT),decreaseDisabled, increaseDisabled, fullWidth);
 	}
 	
 	private static String applyVariableWrapperFluids(String title, String description, String id, String value, boolean decreaseDisabled, boolean increaseDisabled, int incrementSmall, int incrementAverage, int incrementLarge, int incrementHuge) {
@@ -983,7 +995,7 @@ public class CharacterModificationUtils {
 				BodyChanging.getTarget().getAppearsAsAgeValue()>=(BodyChanging.getTarget().getAgeValue()+BodyChanging.getTarget().getAgeDifferenceUpperLimit()))
 				
 				+ applyWrapper("Birthday",
-						UtilText.parse(BodyChanging.getTarget(), "[npc.NamePos] birthday can not ever be changed, but by transforming [npc.her] body, [npc.she] may appear to be younger or older than [npc.she] really [npc.is]."),
+						UtilText.parse(BodyChanging.getTarget(), "[npc.NamePos] birthday can never be changed, but by transforming [npc.her] body, [npc.she] may appear to be younger or older than [npc.she] really [npc.is]."),
 						"BIRTHDAY",
 						"<p style='text-align:center; margin:0; padding:0;'>"
 							+ BodyChanging.getTarget().getBirthdayString()
@@ -993,14 +1005,22 @@ public class CharacterModificationUtils {
 						true);
 	}
 	
-	public static String getHeightChoiceDiv() {
+	public static String getHeightChoiceDiv(boolean fullWidth) {
 		return applyFullVariableWrapperSizes("Height",
 				UtilText.parse(BodyChanging.getTarget(), "Change how tall [npc.name] [npc.is]."
-						+ "<br/><i>This affects some minor descriptions and is also used for determining if a sex scene is categorised as 'size-difference' or not.</i>"),
+						+ "<br/><i>This affects some minor descriptions and is also used for determining if a sex scene is categorised as 'size-difference' or not.</i>"
+						+ (!Main.game.isInNewWorld()
+							?"<br/>[style.italicsMinorBad(Height is limited to [units.sizes("+Height.getMaximumHeightForCharacterCreation()+")]"
+									+ " during character creation, but can be raised to [units.sizes("+Height.SEVEN_COLOSSAL.getMaximumValue()+")] later on.)]"
+							:"")),
 				"HEIGHT",
 				BodyChanging.getTarget().getHeightValue(),
 				BodyChanging.getTarget().getHeightValue()<=BodyChanging.getTarget().getMinimumHeight(),
-				BodyChanging.getTarget().getHeightValue()>=BodyChanging.getTarget().getMaximumHeight());
+				BodyChanging.getTarget().getHeightValue()
+					>= (Main.game.isInNewWorld()
+							?BodyChanging.getTarget().getMaximumHeight()
+							:Height.getMaximumHeightForCharacterCreation()),
+				fullWidth);
 	}
 	
 	public static String getSelfTransformFemininityChoiceDiv() {
@@ -2880,9 +2900,7 @@ public class CharacterModificationUtils {
 	public static String getSelfTransformBreastRowsDiv() {
 		contentSB.setLength(0);
 		
-		if (Main.getProperties().multiBreasts == 0
-				|| (Main.getProperties().multiBreasts == 1
-				&& BodyChanging.getTarget().getTorsoType() == TorsoType.HUMAN)) {
+		if (Main.getProperties().multiBreasts == 0) {
 			contentSB.append(
 					"<div class='cosmetics-button disabled'>"
 							+Util.capitaliseSentence("One")
@@ -2908,11 +2926,8 @@ public class CharacterModificationUtils {
 				UtilText.parse(BodyChanging.getTarget(), "Change how many pairs of breasts [npc.name] [npc.has]."
 						+ "<br/><i>This is a mostly a cosmetic change, but is also taken into account when determining if there are any free nipples for use in sex.</i>"
 						+(Main.getProperties().multiBreasts == 0
-						?"<br/>[style.italicsBad(Multi-Breasts are disabled in the content settings!)]"
-						:(Main.getProperties().multiBreasts == 1
-						&& BodyChanging.getTarget().getTorsoType() == TorsoType.HUMAN)
-						?"<br/>[style.italicsBad(Multi-Breasts are disabled for humans in the content settings!)]"
-						:"")),
+							?"<br/>[style.italicsBad(Multi-Breasts are disabled in the content settings!)]"
+							:"")),
 				"BREAST_ROWS",
 				contentSB.toString(),
 				true);
@@ -3922,7 +3937,7 @@ public class CharacterModificationUtils {
 						+ "<span style='color:"+PresetColour.GENERIC_WETNESS_ONE.getShades()[0]+";'>Not squirter</span>"
 					+ "</div>"
 					+"<div class='cosmetics-button active'>"
-						+ "<span style='color:"+PresetColour.GENERIC_WETNESS_EIGHT.toWebHexString()+";'>Squirter</span>"
+						+ "<span style='color:"+PresetColour.GENERIC_WETNESS_FIVE.toWebHexString()+";'>Squirter</span>"
 					+ "</div>");
 		} else {
 			contentSB.append(
@@ -3930,7 +3945,7 @@ public class CharacterModificationUtils {
 							+ "<span style='color:"+PresetColour.GENERIC_WETNESS_ONE.toWebHexString()+";'>Not squirter</span>"
 					+ "</div>"
 					+"<div id='VAGINA_SQUIRTER_ON' class='cosmetics-button'>"
-						+ "<span style='color:"+PresetColour.GENERIC_WETNESS_EIGHT.getShades()[0]+";'>Squirter</span>"
+						+ "<span style='color:"+PresetColour.GENERIC_WETNESS_FIVE.getShades()[0]+";'>Squirter</span>"
 					+ "</div>");
 		}
 		
@@ -6558,10 +6573,13 @@ public class CharacterModificationUtils {
 	
 	public static InventorySlot tattooInventorySlot = null;
 	public static Tattoo tattoo = null;
+	public static boolean retroactiveApplicationPreferZeroStart = false;
 	
 	public static void resetTattooVariables(InventorySlot slot) {
 		tattooInventorySlot = slot;
-
+		
+		retroactiveApplicationPreferZeroStart = false;
+		
 		tattoo = new Tattoo(
 				"innoxia_symbol_tribal",
 				PresetColour.CLOTHING_GREY,
@@ -6576,7 +6594,8 @@ public class CharacterModificationUtils {
 						TattooCounterType.NONE,
 						TattooCountType.NUMBERS,
 						PresetColour.BASE_GREY,
-						false));
+						false,
+						0));
 	}
 	
 	public static void resetTattooColours() {
@@ -6755,17 +6774,31 @@ public class CharacterModificationUtils {
 
 		// Counter:
 		if(Main.game.isInNewWorld()) {
-			contentSB.append("<div class='container-full-width'>"
-					+ "<h5 style='width:100%; text-align:center;'>Select Counter</h5>");
+			contentSB.append("<div class='container-full-width'>");
+
+			contentSB.append("<div class='container-full-width inner' style='margin:0; padding:0; width:100%; text-align:center; background:transparent;'>");
+				contentSB.append("<h5 style='width:100%; text-align:center;'>Select Counter</h5>");
+			contentSB.append("</div>");
+			
+			contentSB.append(getInformationDiv(
+					"TATTOO_COUNTER_INFO",
+					new TooltipInformationEventListener().setInformation(
+							"Tattoo Counter",
+							"Tattoo counters are enchanted to make them automatically update as the counter type increments."
+								+ " Most counter types can either be started 0 or show all previous experiences."
+								+ " Some, however, can only show current values, and these are marked by an asterisk."),
+					false));
 			
 				contentSB.append("<div class='container-full-width' style='width:66.6%; margin:0;'>");
-					contentSB.append("<div class='container-full-width' style='position:relative; text-align:center;'>");
+					contentSB.append("<div class='container-full-width' style='position:relative; text-align:center; margin-top:0; padding-top:0;'>");
 						contentSB.append("<p style='width:100%; text-align:center;'>Counter Type</p>");
-						for(TattooCounterType counterType : TattooCounterType.values()) {
+						for(TattooCounterType counterType : TattooCounterType.getTattooCounterTypesWithContentFiltersApplied()) {
 							contentSB.append("<div style='width:48%; margin:1%; padding:0; display:inline-block;'>"
 												+ "<div class='normal-button"+(tattoo.getCounter().getType()==counterType?" selected":"")+"' id='TATTOO_COUNTER_TYPE_"+counterType.toString()+"'"
 														+ " style='width:100%; margin:0; color:"+(tattoo.getCounter().getType()==counterType?PresetColour.GENERIC_GOOD:PresetColour.TEXT_HALF_GREY).toWebHexString()+";'>"
-													+Util.capitaliseSentence(counterType.getName())+"</div>"
+													+Util.capitaliseSentence(counterType.getName())
+													+ (counterType.isRetroactiveApplicationAvailable()?"":" *")
+												+"</div>"
 											+ "</div>");
 						}
 					contentSB.append("</div>");
@@ -6791,6 +6824,33 @@ public class CharacterModificationUtils {
 								+ "</div>");
 					}
 					
+					boolean activeButtonZero = tattoo.getCounter().getType().getNonRetroactiveOffset(BodyChanging.getTarget())==0?retroactiveApplicationPreferZeroStart:tattoo.getCounter().isRetroactiveApplication();
+					
+					contentSB.append("<div class='container-full-width' style='position:relative; text-align:center;'>");
+						contentSB.append("<p style='width:100%; text-align:center;'>Initial Count</p>");
+
+						if(tattoo.getCounter().getType().isRetroactiveApplicationAvailable()) {
+							contentSB.append("<div style='width:98%; margin:1%; padding:0; display:inline-block;'>");
+								contentSB.append("<div class='normal-button"+(activeButtonZero?" selected":"")+"' id='TATTOO_COUNT_RETROACTIVE_DISABLED'"
+														+ " style='width:100%; margin:0; color:"+(activeButtonZero?PresetColour.GENERIC_GOOD:PresetColour.TEXT_HALF_GREY).toWebHexString()+";'>");
+									contentSB.append("Start from 0");
+								contentSB.append("</div>");
+							contentSB.append("</div>");
+							contentSB.append("<div style='width:98%; margin:1%; padding:0; display:inline-block;'>");
+								contentSB.append("<div class='normal-button"+(!activeButtonZero?" selected":"")+"' id='TATTOO_COUNT_RETROACTIVE_ENABLED'"
+														+ " style='width:100%; margin:0; color:"+(!activeButtonZero?PresetColour.GENERIC_GOOD:PresetColour.TEXT_HALF_GREY).toWebHexString()+";'>");
+									contentSB.append("Show all");
+								contentSB.append("</div>");
+							contentSB.append("</div>");
+							
+						} else {
+							contentSB.append("<div class='container-full-width' style='margin:0; padding:0;'>");
+								contentSB.append("[style.colourDisabled(<i>This counter type always shows the current value, so the initial count is inapplicable.</i>)]");
+							contentSB.append("</div>");
+						}
+							
+					contentSB.append("</div>");
+					
 					contentSB.append("<div class='container-full-width' style='position:relative; text-align:center;'>");
 						contentSB.append("<p style='width:100%; text-align:center;'>Counter Style</p>");
 						for(TattooCountType countType : TattooCountType.values()) {
@@ -6802,9 +6862,13 @@ public class CharacterModificationUtils {
 						}
 					contentSB.append("</div>");
 					
-					contentSB.append("<div class='container-full-width'>"
-							+ "Output: "+tattoo.getFormattedCounterOutput(BodyChanging.getTarget())
-							+ "</div>");
+					contentSB.append("<div class='container-full-width'>");
+						if(tattoo.getCounter().getType()==TattooCounterType.NONE) {
+							contentSB.append("[style.colourDisabled(Output: <i>(The counter type is 'none', so this tattoo will not have a counter.)</i>)]");
+						} else {
+							contentSB.append("Output: "+tattoo.getFormattedCounterOutput(BodyChanging.getTarget()));
+						}
+					contentSB.append("</div>");
 				contentSB.append("</div>");
 				
 			contentSB.append("</div>");

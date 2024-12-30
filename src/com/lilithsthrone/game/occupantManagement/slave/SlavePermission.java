@@ -40,6 +40,7 @@ public enum SlavePermission {
 					SlavePermissionSetting.SEX_MASTURBATE,
 					SlavePermissionSetting.SEX_INITIATE_SLAVES,
 					SlavePermissionSetting.SEX_INITIATE_PLAYER,
+					SlavePermissionSetting.SEX_RAPIST,
 					SlavePermissionSetting.SEX_RECEIVE_SLAVES,
 					SlavePermissionSetting.SEX_SAVE_VIRGINITY,
 					SlavePermissionSetting.SEX_IMPREGNATED,
@@ -107,7 +108,8 @@ public enum SlavePermission {
 			"Cleanliness",
 			Util.newArrayListOfValues(
 					SlavePermissionSetting.CLEANLINESS_WASH_CLOTHES,
-					SlavePermissionSetting.CLEANLINESS_WASH_BODY),
+					SlavePermissionSetting.CLEANLINESS_WASH_BODY,
+					SlavePermissionSetting.CLEANLINESS_WASH_THOROUGH),
 			false),
 	
 	SLEEPING(PresetColour.BASE_PURPLE_LIGHT,

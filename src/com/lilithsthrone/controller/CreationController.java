@@ -63,6 +63,7 @@ import com.lilithsthrone.game.character.body.valueEnums.FluidFlavour;
 import com.lilithsthrone.game.character.body.valueEnums.FluidModifier;
 import com.lilithsthrone.game.character.body.valueEnums.FootStructure;
 import com.lilithsthrone.game.character.body.valueEnums.GenitalArrangement;
+import com.lilithsthrone.game.character.body.valueEnums.Height;
 import com.lilithsthrone.game.character.body.valueEnums.HipSize;
 import com.lilithsthrone.game.character.body.valueEnums.HornLength;
 import com.lilithsthrone.game.character.body.valueEnums.LabiaSize;
@@ -735,7 +736,10 @@ public class CreationController {
 		String id = "HEIGHT_INCREASE";
 		if (MainController.document.getElementById(id) != null) {
 			((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
-				if(BodyChanging.getTarget().getHeightValue()<BodyChanging.getTarget().getMaximumHeight()) {
+				if(BodyChanging.getTarget().getHeightValue()
+						< (Main.game.isInNewWorld()
+								?BodyChanging.getTarget().getMaximumHeight()
+								:Height.getMaximumHeightForCharacterCreation())) {
 					BodyChanging.getTarget().incrementHeight(1, BodyChanging.isDebugMenu());
 					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 				}
@@ -744,8 +748,14 @@ public class CreationController {
 		id = "HEIGHT_INCREASE_LARGE";
 		if (MainController.document.getElementById(id) != null) {
 			((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
-				if(BodyChanging.getTarget().getHeightValue()<BodyChanging.getTarget().getMaximumHeight()) {
+				if(BodyChanging.getTarget().getHeightValue()
+						< (Main.game.isInNewWorld()
+								?BodyChanging.getTarget().getMaximumHeight()
+								:Height.getMaximumHeightForCharacterCreation())) {
 					BodyChanging.getTarget().incrementHeight(5, BodyChanging.isDebugMenu());
+					if(!Main.game.isInNewWorld() && BodyChanging.getTarget().getHeightValue()>Height.getMaximumHeightForCharacterCreation()) {
+						BodyChanging.getTarget().setHeight(Height.getMaximumHeightForCharacterCreation());
+					}
 					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 				}
 			}, false);
@@ -2666,6 +2676,7 @@ public class CreationController {
 				BodyChanging.getTarget().setFemininity(Femininity.ANDROGYNOUS.getMedianFemininity());
 				if (!Main.game.isInNewWorld() && BodyChanging.getTarget().isPlayer()) {
 					CharacterCreation.getDressed();
+					CharacterCreation.resetFemininityAppearance();
 				}
 				Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 			}, false);
@@ -2677,6 +2688,7 @@ public class CreationController {
 					BodyChanging.getTarget().setFemininity(Femininity.MASCULINE_STRONG.getMedianFemininity());
 					if (!Main.game.isInNewWorld() && BodyChanging.getTarget().isPlayer()) {
 						CharacterCreation.getDressed();
+						CharacterCreation.resetFemininityAppearance();
 					}
 					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 				}, false);
@@ -2688,6 +2700,7 @@ public class CreationController {
 					BodyChanging.getTarget().setFemininity(Femininity.MASCULINE.getMedianFemininity());
 					if (!Main.game.isInNewWorld() && BodyChanging.getTarget().isPlayer()) {
 						CharacterCreation.getDressed();
+						CharacterCreation.resetFemininityAppearance();
 					}
 					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 				}, false);
@@ -2699,6 +2712,7 @@ public class CreationController {
 					BodyChanging.getTarget().setFemininity(Femininity.FEMININE.getMedianFemininity());
 					if (!Main.game.isInNewWorld() && BodyChanging.getTarget().isPlayer()) {
 						CharacterCreation.getDressed();
+						CharacterCreation.resetFemininityAppearance();
 					}
 					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 				}, false);
@@ -2710,6 +2724,7 @@ public class CreationController {
 					BodyChanging.getTarget().setFemininity(Femininity.FEMININE_STRONG.getMedianFemininity());
 					if (!Main.game.isInNewWorld() && BodyChanging.getTarget().isPlayer()) {
 						CharacterCreation.getDressed();
+						CharacterCreation.resetFemininityAppearance();
 					}
 					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 				}, false);
@@ -3243,16 +3258,57 @@ public class CreationController {
 						public void effects() {
 							Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenPField').innerHTML=document.getElementById('tattoo_name').value;");
 							CharacterModificationUtils.tattoo.getWriting().setText(Main.mainController.getWebEngine().getDocument().getElementById("hiddenPField").getTextContent());
-							CharacterModificationUtils.tattoo.getCounter().setType(counterType);
+							boolean preferZero = CharacterModificationUtils.tattoo.getCounter().getType().getNonRetroactiveOffset(BodyChanging.getTarget())==0 && CharacterModificationUtils.retroactiveApplicationPreferZeroStart;
+							CharacterModificationUtils.tattoo.getCounter().setType(counterType, BodyChanging.getTarget());
+							if(preferZero) {
+								CharacterModificationUtils.tattoo.getCounter().setRetroactiveApplicationOffset(BodyChanging.getTarget());
+							}
 						}
 					});
 				}, false);
 				
 				MainController.addEventListener(MainController.document, id, "mousemove", MainController.moveTooltipListener, false);
 				MainController.addEventListener(MainController.document, id, "mouseleave", MainController.hideTooltipListener, false);
-				TooltipInformationEventListener el = new TooltipInformationEventListener().setInformation(Util.capitaliseSentence(counterType.getName()), counterType.getDescription());
+				TooltipInformationEventListener el = new TooltipInformationEventListener().setInformation(
+						Util.capitaliseSentence(counterType.getName()),
+						counterType.getDescription()
+						+(!counterType.isRetroactiveApplicationAvailable()
+							?"<br/><i>This counter type cannot be set to 'Start at 0', and instead always displays the current value.</i>"
+							:""));
 				MainController.addEventListener(MainController.document, id, "mouseenter", el, false);
 			}
+		}
+		
+		
+		id = "TATTOO_COUNT_RETROACTIVE_ENABLED";
+		if (MainController.document.getElementById(id) != null) {
+			((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
+				Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()) {
+					@Override
+					public void effects() {
+						Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenPField').innerHTML=document.getElementById('tattoo_name').value;");
+						CharacterModificationUtils.tattoo.getWriting().setText(Main.mainController.getWebEngine().getDocument().getElementById("hiddenPField").getTextContent());
+						CharacterModificationUtils.tattoo.getCounter().setRetroactiveApplicationOffset(0);
+						CharacterModificationUtils.retroactiveApplicationPreferZeroStart = false;
+					}
+				});
+			}, false);
+		}
+		id = "TATTOO_COUNT_RETROACTIVE_DISABLED";
+		if (MainController.document.getElementById(id) != null) {
+			((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
+				if(CharacterModificationUtils.tattoo.getCounter().getType().isRetroactiveApplicationAvailable()) {
+					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()) {
+						@Override
+						public void effects() {
+							Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenPField').innerHTML=document.getElementById('tattoo_name').value;");
+							CharacterModificationUtils.tattoo.getWriting().setText(Main.mainController.getWebEngine().getDocument().getElementById("hiddenPField").getTextContent());
+							CharacterModificationUtils.tattoo.getCounter().setRetroactiveApplicationOffset(BodyChanging.getTarget());
+							CharacterModificationUtils.retroactiveApplicationPreferZeroStart = true;
+						}
+					});
+				}
+			}, false);
 		}
 		
 		for (TattooCountType countType : TattooCountType.values()) {

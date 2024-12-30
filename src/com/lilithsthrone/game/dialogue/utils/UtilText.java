@@ -106,6 +106,7 @@ import com.lilithsthrone.game.character.body.valueEnums.Capacity;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringModifier;
 import com.lilithsthrone.game.character.body.valueEnums.CoveringPattern;
 import com.lilithsthrone.game.character.body.valueEnums.CumProduction;
+import com.lilithsthrone.game.character.body.valueEnums.CupSize;
 import com.lilithsthrone.game.character.body.valueEnums.EyeShape;
 import com.lilithsthrone.game.character.body.valueEnums.Femininity;
 import com.lilithsthrone.game.character.body.valueEnums.FluidFlavour;
@@ -190,6 +191,8 @@ import com.lilithsthrone.game.inventory.clothing.AbstractClothingType;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
 import com.lilithsthrone.game.inventory.enchanting.AbstractItemEffectType;
 import com.lilithsthrone.game.inventory.enchanting.ItemEffectType;
+import com.lilithsthrone.game.inventory.enchanting.TFModifier;
+import com.lilithsthrone.game.inventory.enchanting.TFPotency;
 import com.lilithsthrone.game.inventory.item.AbstractItemType;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.inventory.outfit.AbstractOutfit;
@@ -237,8 +240,8 @@ import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 /**
  * @since 0.1.0
- * @version 0.4
- * @author Innoxia, Pimvgd, AlacoGit, Tad Unlikely
+ * @version 0.4.10.4
+ * @author Innoxia, Pimvgd, AlacoGit, Tad Unlikely, CognitiveMist, tarbh-uisge
  */
 public class UtilText {
 
@@ -491,7 +494,7 @@ public class UtilText {
 		
 		modifiedSentence = UtilText.parse(parsingCharactersForSpeech, splitOnConditional[splitOnConditional.length-1]);
 		
-		if(target.hasPersonalityTrait(PersonalityTrait.MUTE) && canBeMuted) {
+		if(target.isMute() && canBeMuted) {
 			modifiedSentence = Util.replaceWithMute(modifiedSentence, Main.game.isInSex() && Main.sex.getAllParticipants().contains(target));
 			
 		} else if(includeExtraEffects
@@ -5866,7 +5869,7 @@ public class UtilText {
 				Util.newArrayListOfValues(
 						"armRows"),
 				true,
-				true,
+				false,
 				"",
 				"Returns a descriptor in the form of the character number of arms. i.e. If the character has 1 arm row it will return 'a pair of', for 2, 'two pairs of', and 3, 'three pairs of'.",
 				BodyPartType.ARM){
@@ -5879,6 +5882,20 @@ public class UtilText {
 				} else {
 					return "three pairs of";
 				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"handCount"),
+				true,
+				false,
+				"",
+				"Returns the total number of the character's hands, which will usually be 'two', 'four', or 'six'. (Sometimes 'no' for ferals!)",
+				BodyPartType.ARM){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				return Util.intToString(character.getArmRows() * 2);
 			}
 		});
 		
@@ -9777,6 +9794,7 @@ public class UtilText {
 	
 	public static void resetParsingEngine() {
 		engine = null;
+		memo.clear();
 		specialParsingStrings = new ArrayList<>();
 	}
 	
@@ -9814,6 +9832,7 @@ public class UtilText {
 	public static void initScriptEngine() {
 		// http://hg.openjdk.java.net/jdk8/jdk8/nashorn/rev/eb7b8340ce3a
 		engine = factory.getScriptEngine("-strict", "--no-java", "--no-syntax-extensions");//, "-scripting");
+		memo.clear(); // cached scripts may reference the previous engine; drop them
 		try {
 			engine.getBindings(ScriptContext.ENGINE_SCOPE).remove("exit");
 			engine.getBindings(ScriptContext.ENGINE_SCOPE).remove("quit");
@@ -9899,6 +9918,12 @@ public class UtilText {
 		for(AbstractItemEffectType aiet : ItemEffectType.getAllEffectTypes()) {
 			engine.put("ITEM_EFFECT_TYPE_"+ItemEffectType.getIdFromItemEffectType(aiet), aiet);
 		}
+		for(TFModifier modifier : TFModifier.values()) {
+			engine.put("ENCHANTMENT_MODIFIER_"+modifier.toString(), modifier);
+		}
+		for(TFPotency potency : TFPotency.values()) {
+			engine.put("ENCHANTMENT_POTENCY_"+potency.toString(), potency);
+		}
 		
 		// Tattoos:
 		for(AbstractTattooType tattooType : TattooType.getAllTattooTypes()) {
@@ -9946,6 +9971,9 @@ public class UtilText {
 		}
 		for(LegConfiguration legConf : LegConfiguration.values()) {
 			engine.put("LEG_CONFIGURATION_"+legConf.toString(), legConf);
+		}
+		for(CupSize cupSize : CupSize.values()) {
+			engine.put("CUP_SIZE_"+cupSize.toString(), cupSize);
 		}
 		for(FootStructure footStructure : FootStructure.values()) {
 			engine.put("FOOT_STRUCTURE_"+footStructure.toString(), footStructure);
@@ -10956,12 +10984,8 @@ public class UtilText {
 	}
 	
 	
-	// Memoization improvement attempts follow from here:
-	
-//	private static final Map<String, CompiledScript> memo = new HashMap<>();
-//	private static final int memo_limit = 500;
-	// NOTE: This was causing a bug where upon loading a saved game, the player's race wasn't being recalculated properly for some reason.
-	// It seems to have been fixed by changing return script.eval(); to return script.eval(((NashornScriptEngine)engine).getContext());
+	private static final Map<String, CompiledScript> memo = new HashMap<>();
+	private static final int memo_limit = 500;
 	/**
 	 * Added in PR#1442 to increase performance by adding a memoization cache to compile scripting engine scripts.
 	 * <br/>- Adds a cache intended to hold compiled forms of script engine scripts.
@@ -10973,27 +10997,18 @@ public class UtilText {
 	 * @throws ScriptException
 	 */
 	private static Object evaluate(String command) throws ScriptException {
-		// Commented out in 0.4.0.10 as it was continuing to throw parsing errors
-		// Unable to reliably replicate the bug - sometimes everything worked fine, sometimes the #VAR parsing sections would fail to parse completely
-		
-//		CompiledScript script;
-//		if (!memo.containsKey(command)) {
-//			script = ((NashornScriptEngine)engine).compile(command);
-//			if (memo.size() < memo_limit) {
-//				memo.put(command, script);
-//				if (memo.size() == memo_limit) {
-//					System.err.println("Memo has reached capacity! Additional script commands will not be memoized.");
-//				}
-//			}
-//		} else {
-//			script = memo.get(command);
-//		}
-//		return script.eval(((NashornScriptEngine)engine).getContext());
-//		//return script.eval();
-		
-		
-		// This is the old code which works but is slow:
-		CompiledScript script = ((NashornScriptEngine)engine).compile(command);
+		CompiledScript script;
+		if (!memo.containsKey(command)) {
+			script = ((NashornScriptEngine)engine).compile(command);
+			if (memo.size() < memo_limit) {
+				memo.put(command, script);
+				if (memo.size() == memo_limit) {
+					System.err.println("Memo has reached capacity! Additional script commands will not be memoized.");
+				}
+			}
+		} else {
+			script = memo.get(command);
+		}
 		return script.eval();
 	}
 }

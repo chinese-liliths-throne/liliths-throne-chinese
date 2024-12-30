@@ -232,7 +232,8 @@ public class TooltipInventoryEventListener implements EventListener {
 							TattooCounterType.UNIQUE_SEX_PARTNERS,
 							TattooCountType.NUMBERS,
 							genericTattoo.getAvailablePrimaryColours().get(0),
-							false)));
+							false,
+							0)));
 
 		} else if (genericWeapon != null) {
 			weaponTooltip(Main.game.getItemGen().generateWeapon(genericWeapon, dt));
@@ -680,13 +681,13 @@ public class TooltipInventoryEventListener implements EventListener {
 			}
 			
 			if(dirty) {
-				sb.append("[npc.NamePos] "+invSlot.getName()+" "+(invSlot.isPlural()?"have":"has")
-						+ " been [style.colourDirty(dirtied)] by sexual fluids!");
+				sb.append("[npc.NamePos] "+invSlot.getName()+" "+(invSlot.isPlural(equippedToCharacter)?"have":"has")
+						+ " been [style.colourDirty(dirtied)]!");
 				if(Main.game.isInSex()) {
 					sb.append("<br/>");
 				}
 				if(!cummedOnInfo.isEmpty()) {
-					sb.append("[style.boldDirty(Fluids present:)]");
+					sb.append("[style.boldDirty(Sexual fluids present:)]");
 					for(Entry<GameCharacter, Integer> entry : cummedOnInfo.entrySet()) {
 						sb.append("<br/>");
 						sb.append(UtilText.parse(entry.getKey(), "[style.fluid("+entry.getValue()+")] of <span style='color:"+entry.getKey().getFemininity().getColour().toWebHexString()+";'>[npc.namePos]</span> [npc.cum+]!"));
@@ -872,8 +873,8 @@ public class TooltipInventoryEventListener implements EventListener {
 			for(ItemEffect ie : absItem.getEffects()) {
 				listIncrease += ie.getEffectsDescription(Main.game.getPlayer(), Main.game.getPlayer()).size();
 			}
-			listIncrease+=absItem.getEffectTooltipLines().size();
 		}
+		listIncrease+=absItem.getEffectTooltipLines().size();
 		
 		if(!absItem.getExtraDescriptions(equippedToCharacter).isEmpty()) { //TODO
 			yIncrease += 2 + absItem.getExtraDescriptions(equippedToCharacter).size();
@@ -928,6 +929,7 @@ public class TooltipInventoryEventListener implements EventListener {
 			}
 		}
 		yIncrease += Math.max(0, listIncrease-4);
+//		System.out.println(listIncrease + ", "+Math.max(0, listIncrease-4));
 		
 		for(String s : absItem.getEffectTooltipLines()) {
 			tooltipSB.append("</br>"+s);
@@ -1000,7 +1002,7 @@ public class TooltipInventoryEventListener implements EventListener {
 		}
 		
 		if(!author.isEmpty()) {
-			tooltipSB.append("<div class='description' style='height:52px;'>" + author + "</div>");
+			tooltipSB.append("<div class='description' style='min-height:52px;'>" + author + "</div>");
 		}
 		
 		tooltipSB.append("</body>");
@@ -1509,7 +1511,7 @@ public class TooltipInventoryEventListener implements EventListener {
 		if(lipsticks!=null) {
 			yIncrease = 24 + (1+lipsticks.size())*LINE_HEIGHT;
 			tooltipSB.append("<div class='container-full-width' style='text-align:center; padding:8px; height:"+(16+(1+lipsticks.size())*LINE_HEIGHT)+"px;'>");
-			tooltipSB.append(UtilText.parse(owner, "[npc.NamePos] ")+invSlot.getNameOfAssociatedPart(owner)+" "+(invSlot.isPlural()?"have":"has")+" been marked by:");
+			tooltipSB.append(UtilText.parse(owner, "[npc.NamePos] ")+invSlot.getNameOfAssociatedPart(owner)+" "+(invSlot.isPlural(owner)?"have":"has")+" been marked by:");
 				for(int i=lipsticks.size()-1; i>=0; i--) {
 					tooltipSB.append("<br/>"+Util.capitaliseSentence(lipsticks.get(i).getFullDescription(owner, true)));
 				}
@@ -1627,9 +1629,9 @@ public class TooltipInventoryEventListener implements EventListener {
 			int writingHeight = tattoo.getWriting().getText().split("<br/>").length;
 			
 			tooltipSB.append("<div class='container-full-width' style='padding:4px; height:"+(28 + writingHeight*LINE_HEIGHT)+"px; text-align:center;'>");
-			tooltipSB.append("The writing reads:<br/>");
-			tooltipSB.append(tattoo.getFormattedWritingOutput()
-					+ "</div>");
+				tooltipSB.append("The writing reads:<br/>");
+				tooltipSB.append(tattoo.getFormattedWritingOutput());
+			tooltipSB.append("</div>");
 		} else {
 			tooltipSB.append(
 					"<div class='container-full-width' style='padding:4px; height:28px; text-align:center;'>"
@@ -1671,7 +1673,7 @@ public class TooltipInventoryEventListener implements EventListener {
 			if(lipsticks!=null) {
 				lipstickYIncrease = 24 + (1+lipsticks.size())*LINE_HEIGHT;
 				tooltipSB.append("<div class='container-full-width' style='text-align:center; padding:8px; height:"+(16+(1+lipsticks.size())*LINE_HEIGHT)+"px;'>");
-				tooltipSB.append(UtilText.parse(owner, "[npc.NamePos] ")+invSlot.getNameOfAssociatedPart(owner)+" "+(invSlot.isPlural()?"have":"has")+" been marked by:");
+				tooltipSB.append(UtilText.parse(owner, "[npc.NamePos] ")+invSlot.getNameOfAssociatedPart(owner)+" "+(invSlot.isPlural(owner)?"have":"has")+" been marked by:");
 					for(int i=lipsticks.size()-1; i>=0; i--) {
 						tooltipSB.append("<br/>"+Util.capitaliseSentence(lipsticks.get(i).getFullDescription(owner, true)));
 					}

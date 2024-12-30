@@ -6032,6 +6032,13 @@ public class Subspecies {
 			for(Entry<WorldRegion, SubspeciesSpawnRarity> type : species.getRegionLocations().entrySet()) {
 				regionSpecies.putIfAbsent(type.getKey(), new HashMap<>());
 				regionSpecies.get(type.getKey()).put(species, type.getValue());
+				try {
+					if(type.getKey()==WorldRegion.DOMINION
+							&& (species.getRace()==Race.DEMON || species.getStatusEffectAttributeModifiers(null).get(Attribute.MAJOR_ARCANE)>=IntelligenceLevel.TWO_SMART.getMinimumValue())) {
+						dominionStormImmuneSpecies.put(species, type.getValue());
+					}
+				} catch(Exception ex) {	
+				}
 			}
 			
 			for(Entry<AbstractWorldType, SubspeciesSpawnRarity> type : species.getWorldLocations().entrySet()) {
@@ -6039,7 +6046,8 @@ public class Subspecies {
 				worldSpecies.get(type.getKey()).put(species, type.getValue());
 				
 				try {
-					if(type.getKey()==WorldType.DOMINION && species.getRace()==Race.DEMON && species.getStatusEffectAttributeModifiers(null).get(Attribute.MAJOR_ARCANE)>=IntelligenceLevel.TWO_SMART.getMinimumValue()) {
+					if(type.getKey()==WorldType.DOMINION
+							&& (species.getRace()==Race.DEMON || species.getStatusEffectAttributeModifiers(null).get(Attribute.MAJOR_ARCANE)>=IntelligenceLevel.TWO_SMART.getMinimumValue())) {
 						dominionStormImmuneSpecies.put(species, type.getValue());
 					}
 				} catch(Exception ex) {	
@@ -6051,6 +6059,10 @@ public class Subspecies {
 				placeSpecies.get(type.getKey()).put(species, type.getValue());
 			}
 		}
+		
+//		for(AbstractSubspecies s : dominionStormImmuneSpecies.keySet()) {
+//			System.out.println(s.getName(null));
+//		}
 		
 		for(List<AbstractSubspecies> e : subspeciesFromRace.values()) {
 			e.sort((s1, s2) -> s1.getName(null).compareTo(s2.getName(null)));
@@ -6125,7 +6137,7 @@ public class Subspecies {
 	}
 
 	/**
-	 * @param onlyCoreRaceSpecies true if only core Subspecies should be returned. (e.g. Cat-morph would be returned, but not Lion-morph, Tiger-morph, etc.)
+	 * @param onlyCoreRaceSpecies true if only core Subspecies should be returned. (e.g. Cat-morph would be returned, but not caracal-morph, lynx-morph, etc.)
 	 * @param subspeciesToExclude Any Subspecies that should be excluded from the returned map.
 	 */
 	public static Map<AbstractSubspecies, SubspeciesSpawnRarity> getDominionStormImmuneSpecies(boolean onlyCoreRaceSpecies, AbstractSubspecies... subspeciesToExclude) {

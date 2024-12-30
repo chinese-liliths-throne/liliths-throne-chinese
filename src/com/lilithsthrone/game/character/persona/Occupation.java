@@ -236,7 +236,7 @@ public enum Occupation {
 	
 	NPC_MODEL(Perk.JOB_MISC, "model", "-"),
 
-	NPC_TRADER(Perk.JOB_NPC_SHOP_MANAGER, "trader", "[npc.Name] is a trader and makes a living by buying and selling various goods."),
+	NPC_TRADER(Perk.JOB_NPC_SHOP_MANAGER, "trader", "[npc.Name] is a trader and makes a living by buying and selling various goods.", OccupationTag.HAS_PREREQUISITES),
 	
 	
 	

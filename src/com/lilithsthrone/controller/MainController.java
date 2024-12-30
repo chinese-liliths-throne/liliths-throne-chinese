@@ -509,9 +509,32 @@ public class MainController implements Initializable {
 						
 						if(event.getCode()==KeyCode.END && Main.DEBUG){
 
+//							int rndInt = Util.random.nextInt();
+//							System.out.println(rndInt+ " = " +Util.intToIndividualNumbersString(rndInt));
 							
-							System.out.println(Main.game.getSavedDialogueNode()==null);
+//							if(Main.game.isInSex()) {
+//								System.out.println(Main.sex.getInitialSexManager().isHidden(Main.game.getPlayer()));
+//								Main.sex.getTargetedPartner(Main.game.getPlayer()).setForeplayPreference(Main.game.getPlayer(), new SexType(SexAreaOrifice.ANUS, SexAreaPenetration.TONGUE));
+//								Main.sex.getTargetedPartner(Main.game.getPlayer()).setMainSexPreference(Main.game.getPlayer(), new SexType(SexAreaPenetration.PENIS, SexAreaOrifice.MOUTH));
+//								Main.sex.recalculateSexActions();
+//							}
 							
+//							for(GameCharacter partner : Main.sex.getAllParticipants()) {
+//								if(!partner.isPlayer()) {
+//									System.out.println();
+//									System.out.println("#####################################");
+//									System.out.println("##### "+partner.getName()+" #####");
+//									for(SexActionInterface sa : Main.sex.getActionsAvailablePartner(partner, Main.game.getPlayer())) {
+//										System.out.println(sa.toString()+" | "+ sa.getActionTitle());
+//									}
+//								}
+//							}
+							
+//							for(Colour c : ColourListPresets.ALL) {
+//								System.out.println(c.getId());
+//							}
+
+//							System.out.println(Main.game.getSavedDialogueNode()==null);
 							
 //							System.out.println(Main.isVersionOlderThan(Game.loadingVersion, "0.4.8.10"));
 							
@@ -523,7 +546,8 @@ public class MainController implements Initializable {
 //								}
 //							}
 							
-//							System.out.println(GenericOrgasms.GENERIC_ORGASM_CREAMPIE.isBaseRequirementsMet());
+//							System.out.println(PenisMouth.BLOWJOB_START.isBaseRequirementsMet());
+							
 //							System.out.println(Main.sex.getOrgasmActionsPlayer().contains(GenericOrgasms.GENERIC_ORGASM_SELF_FACE));
 //							System.out.println(Main.sex.getOrgasmActionsPlayer().contains(GenericOrgasms.GENERIC_ORGASM_CREAMPIE));
 							
@@ -595,12 +619,12 @@ public class MainController implements Initializable {
 //								if(npc.isUnique() && !npc.hasArtwork()
 ////										&& (npc.getWorldLocation().getWorldRegion()==WorldRegion.DOMINION)
 ////										&& npc.isFeminine()
-//										&& npc.getFaceType().getBodyCoveringType(npc).getCategory()==BodyCoveringCategory.MAIN_SKIN
+////										&& npc.getFaceType().getBodyCoveringType(npc).getCategory()==BodyCoveringCategory.MAIN_SKIN
 ////										&& npc.isAbleToBeImpregnated()
 ////										&& npc.isFeminine()
 ////										&& (npc.getClass().getName().contains("dominion.") || npc.getClass().getName().contains("submission."))
 //										) {
-//									System.out.println(npc.getNameIgnoresPlayerKnowledge() + " "+npc.getClass().getName().split(".npc.")[1]);// + " " + npc.getSurname());
+//									System.out.println(UtilText.parse(npc, "[npc.Race] ([npc.raceStage]) [npc.name(true)] [npc.surname]")+" | "+npc.getClass().getName().split(".npc.")[1]+" ("+npc.getHomeWorldLocation().getName()+")");
 //								}
 //							}
 							
@@ -769,10 +793,9 @@ public class MainController implements Initializable {
 								allowInput = false;
 								if (event.getCode() == KeyCode.ENTER) {
 									enterConsumed = true;
-									Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
-								} else {
 									Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenPField').innerHTML=document.getElementById('output_name').value;");
 									EnchantmentDialogue.setOutputName(Main.mainController.getWebEngine().getDocument().getElementById("hiddenPField").getTextContent());
+									Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 								}
 							}
 						}
@@ -817,10 +840,9 @@ public class MainController implements Initializable {
 								allowInput = false;
 								if (event.getCode() == KeyCode.ENTER) {
 									enterConsumed = true;
-									Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
-								} else {
 									Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenPField').innerHTML=document.getElementById('tattoo_name').value;");
 									CharacterModificationUtils.tattoo.getWriting().setText(Main.mainController.getWebEngine().getDocument().getElementById("hiddenPField").getTextContent());
+									Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 								}
 							}
 						}
@@ -1345,7 +1367,8 @@ public class MainController implements Initializable {
 			MiscController.initDollBrochureListeners();
 			
 		} else if (currentNode.equals(BodyChanging.BODY_CHANGING_ASS)
-				|| currentNode.equals(ScarlettsShop.HELENAS_SHOP_CUSTOM_SLAVE_BODY_ASS)) {
+				|| currentNode.equals(ScarlettsShop.HELENAS_SHOP_CUSTOM_SLAVE_BODY_ASS)
+				|| currentNode.equals(MiscDialogue.SAELLATRIX_DOLL_ASS)) {
 			CreationController.initAnusCapacityListeners();
 			CreationController.initAnusDepthListeners();
 			CreationController.initAnusElasticityListeners();
@@ -1496,7 +1519,8 @@ public class MainController implements Initializable {
 			CreationController.initSpinneretPlasticityListeners();
 			CreationController.initSpinneretWetnessListeners();
 		} else if (currentNode.equals(BodyChanging.BODY_CHANGING_VAGINA)
-				|| currentNode.equals(ScarlettsShop.HELENAS_SHOP_CUSTOM_SLAVE_BODY_VAGINA)) {
+				|| currentNode.equals(ScarlettsShop.HELENAS_SHOP_CUSTOM_SLAVE_BODY_VAGINA)
+				|| currentNode.equals(MiscDialogue.SAELLATRIX_DOLL_PUSSY)) {
 			CreationController.initVaginaCapacityListeners();
 			CreationController.initVaginaDepthListeners();
 			CreationController.initVaginaEggLayerListeners();

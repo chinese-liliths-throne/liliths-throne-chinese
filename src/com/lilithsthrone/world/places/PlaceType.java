@@ -278,13 +278,23 @@ public class PlaceType {
 		public List<Population> getPopulation() {
 			List<Population> pop = new ArrayList<>();
 			
-			if(Main.game.getCurrentWeather()==Weather.MAGIC_STORM) {
-				pop.add(new Population(true, PopulationType.PERSON, PopulationDensity.COUPLE, Subspecies.getDominionStormImmuneSpecies(true)));
-				pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getDominionStormImmuneSpecies(true, Subspecies.HUMAN)));
+			if(Main.game.isDayTime()) {
+				if(Main.game.getCurrentWeather()==Weather.MAGIC_STORM) {
+					pop.add(new Population(true, PopulationType.PERSON, PopulationDensity.COUPLE, Subspecies.getDominionStormImmuneSpecies(true)));
+					pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getDominionStormImmuneSpecies(true, Subspecies.HUMAN)));
+				} else {
+					pop.add(new Population(true, PopulationType.CROWD, PopulationDensity.DENSE, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
+					pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true, Subspecies.HUMAN)));
+					pop.add(new Population(true, PopulationType.CENTAUR_CARTS, PopulationDensity.NUMEROUS, Util.newHashMapOfValues(new Value<>(Subspecies.CENTAUR, SubspeciesSpawnRarity.TEN))));
+				}
 			} else {
-				pop.add(new Population(true, PopulationType.CROWD, PopulationDensity.DENSE, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
-				pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true, Subspecies.HUMAN)));
-				pop.add(new Population(true, PopulationType.CENTAUR_CARTS, PopulationDensity.NUMEROUS, Util.newHashMapOfValues(new Value<>(Subspecies.CENTAUR, SubspeciesSpawnRarity.TEN))));
+				if(Main.game.getCurrentWeather()==Weather.MAGIC_STORM) {
+					pop.add(new Population(false, PopulationType.PERSON, PopulationDensity.OCCASIONAL, Subspecies.getDominionStormImmuneSpecies(true)));
+					pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getDominionStormImmuneSpecies(true, Subspecies.HUMAN)));
+				} else {
+					pop.add(new Population(false, PopulationType.PERSON, PopulationDensity.OCCASIONAL, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
+					pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true, Subspecies.HUMAN)));
+				}
 			}
 			
 			return pop;
@@ -307,15 +317,31 @@ public class PlaceType {
 		}
 		@Override
 		public List<Population> getPopulation() {
-			if(Main.game.getCurrentWeather()!=Weather.MAGIC_STORM) {
-				List<Population> pop = Util.newArrayListOfValues(new Population(true, PopulationType.CROWD, PopulationDensity.DENSE, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
-				pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true, Subspecies.HUMAN)));
-				pop.add(new Population(true, PopulationType.CENTAUR_CARTS, PopulationDensity.NUMEROUS, Util.newHashMapOfValues(new Value<>(Subspecies.CENTAUR, SubspeciesSpawnRarity.TEN))));
-				return pop;
-				
+			List<Population> pop = new ArrayList<>();
+			
+			if(Main.game.isDayTime()) {
+				if(Main.game.getCurrentWeather()==Weather.MAGIC_STORM) {
+					if(Main.game.getNonCompanionCharactersPresent().isEmpty() || !Main.game.getCurrentDialogueNode().isTravelDisabled()) {
+						pop.add(new Population(false, PopulationType.PERSON, PopulationDensity.OCCASIONAL, Subspecies.getDominionStormImmuneSpecies(true)));
+					}
+					
+				} else {
+					pop.add(new Population(true, PopulationType.CROWD, PopulationDensity.DENSE, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
+					pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true, Subspecies.HUMAN)));
+					pop.add(new Population(true, PopulationType.CENTAUR_CARTS, PopulationDensity.NUMEROUS, Util.newHashMapOfValues(new Value<>(Subspecies.CENTAUR, SubspeciesSpawnRarity.TEN))));
+				}
 			} else {
-				return new ArrayList<>();
+				if(Main.game.getCurrentWeather()==Weather.MAGIC_STORM) {
+					if(Main.game.getNonCompanionCharactersPresent().isEmpty() || !Main.game.getCurrentDialogueNode().isTravelDisabled()) {
+						pop.add(new Population(false, PopulationType.PERSON, PopulationDensity.OCCASIONAL, Subspecies.getDominionStormImmuneSpecies(true)));
+					}
+				} else {
+					pop.add(new Population(true, PopulationType.CROWD, PopulationDensity.SPARSE, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
+					pop.add(new Population(false, PopulationType.ENFORCER, PopulationDensity.OCCASIONAL, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true, Subspecies.HUMAN)));
+				}
 			}
+			
+			return pop;
 		}
 	};
 	
@@ -484,6 +510,25 @@ public class PlaceType {
 			DemonHome.DEMON_HOME_SEX_SHOP,
 			Darkness.ALWAYS_LIGHT,
 			null, "in the streets of Demon Home") {
+		@Override
+		public List<Population> getPopulation() {
+			if(Main.game.getDialogueFlags().hasFlag("innoxia_doll_factory_exterior_population_hidden")) {
+				return super.getPopulation();
+			}
+			
+			if(Main.game.getPlayer().getQuest(QuestLine.SIDE_DOLL_FACTORY)==Quest.DOLL_FACTORY_7A) {
+				if(Main.game.getCurrentWeather()==Weather.MAGIC_STORM) {
+					return Util.newArrayListOfValues(
+							new Population(false, PopulationType.CROWD, PopulationDensity.DENSE, Subspecies.getDominionStormImmuneSpecies(true)),
+							new Population(true, PopulationType.ENFORCER, PopulationDensity.DOZENS, Subspecies.getDominionStormImmuneSpecies(true, Subspecies.HUMAN)));
+				} else {
+					return Util.newArrayListOfValues(
+							new Population(false, PopulationType.CROWD, PopulationDensity.DENSE, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)),
+							new Population(true, PopulationType.ENFORCER, PopulationDensity.DOZENS, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true, Subspecies.HUMAN)));
+				}
+			}
+			return DOMINION_PLAZA.getPopulation();
+		}
 	}.initMapBackgroundColour(PresetColour.MAP_BACKGROUND_PINK);
 	
 	public static final AbstractPlaceType DOMINION_SHOPPING_ARCADE = new AbstractPlaceType(
@@ -2895,8 +2940,17 @@ public class PlaceType {
 			PresetColour.BASE_ROSE,
 			ClothingEmporium.EXTERIOR,
 			Darkness.ALWAYS_LIGHT,
-			null, "in her store"
-			).initWeatherImmune();
+			null,
+			"in her store") {
+		@Override
+		public List<Population> getPopulation() {
+			if(Main.game.isHourBetween(9, 20) && !Main.game.getCurrentDialogueNode().isTravelDisabled()) { // Travel disabled indicates that the player is in the storeroom with Nyan
+				return Util.newArrayListOfValues(new Population(true, PopulationType.SHOPPER, PopulationDensity.DOZENS, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
+			} else {
+				return new ArrayList<>();
+			}
+		}
+	}.initWeatherImmune();
 	
 	public static final AbstractPlaceType SHOPPING_ARCADE_VICKYS_SHOP = new AbstractPlaceType(
 			WorldRegion.DOMINION,
@@ -3586,6 +3640,14 @@ public class PlaceType {
 		public List<Population> getPopulation() {
 			return Util.newArrayListOfValues(new Population(false, PopulationType.CROWD, PopulationDensity.SPARSE, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
 		}
+		@Override
+		public boolean isLoiteringEnabledOverride() {
+			return true;
+		}
+		@Override
+		public boolean isLoiteringEnabled() {
+			return true;
+		}
 	}.initWeatherImmune(Weather.MAGIC_STORM);
 	
 	public static final AbstractPlaceType BOUNTY_HUNTER_LODGE_BOUNTY_BOARD = new AbstractPlaceType(
@@ -3617,6 +3679,14 @@ public class PlaceType {
 		@Override
 		public List<Population> getPopulation() {
 			return Util.newArrayListOfValues(new Population(true, PopulationType.PERSON, PopulationDensity.NUMEROUS, Subspecies.getWorldSpecies(WorldType.DOMINION, this, true)));
+		}
+		@Override
+		public boolean isLoiteringEnabledOverride() {
+			return true;
+		}
+		@Override
+		public boolean isLoiteringEnabled() {
+			return true;
 		}
 	}.initWeatherImmune(Weather.MAGIC_STORM);
 
@@ -3659,8 +3729,16 @@ public class PlaceType {
 			BountyHunterLodge.UPSTAIRS_CORRIDOR,
 			Darkness.ALWAYS_LIGHT,
 			null,
-			"in 'The Rusty Collar'")
-		.initWeatherImmune(Weather.MAGIC_STORM);
+			"in 'The Rusty Collar'") {
+		@Override
+		public boolean isLoiteringEnabledOverride() {
+			return true;
+		}
+		@Override
+		public boolean isLoiteringEnabled() {
+			return true;
+		}
+	}.initWeatherImmune(Weather.MAGIC_STORM);
 
 	public static final AbstractPlaceType BOUNTY_HUNTER_LODGE_UPSTAIRS_STAIRS = new AbstractPlaceType(
 			WorldRegion.DOMINION,
@@ -3709,7 +3787,7 @@ public class PlaceType {
 			null,
 			"in 'The Rusty Collar'")
 		.initWeatherImmune(Weather.MAGIC_STORM);
-	
+
 	
 	// Watering hole:
 	
@@ -4041,7 +4119,7 @@ public class PlaceType {
 	public static final AbstractPlaceType NYAN_APARTMENT_HALLWAY = new AbstractPlaceType(
 			WorldRegion.DOMINION,
 			"Hallway",
-			"The wide, carpeted hallways connects the rooms in Helena's apartment.",
+			"The wide, carpeted hallways connect the rooms in Nyan's apartment.",
 			null,
 			PresetColour.BASE_BLACK,
 			NyanApartment.HALLWAY,

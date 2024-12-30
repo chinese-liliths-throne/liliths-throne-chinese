@@ -191,8 +191,7 @@ public class DominionPlaces {
 							"You've already taken Nyan and [nyanmum.name] out for a date this weekend. You'll have to wait until next weekend before taking them out again...",
 							null));
 					
-				} else if((Main.game.getDayOfWeek()==DayOfWeek.FRIDAY || Main.game.getDayOfWeek()==DayOfWeek.SATURDAY)
-						&& (Main.game.getHourOfDay()>=18 && Main.game.getHourOfDay()<23)) {
+				} else if((Main.game.getDayOfWeek()==DayOfWeek.FRIDAY || Main.game.getDayOfWeek()==DayOfWeek.SATURDAY) && (Main.game.isHourBetween(20, 23))) {
 					if(Main.game.getNpc(Nyan.class).getWorldLocation()!=WorldType.NYANS_APARTMENT) {
 						mommyResponses.add(new Response("Double date ("+UtilText.formatAsMoneyUncoloured(dateCost, "span")+")",
 								"Nyan and [nyanmum.name] are not at home at the moment. You'll have to come back after their work day ends...",
@@ -229,9 +228,9 @@ public class DominionPlaces {
 									?"[style.italicsMinorGood(Saturday)]"
 									:"[style.italicsMinorBad(Saturday)]")
 								+", and between the hours of "
-								+ (Main.game.getHourOfDay()>=18 && Main.game.getHourOfDay()<23
-									?"[style.italicsMinorGood([unit.time(18)]-[unit.time(23)])]"
-									:"[style.italicsMinorBad([unit.time(18)]-[unit.time(23)])]")
+								+ (Main.game.isHourBetween(20, 23)
+									?"[style.italicsMinorGood([unit.time(20)]-[unit.time(23)])]"
+									:"[style.italicsMinorBad([unit.time(20)]-[unit.time(23)])]")
 								+" in order to take Nyan and [nyanmum.name] out for a date!",
 							null));
 				}

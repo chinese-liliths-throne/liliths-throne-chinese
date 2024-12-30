@@ -33,7 +33,7 @@ public enum TattooCountType {
 			return Util.capitaliseSentence(Util.intToString(input));
 		}
 	},
-	ZHENG("正字") {
+	CHINESE("Chinese characters tally") {
 		public String convertInt(int input) {
 			return Util.intToZheng(input, 50);
 		}

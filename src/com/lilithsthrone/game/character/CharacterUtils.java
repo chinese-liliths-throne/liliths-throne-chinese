@@ -125,6 +125,7 @@ import com.lilithsthrone.game.inventory.clothing.AbstractClothingType;
 import com.lilithsthrone.game.inventory.clothing.BlockedParts;
 import com.lilithsthrone.game.inventory.clothing.BodyPartClothingBlock;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
+import com.lilithsthrone.game.inventory.enchanting.TFModifier;
 import com.lilithsthrone.game.inventory.item.AbstractItem;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.inventory.outfit.AbstractOutfit;
@@ -938,7 +939,7 @@ public class CharacterUtils {
 				}
 			}
 		}
-
+		
 		if(motherBody.isFeral()) { // Feral mothers always birth feral offspring. This is done after the genetics section to make sure that the feral offspring is not modified in an unintended manner (such as making them as tall as the father).
 			body.setFeral(offspring, motherBody.getTrueSubspecies()); // Feral offspring should always be the race of the feral mother to avoid very odd birthings (e.g. elephants born from a wolf)
 		}
@@ -1191,11 +1192,13 @@ public class CharacterUtils {
 
 		body.updateCoverings(true, true, true, true);
 
-		halfSubspecies.getRace().applyRaceChanges(body);
-		halfSubspecies.applySpeciesChanges(body);
+		applyPreferenceChanges(linkedCharacter, body);
 		
 		setBodyHair(body);
 		
+		halfSubspecies.getRace().applyRaceChanges(body);
+		halfSubspecies.applySpeciesChanges(body);
+
 		return body;
 	}
 	
@@ -1215,46 +1218,69 @@ public class CharacterUtils {
 		boolean isHalfDemon = species == Subspecies.HALF_DEMON;
 		boolean isDoll = species == Subspecies.DOLL;
 		
-		if(isSlime || isHalfDemon) {
-			if(linkedCharacter==null || !linkedCharacter.isUnique()) {
-				List<AbstractSubspecies> slimeSubspecies = new ArrayList<>();
-				for(AbstractSubspecies subspecies : Subspecies.getAllSubspecies()) {
-					// Special races that slimes/half-demons do not spawn as are slimes and any Subspecies which sets an override (so demons, elementals, or Youko):
-					if(!isSlime && subspecies.getSubspeciesOverridePriority()==0) {
-						if(startingGender.isFeminine()) {
-							for(Entry<AbstractSubspecies, FurryPreference> entry : Main.getProperties().getSubspeciesFeminineFurryPreferencesMap().entrySet()) {
-								if(entry.getValue() != FurryPreference.HUMAN) {
-									slimeSubspecies.add(subspecies);
-								}
+		// Handling half-demons:
+		if(isHalfDemon && (linkedCharacter==null || !linkedCharacter.isUnique())) {
+			List<AbstractSubspecies> potentialSubspecies = new ArrayList<>();
+			for(AbstractSubspecies subspecies : Subspecies.getAllSubspecies()) {
+				// Special races that half-demons do not spawn as are slimes and any Subspecies which sets an override (so demons, elementals, or Youko):
+				if(subspecies!=Subspecies.SLIME && subspecies.getSubspeciesOverridePriority()==0) {
+					if(startingGender.isFeminine()) {
+						for(Entry<AbstractSubspecies, FurryPreference> entry : Main.getProperties().getSubspeciesFeminineFurryPreferencesMap().entrySet()) {
+							if(entry.getValue() != FurryPreference.HUMAN) {
+								potentialSubspecies.add(subspecies);
 							}
-						} else {
-							for(Entry<AbstractSubspecies, FurryPreference> entry : Main.getProperties().getSubspeciesMasculineFurryPreferencesMap().entrySet()) {
-								if(entry.getValue() != FurryPreference.HUMAN) {
-									slimeSubspecies.add(subspecies);
-								}
+						}
+					} else {
+						for(Entry<AbstractSubspecies, FurryPreference> entry : Main.getProperties().getSubspeciesMasculineFurryPreferencesMap().entrySet()) {
+							if(entry.getValue() != FurryPreference.HUMAN) {
+								potentialSubspecies.add(subspecies);
 							}
 						}
 					}
 				}
-				
-				if(slimeSubspecies.isEmpty()) {
-					slimeSubspecies.add(Subspecies.HUMAN);
-				}
-				species = Util.randomItemFrom(slimeSubspecies);
-				
-				if(isHalfDemon) {
-					return generateHalfDemonBody(linkedCharacter, startingGender, species, true);
-				}
-				
-				if(startingGender.isFeminine()) {
-					stage = getRaceStageFromPreferences(Main.getProperties().getSubspeciesFeminineFurryPreferencesMap().get(species), startingGender, species);
-					
-				} else {
-					stage = getRaceStageFromPreferences(Main.getProperties().getSubspeciesMasculineFurryPreferencesMap().get(species), startingGender, species);
-				}
-				
-				startingBodyType = RacialBody.valueOfRace(species.getRace());
 			}
+			
+			if(potentialSubspecies.isEmpty()) {
+				potentialSubspecies.add(Subspecies.HUMAN);
+			}
+			species = Util.randomItemFrom(potentialSubspecies);
+			
+			return generateHalfDemonBody(linkedCharacter, startingGender, species, true);
+		}
+		
+		// Handling slimes:
+		if(isSlime && (linkedCharacter==null || !linkedCharacter.isUnique())) {
+			List<AbstractSubspecies> potentialSubspecies = new ArrayList<>();
+			for(AbstractSubspecies subspecies : Subspecies.getAllSubspecies()) {
+				// Special races that slimes do not spawn as are slimes any Subspecies which sets an override (so demons, elementals, or Youko):
+				if(subspecies!=Subspecies.SLIME && subspecies.getSubspeciesOverridePriority()==0) {
+					if(startingGender.isFeminine()) {
+						for(Entry<AbstractSubspecies, FurryPreference> entry : Main.getProperties().getSubspeciesFeminineFurryPreferencesMap().entrySet()) {
+							if(entry.getValue() != FurryPreference.HUMAN) {
+								potentialSubspecies.add(subspecies);
+							}
+						}
+					} else {
+						for(Entry<AbstractSubspecies, FurryPreference> entry : Main.getProperties().getSubspeciesMasculineFurryPreferencesMap().entrySet()) {
+							if(entry.getValue() != FurryPreference.HUMAN) {
+								potentialSubspecies.add(subspecies);
+							}
+						}
+					}
+				}
+			}
+			if(potentialSubspecies.isEmpty()) {
+				potentialSubspecies.add(Subspecies.HUMAN);
+			}
+			species = Util.randomItemFrom(potentialSubspecies);
+			
+			if(startingGender.isFeminine()) {
+				stage = getRaceStageFromPreferences(Main.getProperties().getSubspeciesFeminineFurryPreferencesMap().get(species), startingGender, species);
+			} else {
+				stage = getRaceStageFromPreferences(Main.getProperties().getSubspeciesMasculineFurryPreferencesMap().get(species), startingGender, species);
+			}
+			
+			startingBodyType = RacialBody.valueOfRace(species.getRace());
 		}
 		
 		if(isDoll) { // Dolls spawn as human
@@ -1357,44 +1383,7 @@ public class CharacterUtils {
 								true))
 					.build();
 			
-		// Randomise skin colour if not greater by using skin preferences:
-		if(body.getRaceStage()!=RaceStage.GREATER && body.getRaceStage()!=RaceStage.FERAL) {
-			Colour skinColour = Util.randomItemFrom(BodyCoveringType.HUMAN.getNaturalColoursPrimary());
-			if(Main.getProperties().skinColourPreferencesMap.values().stream().anyMatch(v->v>0)) {
-				skinColour = Util.getRandomObjectFromWeightedMap(Main.getProperties().skinColourPreferencesMap);
-			}
-			body.setCovering(BodyCoveringType.HUMAN, Util.getRandomObjectFromWeightedMap(BodyCoveringType.HUMAN.getNaturalPatterns()), CoveringModifier.SMOOTH, skinColour, false, skinColour, false);
-			body.updateCoverings(true, true, true, true);
-		}
-		
-		if(linkedCharacter==null || !linkedCharacter.isUnique()) { // Unique characters should always have the default number of breast rows
-			// Set breast rows based on preferences:
-			if(Main.getProperties().multiBreasts==0 || Main.getProperties().multiBreasts==1) {
-				body.getBreast().setRows(null, 1);
-				
-			} else if(Main.getProperties().multiBreasts==2) {
-				if(body.getTorsoType()==TorsoType.HUMAN) {
-					body.getBreast().setRows(null, 1);
-				}
-			}
-		}
-
-		// Set crotch boobs based on preferences:
-		if(!body.isFeral()
-				&& (Main.getProperties().getUddersLevel()==0
-					|| (body.getLeg().getLegConfiguration()==LegConfiguration.BIPEDAL && Main.getProperties().getUddersLevel()==1)
-					|| (body.getLeg().getLegConfiguration()==LegConfiguration.BIPEDAL && body.getRaceStage()!=RaceStage.GREATER))) {
-			body.getBreastCrotch().setType(null, BreastType.NONE);
-		}
-
-		// Set external futa testicles based on preferences:
-		if(body.getPenis().getType()!=PenisType.NONE
-				&& body.getPenis().getType()!=PenisType.DILDO
-				&& body.getVagina().getType()!=VaginaType.NONE
-				&& body.getVagina().getType()!=VaginaType.ONAHOLE
-				&& !Main.game.isFutanariTesticlesEnabled()) {
-			body.getPenis().getTesticle().setInternal(null, true);
-		}
+		applyPreferenceChanges(linkedCharacter, body);
 		
 		// Pubic hair:
 		setBodyHair(body);
@@ -1422,6 +1411,7 @@ public class CharacterUtils {
 	
 	/**
 	 * If you are wanting to change a newly-spawned NPC's body, then <b>you should consider using GameCharacter.setBody() instead</b>, as that method can also apply personality changes.
+	 * <br/>This method maintains the character's pierced areas.
 	 */
 	public Body reassignBody(GameCharacter linkedCharacter, Body body, Gender startingGender, AbstractSubspecies species, RaceStage stage, boolean removeDemonOverride) {
 		if(removeDemonOverride) {
@@ -1434,8 +1424,9 @@ public class CharacterUtils {
 		boolean hasPenis = startingGender.getGenderName().isHasPenis();
 		boolean hasBreasts = startingGender.getGenderName().isHasBreasts();
 		boolean[] virginities = null;
+		boolean[] piercings = null;
 		
-		// Save virginities to be restored after body reset:
+		// Save virginities & piercings to be restored after body reset:
 		if(linkedCharacter!=null) {
 			virginities = new boolean[] {
 				linkedCharacter.isAnalVirgin(),
@@ -1449,6 +1440,17 @@ public class CharacterUtils {
 				linkedCharacter.isVaginaUrethraVirgin(),
 				linkedCharacter.isVaginaVirgin(),
 				linkedCharacter.hasHymen()
+			};
+			piercings = new boolean[] {
+				linkedCharacter.isPiercedEar(),
+				linkedCharacter.isPiercedLip(),
+				linkedCharacter.isPiercedNavel(),
+				linkedCharacter.isPiercedNipple(),
+				linkedCharacter.isPiercedNippleCrotch(),
+				linkedCharacter.isPiercedNose(),
+				linkedCharacter.isPiercedTongue(),
+				linkedCharacter.isPiercedVagina(),
+				linkedCharacter.isPiercedPenis()
 			};
 		}
 		
@@ -1571,13 +1573,7 @@ public class CharacterUtils {
 		
 		body.setWing(new Wing((stage.isWingFurry()?startingBodyType.getRandomWingType(false):WingType.NONE), (startingGender.isFeminine() ? startingBodyType.getFemaleWingSize() : startingBodyType.getMaleWingSize())));
 		
-		if(body.getPenis().getType()!=PenisType.NONE
-				&& body.getPenis().getType()!=PenisType.DILDO
-				&& body.getVagina().getType()!=VaginaType.NONE
-				&& body.getVagina().getType()!=VaginaType.ONAHOLE
-				&& !Main.game.isFutanariTesticlesEnabled()) {
-			body.getPenis().getTesticle().setInternal(null, true);
-		}
+		applyPreferenceChanges(linkedCharacter, body);
 		
 		// Pubic hair:
 		setBodyHair(body);
@@ -1613,6 +1609,16 @@ public class CharacterUtils {
 			linkedCharacter.setVaginaUrethraVirgin(virginities[8]);
 			linkedCharacter.setVaginaVirgin(virginities[9]);
 			linkedCharacter.setHymen(virginities[10]);
+			
+			linkedCharacter.setPiercedEar(piercings[0]);
+			linkedCharacter.setPiercedLip(piercings[1]);
+			linkedCharacter.setPiercedNavel(piercings[2]);
+			linkedCharacter.setPiercedNipples(piercings[3]);
+			linkedCharacter.setPiercedNipplesCrotch(piercings[4]);
+			linkedCharacter.setPiercedNose(piercings[5]);
+			linkedCharacter.setPiercedTongue(piercings[6]);
+			linkedCharacter.setPiercedVagina(piercings[7]);
+			linkedCharacter.setPiercedPenis(piercings[8]);
 		}
 		
 		return body;
@@ -1735,6 +1741,47 @@ public class CharacterUtils {
 								: RacialBody.valueOfRace(character.getRace()).getMaleHairLength()));
 				}
 				break;
+		}
+	}
+	
+	private static void applyPreferenceChanges(GameCharacter linkedCharacter, Body body) {
+		// Randomise skin colour if not greater by using skin preferences:
+		if(body.getRaceStage()!=RaceStage.GREATER && body.getRaceStage()!=RaceStage.FERAL) {
+			Colour skinColour = Util.randomItemFrom(BodyCoveringType.HUMAN.getNaturalColoursPrimary());
+			if(Main.getProperties().skinColourPreferencesMap.values().stream().anyMatch(v->v>0)) {
+				skinColour = Util.getRandomObjectFromWeightedMap(Main.getProperties().skinColourPreferencesMap);
+			}
+			body.setCovering(BodyCoveringType.HUMAN, Util.getRandomObjectFromWeightedMap(BodyCoveringType.HUMAN.getNaturalPatterns()), CoveringModifier.SMOOTH, skinColour, false, skinColour, false);
+			body.updateCoverings(true, true, true, true);
+		}
+		
+		if(linkedCharacter==null || !linkedCharacter.isUnique() || linkedCharacter.isPlayer()) { // Unique characters should always have the default number of breast rows
+			// Set breast rows based on preferences:
+			if(Main.getProperties().multiBreasts==0 || Main.getProperties().multiBreasts==1) {
+				body.getBreast().setRows(null, 1);
+				
+			} else if(Main.getProperties().multiBreasts==2) {
+				if(body.getTorsoType()==TorsoType.HUMAN) {
+					body.getBreast().setRows(null, 1);
+				}
+			}
+		}
+
+		// Set crotch boobs based on preferences:
+		if(!body.isFeral()
+				&& (Main.getProperties().getUddersLevel()==0
+					|| (body.getLeg().getLegConfiguration()==LegConfiguration.BIPEDAL && Main.getProperties().getUddersLevel()==1)
+					|| (body.getLeg().getLegConfiguration()==LegConfiguration.BIPEDAL && body.getRaceStage()!=RaceStage.GREATER))) {
+			body.getBreastCrotch().setType(null, BreastType.NONE);
+		}
+
+		// Set external futa testicles based on preferences:
+		if(body.getPenis().getType()!=PenisType.NONE
+				&& body.getPenis().getType()!=PenisType.DILDO
+				&& body.getVagina().getType()!=VaginaType.NONE
+				&& body.getVagina().getType()!=VaginaType.ONAHOLE
+				&& !Main.game.isFutanariTesticlesEnabled()) {
+			body.getPenis().getTesticle().setInternal(null, true);
 		}
 	}
 	
@@ -2507,10 +2554,12 @@ public class CharacterUtils {
 		// Only bondage fetishists spawn with BDSM clothing:
 		if(character.hasFetish(Fetish.FETISH_BONDAGE_APPLIER)) {
 			maxClothingCount+=1;
+			List<InventorySlot> prohibitedSlots = Util.newArrayListOfValues(InventorySlot.VAGINA, InventorySlot.PENIS, InventorySlot.ANUS, InventorySlot.NIPPLE, InventorySlot.GROIN);
 			for(AbstractClothingType ct : ClothingType.getAllClothingInSet(SetBonus.getSetBonusFromId("innoxia_bdsm"))) {
 				InventorySlot defaultSlot = ct.getEquipSlots().get(0);
-				if(defaultSlot!=InventorySlot.VAGINA && defaultSlot!=InventorySlot.PENIS && defaultSlot!=InventorySlot.ANUS && defaultSlot!=InventorySlot.NIPPLE && defaultSlot!=InventorySlot.GROIN) {
-					availableClothing.add(ct); // Do not add clothing types which are sex toys, as conditionals for those are added in the next logic block
+				// Do not add clothing types which are sex toys, as conditionals for those are added in the next logic block, and do not add enslavement clothing as the NPC will not want to equip it.
+				if(!ct.getEffects().stream().anyMatch(ie -> ie.getSecondaryModifier()==TFModifier.CLOTHING_ENSLAVEMENT) && !prohibitedSlots.contains(defaultSlot)) {
+					availableClothing.add(ct);
 				}
 			}
 		}
@@ -2519,7 +2568,7 @@ public class CharacterUtils {
 			maxClothingCount+=1;
 			for(AbstractClothingType ct : ClothingType.getAllClothing()) {
 				InventorySlot defaultSlot = ct.getEquipSlots().get(0);
-				if(ct.getDefaultItemTags().contains(ItemTag.ENABLE_SEX_EQUIP)) {
+				if(ct.getDefaultItemTags().contains(ItemTag.ENABLE_SEX_EQUIP) && !ct.getEffects().stream().anyMatch(ie -> ie.getSecondaryModifier()==TFModifier.CLOTHING_ENSLAVEMENT)) {
 					// Conditionals for equipping sex toys are if this character is not averse to using the associated area
 						// (choosing to equip them is handled in NPC.getSexClothingToEquip(), so it's ok to give them clothing which they might not want to equip)
 					if(defaultSlot==InventorySlot.VAGINA) {

@@ -2226,19 +2226,27 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 	}
 
 	public AbstractAttribute getCoreEnchantment() {
-		AbstractAttribute att = null;
+		AbstractAttribute attMax = null;
+		AbstractAttribute attMin = null;
 		int max = 0;
+		int min = 0;
 		for(Entry<AbstractAttribute, Integer> entry : getAttributeModifiers().entrySet()) {
-			att = entry.getKey();
-			if(Math.abs(entry.getValue()) > max) {
-				att = entry.getKey();
-				max = Math.abs(entry.getValue());
+			if(entry.getValue() > max) {
+				attMax = entry.getKey();
+				max = entry.getValue();
+			}
+			if(entry.getValue() < min) {
+				attMin = entry.getKey();
+				min = entry.getValue();
 			}
 		}
-		if(att==null) {
+		if(Math.abs(min)>max) {
+			attMax = attMin;
+		}
+		if(attMax==null) {
 			return Attribute.MAJOR_PHYSIQUE;
 		}
-		return att;
+		return attMax;
 	}
 	
 	public String getEnchantmentPostfix(boolean coloured, String tag) {
@@ -2334,6 +2342,13 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 	public void addEffect(ItemEffect effect) {
 		effects.add(effect);
 	}
+	
+	/**
+	 * <b>Do not call when equipped to someone!</b> (It will not update the wearer's attributes.)
+	 */
+	public void addEffect(AbstractItemEffectType itemEffectType, TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit) {
+		effects.add(new ItemEffect(itemEffectType, primaryModifier, secondaryModifier, potency, limit));
+	}
 
 	/**
 	 * <b>Do not call when equipped to someone!</b> (It will not update the wearer's attributes.)
@@ -2368,7 +2383,10 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 	 */
 	public int getEnchantmentCapacityCost() {
 		Map<AbstractAttribute, Integer> noCorruption = new HashMap<>();
-		getAttributeModifiers().entrySet().stream().filter(ent -> ent.getKey()!=Attribute.FERTILITY && ent.getKey()!=Attribute.VIRILITY).forEach(ent -> noCorruption.put(ent.getKey(), ent.getValue()*(ent.getKey()==Attribute.MAJOR_CORRUPTION?-1:1)));
+		
+		getAttributeModifiers().entrySet().stream().filter(ent -> ent.getKey()!=Attribute.FERTILITY && ent.getKey()!=Attribute.VIRILITY)
+			.forEach(ent -> noCorruption.put(ent.getKey(), !ent.getKey().isAffectedByEnchantmentCost()?0:(ent.getValue()*(ent.getKey()==Attribute.MAJOR_CORRUPTION?-1:1))));
+		
 		return noCorruption.values().stream().reduce(0, (a, b) -> a + Math.max(0, b));
 	}
 	

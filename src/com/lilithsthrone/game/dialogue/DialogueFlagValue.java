@@ -147,6 +147,7 @@ public class DialogueFlagValue {
 	public static AbstractDialogueFlagValue readBook2 = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue readBook3 = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue readBook4 = new AbstractDialogueFlagValue();
+	public static AbstractDialogueFlagValue readBook5 = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue readBookSlavery = new AbstractDialogueFlagValue();
 	
 	public static AbstractDialogueFlagValue arthursPackageObtained = new AbstractDialogueFlagValue();
@@ -367,6 +368,9 @@ public class DialogueFlagValue {
 	public static AbstractDialogueFlagValue impCitadelArcanistAcceptedTF = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue impCitadelTreasurySearched = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue impCitadelLaboratorySearched = new AbstractDialogueFlagValue();
+
+	public static AbstractDialogueFlagValue meraxisTrickedWithRing = new AbstractDialogueFlagValue();
+	
 
 	public static AbstractDialogueFlagValue impCitadelPrisonerMale = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue impCitadelPrisonerFemale = new AbstractDialogueFlagValue();

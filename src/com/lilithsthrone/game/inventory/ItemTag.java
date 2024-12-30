@@ -180,7 +180,9 @@ public enum ItemTag {
 					"[style.colourTerrible(Prevents combat escape)]"),
 			false),
 	
-	DISCARDED_WHEN_UNEQUIPPED( //  Makes the clothing be thrown away when unequipped. E.g. Condoms
+	DUPLICATE_WHEN_EQUIP,  // Instead of removing the clothing from the inventory it's in, duplicate the clothing and then equip the duplicate instead. This should probably be paired with DISCARDED_WHEN_UNEQUIPPED, and is used for the electrical tape roll.
+	
+	DISCARDED_WHEN_UNEQUIPPED( // Makes the clothing be thrown away when unequipped. E.g. Condoms
 			Util.newArrayListOfValues(
 					"[style.colourMinorBad(Discarded when unequipped)]"),
 			false),
