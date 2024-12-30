@@ -5,7 +5,7 @@ import com.lilithsthrone.utils.colours.PresetColour;
 
 /**
  * @since 0.2.2
- * @version 0.3.5
+ * @version 0.4.10.7
  * @author Innoxia
  */
 public enum SlaveEventTag {
@@ -16,7 +16,16 @@ public enum SlaveEventTag {
 	
 	WASHED_BODY_NIPPLE_CREAMPIE("<span style='color:"+PresetColour.BASE_AQUA.toWebHexString()+";'>Cleaned Nipple Creampie</span>"),
 
+	WASHED_BODY_REMOVED_MUSK("<span style='color:"+PresetColour.BASE_AQUA.toWebHexString()+";'>Removed Musky Odours</span>") {
+		@Override
+		public void applyEffects(GameCharacter character) {
+			character.clearMuskMarkers();
+			character.calculateStatusEffects(0);
+		}
+	},
+	
 	WASHED_CLOTHES("<span style='color:"+PresetColour.BASE_AQUA.toWebHexString()+";'>Cleaned Clothes</span>"),
+	
 
 	// Muscle:
 	

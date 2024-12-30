@@ -2989,8 +2989,12 @@ public class SexPosition {
 					
 				}
 				
-				boolean skipLyingdown = count >= lyingDownCharacters.size();
+				if(lyingDown==null) {
+					// There always needs to be a character lying down, so if there are multiple characters in an oral position (or something similar), make the last encountered lyingDown character the focused one
+					lyingDown = lyingDownCharacters.get(lyingDownCharacters.size()-1);
+				}
 				
+				boolean skipLyingdown = count >= lyingDownCharacters.size();
 				if(!skipLyingdown) {
 					switch(count) {
 						case 0:

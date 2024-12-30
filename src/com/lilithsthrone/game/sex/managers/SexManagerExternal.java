@@ -1635,6 +1635,7 @@ public class SexManagerExternal extends SexManagerDefault {
 				GameCharacter character = Main.game.getNPCById(entry.getKey());
 				exposeMap.put(character, entry.getValue().getAreasExposedOnStart());
 			} catch (Exception e) {
+				System.err.println("exposeAtStartOfSexMap() ERROR for ID: "+entry.getKey());
 				e.printStackTrace();
 			}
 		}

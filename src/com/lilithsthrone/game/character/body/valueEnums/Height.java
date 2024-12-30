@@ -96,6 +96,10 @@ public enum Height {
 		return this.getMinimumValue()<getFairySizeCutOff();
 	}
 	
+	public static int getMaximumHeightForCharacterCreation() {
+		return 200;
+	}
+	
 	public static Height getHeightFromInt(int centimeters) {
 		for(Height cs : Height.values()) {
 			if(centimeters >= cs.getMinimumValue() && centimeters < cs.getMaximumValue()) {

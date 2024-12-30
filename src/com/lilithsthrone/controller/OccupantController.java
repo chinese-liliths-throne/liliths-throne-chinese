@@ -303,7 +303,7 @@ public class OccupantController {
 						
 						room.incrementFluidStored(fluid, -milkAmount);
 						
-						Main.game.setContent(new Response("", "", LilayaMilkingRoomDialogue.MILKED));
+						Main.game.setContent(new Response("", "", LilayaMilkingRoomDialogue.INGEST));
 						
 					}, false);
 				}

@@ -1018,7 +1018,7 @@
 			<p>
 				Once again, you find yourself surrounded by the shimmering pink outline of your arcane aura. This time, however, you see a strange ball of energy orbiting your body, which looks to be the same sort of size as the shard of energy that you remember shooting into you. Looking up at Lilaya, you see that her cheeks have completely drained of colour, and she's looking down at you with an extremely worried expression on her face.
 			</p>
-		#ELSEIF(SPECIAL_PARSE_0=="false")
+		#ELSEIF(!pc.isAnyEquippedClothingSealed())
 			<p>
 				[pc.speech(That's good to hear, so what would I need to do if it happens again?)] you ask.
 			</p>

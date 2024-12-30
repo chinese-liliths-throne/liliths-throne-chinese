@@ -1329,7 +1329,15 @@
 				<availabilityConditional><![CDATA[[#flags.getSavedLong('sterope_centaur_punishments')<3]]]></availabilityConditional>
 				<responseTabIndex><![CDATA[0]]></responseTabIndex>
 				<index><![CDATA[1]]></index>
-				<responseTitle><![CDATA[Punished]]></responseTitle>
+				<responseTitle><![CDATA[
+					#IF(flags.getSavedLong('sterope_centaur_punishments')==0)
+						Punished
+					#ELSEIF(flags.getSavedLong('sterope_centaur_punishments')==1)
+						Punished again
+					#ELSE
+						Punishment!
+					#ENDIF
+				]]></responseTitle>
 				<responseTooltip><![CDATA[Tied up and at the mercy of the [centaur.race], all you can do is submit to your punishment.]]></responseTooltip>
 				<nextDialogue>innoxia_places_fields_elis_tavern_taur_sterope_centaur_submit_stables_feral_sex</nextDialogue>
 				<effects><![CDATA[

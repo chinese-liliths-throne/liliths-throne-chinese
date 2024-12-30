@@ -767,6 +767,9 @@ public class Properties {
 					if(Main.isVersionOlderThan(versionNumber, "0.4.9.6")) {
 						values.add(PropertyValue.lipLispContent);
 					}
+					if(Main.isVersionOlderThan(versionNumber, "0.4.10.4")) {
+						values.add(PropertyValue.mapZoomedIn);
+					}
 					
 					
 				} else {

@@ -15,8 +15,10 @@ import com.lilithsthrone.game.character.body.coverings.BodyCoveringType;
 import com.lilithsthrone.game.character.body.coverings.Covering;
 import com.lilithsthrone.game.character.body.valueEnums.BodyHair;
 import com.lilithsthrone.game.character.body.valueEnums.BreastShape;
+import com.lilithsthrone.game.character.body.valueEnums.CupSize;
 import com.lilithsthrone.game.character.body.valueEnums.Femininity;
 import com.lilithsthrone.game.character.body.valueEnums.LabiaSize;
+import com.lilithsthrone.game.character.body.valueEnums.PenisLength;
 import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.fetishes.FetishDesire;
 import com.lilithsthrone.game.character.gender.Gender;
@@ -178,33 +180,47 @@ public class CharacterCreation {
 		Main.game.getPlayer().setHairCovering(new Covering(BodyCoveringType.HAIR_HUMAN, PresetColour.COVERING_BROWN), true);
 		Main.game.getPlayer().setBreastShape(BreastShape.ROUND);
 		Main.game.getPlayer().setVaginaLabiaSize(LabiaSize.TWO_AVERAGE.getValue());
-
+		
 		Main.game.getPlayer().setFacialHair(BodyHair.ZERO_NONE);
+		resetFemininityAppearance();
+	}
+	
+	public static void resetFemininityAppearance() {
 		switch(Main.game.getPlayer().getFemininity()) {
 			case MASCULINE_STRONG:
 				Main.game.getPlayer().setUnderarmHair(BodyHair.FOUR_NATURAL);
 				Main.game.getPlayer().setAssHair(BodyHair.FOUR_NATURAL);
 				Main.game.getPlayer().setPubicHair(BodyHair.FOUR_NATURAL);
+				Main.game.getPlayer().setPenisSize(PenisLength.TWO_AVERAGE.getMedianValue()+3);
 				break;
 			case MASCULINE:
 				Main.game.getPlayer().setUnderarmHair(BodyHair.FOUR_NATURAL);
 				Main.game.getPlayer().setAssHair(BodyHair.FOUR_NATURAL);
 				Main.game.getPlayer().setPubicHair(BodyHair.FOUR_NATURAL);
+				Main.game.getPlayer().setPenisSize(PenisLength.TWO_AVERAGE);
 				break;
 			case ANDROGYNOUS:
 				Main.game.getPlayer().setUnderarmHair(BodyHair.ZERO_NONE);
 				Main.game.getPlayer().setAssHair(BodyHair.TWO_MANICURED);
 				Main.game.getPlayer().setPubicHair(BodyHair.FOUR_NATURAL);
+				if(Main.game.getPlayer().hasPenis()) {
+					Main.game.getPlayer().setPenisSize(PenisLength.ONE_TINY);
+				}
+				if(Main.game.getPlayer().hasVagina()) {
+					Main.game.getPlayer().setBreastSize(CupSize.A);
+				}
 				break;
 			case FEMININE:
 				Main.game.getPlayer().setUnderarmHair(BodyHair.ZERO_NONE);
 				Main.game.getPlayer().setAssHair(BodyHair.TWO_MANICURED);
 				Main.game.getPlayer().setPubicHair(BodyHair.THREE_TRIMMED);
+				Main.game.getPlayer().setBreastSize(CupSize.C);
 				break;
 			case FEMININE_STRONG:
 				Main.game.getPlayer().setUnderarmHair(BodyHair.ZERO_NONE);
 				Main.game.getPlayer().setAssHair(BodyHair.ZERO_NONE);
 				Main.game.getPlayer().setPubicHair(BodyHair.ZERO_NONE);
+				Main.game.getPlayer().setBreastSize(CupSize.DD);
 				break;
 		}
 	}
@@ -258,8 +274,16 @@ public class CharacterCreation {
 	}
 	
 	private static void equipPiercings() {
-		Colour colour1 = Main.game.getPlayer().isFeminine()?PresetColour.CLOTHING_GOLD:PresetColour.CLOTHING_BLACK_STEEL;
-		Colour colour2 = Main.game.getPlayer().isFeminine()?PresetColour.CLOTHING_ROSE_GOLD:PresetColour.CLOTHING_SILVER;
+		Colour colour1 = PresetColour.CLOTHING_BLACK_STEEL;
+		Colour colour2 = PresetColour.CLOTHING_STEEL;
+
+		if(Main.game.getPlayer().getFemininity()==Femininity.FEMININE_STRONG) {
+			colour1 = PresetColour.CLOTHING_PLATINUM;
+			colour2 = PresetColour.CLOTHING_GOLD;
+		} else if(Main.game.getPlayer().isFeminine()) {
+			colour1 = PresetColour.CLOTHING_SILVER;
+			colour2 = PresetColour.CLOTHING_SILVER;
+		}
 		
 		for(InventorySlot slot : InventorySlot.getPiercingSlots()) {
 			if(Main.game.getPlayer().getClothingInSlot(slot)!=null){
@@ -269,7 +293,13 @@ public class CharacterCreation {
 		
 		// Ear piercings:
 		if(Main.game.getPlayer().isPiercedEar()) {
-			Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_ear_ring", colour1, false), true, Main.game.getPlayer());
+			if(Main.game.getPlayer().getFemininity()==Femininity.FEMININE_STRONG) {
+				Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_ear_chain_dangle", colour1, false), true, Main.game.getPlayer());
+			} else if(Main.game.getPlayer().getFemininity()==Femininity.FEMININE) {
+				Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_ear_ring", colour1, false), true, Main.game.getPlayer());
+			} else {
+				Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_ear_ball_studs", colour1, false), true, Main.game.getPlayer());
+			}
 			
 		} else if(Main.game.getPlayer().getClothingInSlot(InventorySlot.PIERCING_EAR)!=null){
 			Main.game.getPlayer().unequipClothingIntoVoid(Main.game.getPlayer().getClothingInSlot(InventorySlot.PIERCING_EAR), true, Main.game.getPlayer());
@@ -284,8 +314,12 @@ public class CharacterCreation {
 		}
 		
 		// Navel piercings:
-		if(Main.game.getPlayer().isPiercedNavel() && Main.game.getPlayer().isFeminine()) {
-			Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_gemstone_barbell", colour2, false), InventorySlot.PIERCING_STOMACH, true, Main.game.getPlayer());
+		if(Main.game.getPlayer().isPiercedNavel()) {
+			if(Main.game.getPlayer().isFeminine()) {
+				Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_gemstone_barbell", colour2, false), InventorySlot.PIERCING_STOMACH, true, Main.game.getPlayer());
+			} else {
+				Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_ringed_barbell", colour2, false), InventorySlot.PIERCING_STOMACH, true, Main.game.getPlayer());
+			}
 			
 		} else if(Main.game.getPlayer().getClothingInSlot(InventorySlot.PIERCING_STOMACH)!=null){
 			Main.game.getPlayer().unequipClothingIntoVoid(Main.game.getPlayer().getClothingInSlot(InventorySlot.PIERCING_STOMACH), true, Main.game.getPlayer());
@@ -301,7 +335,11 @@ public class CharacterCreation {
 
 		// Nose piercings:
 		if(Main.game.getPlayer().isPiercedNose()) {
-			Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_nose_ring", colour1, false), true, Main.game.getPlayer());
+			if(Main.game.getPlayer().isFeminine()) {
+				Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_nose_ring", colour1, false), true, Main.game.getPlayer());
+			} else {
+				Main.game.getPlayer().equipClothingFromGround(Main.game.getItemGen().generateClothing("innoxia_piercing_nose_ball_stud", colour1, false), true, Main.game.getPlayer());
+			}
 			
 		} else if(Main.game.getPlayer().getClothingInSlot(InventorySlot.PIERCING_NOSE)!=null){
 			Main.game.getPlayer().unequipClothingIntoVoid(Main.game.getPlayer().getClothingInSlot(InventorySlot.PIERCING_NOSE), true, Main.game.getPlayer());
@@ -935,7 +973,7 @@ public class CharacterCreation {
 						+ "<i>All of these options can be influenced later on in the game.</i>"
 					+ "</div>"
 						
-					+ CharacterModificationUtils.getHeightChoiceDiv()
+					+ CharacterModificationUtils.getHeightChoiceDiv(true)
 					
 					+ CharacterModificationUtils.getKatesDivCoveringsNew(false, Race.HUMAN, BodyCoveringType.HUMAN, "Skin Colour", "The colour of the skin that's covering your body.", true, false, false)
 					
@@ -1210,7 +1248,7 @@ public class CharacterCreation {
 
 		@Override
 		public String getLabel() {
-			return "Add "+Util.capitaliseSentence(CharacterModificationUtils.tattooInventorySlot.getName()) +" Tattoo";
+			return "Add Tattoo: "+Util.capitaliseSentence(CharacterModificationUtils.tattooInventorySlot.getTattooSlotName());
 		}
 		
 		@Override

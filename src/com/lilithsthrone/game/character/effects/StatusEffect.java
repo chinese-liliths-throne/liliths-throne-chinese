@@ -28,7 +28,6 @@ import com.lilithsthrone.game.character.body.Body;
 import com.lilithsthrone.game.character.body.CoverableArea;
 import com.lilithsthrone.game.character.body.Penis;
 import com.lilithsthrone.game.character.body.abstractTypes.AbstractFluidType;
-import com.lilithsthrone.game.character.body.types.VaginaType;
 import com.lilithsthrone.game.character.body.valueEnums.BodyMaterial;
 import com.lilithsthrone.game.character.body.valueEnums.BreastShape;
 import com.lilithsthrone.game.character.body.valueEnums.CumProduction;
@@ -69,6 +68,7 @@ import com.lilithsthrone.game.sex.SexAreaInterface;
 import com.lilithsthrone.game.sex.SexAreaOrifice;
 import com.lilithsthrone.game.sex.SexAreaPenetration;
 import com.lilithsthrone.game.sex.SexType;
+import com.lilithsthrone.game.sex.positions.slots.SexSlotTag;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.rendering.RenderingEngine;
 import com.lilithsthrone.rendering.SVGImages;
@@ -2748,8 +2748,10 @@ public class StatusEffect {
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
-			return (target.isPlayer() && target.hasStatusEffect(SLEEPING))
-					|| (Main.game.isStarted()
+			if(target.isPlayer()) {
+				return target.hasStatusEffect(SLEEPING);
+			}
+			return (Main.game.isStarted()
 						&& target.isSleepingAtHour()
 						&& target.isAtHome()
 						&& target.isAffectedBySleepingStatusEffect()
@@ -2776,8 +2778,10 @@ public class StatusEffect {
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
-			return (target.isPlayer() && target.hasStatusEffect(SLEEPING_HEAVY))
-					|| (Main.game.isStarted()
+			if(target.isPlayer()) {
+				return target.hasStatusEffect(SLEEPING_HEAVY);
+			}
+			return (Main.game.isStarted()
 						&& target.isSleepingAtHour()
 						&& target.isAtHome()
 						&& target.isAffectedBySleepingStatusEffect()
@@ -4044,7 +4048,7 @@ public class StatusEffect {
 					&& (target.isPlayer()
 							?target.getAgeValue()>=52+Game.TIME_SKIP_YEARS
 							:target.getAgeValue()>=52)
-					&& (target.getSubspecies()==Subspecies.ANGEL || target.getSubspeciesOverride()==null) // Angels and demons are immune
+					&& (target.getSubspecies()!=Subspecies.ANGEL && target.getSubspeciesOverride()==null) // Angels and demons are immune
 					&& !target.isElemental()
 					&& !target.isDoll()
 					&& !target.hasStatusEffect(StatusEffect.VIXENS_VIRILITY)
@@ -4476,7 +4480,7 @@ public class StatusEffect {
 										+Util.intToString(target.getPregnantLitter().getTotalLitterCount())+" slime core"
 										+(target.getPregnantLitter().getTotalLitterCount()==1?"":"s")+" growing inside of you "+(target.getPregnantLitter().getTotalLitterCount()==1?"has":"have")
 										+" grown to be just as large as your own, and you know that you're now ready to give birth."
-								:(target.getVaginaType()==VaginaType.HARPY
+								:(target.isVaginaEggLayer()
 									?" Although you can feel the hard shells of your clutch of eggs pressing out against the inner walls of your womb, you don't find the sensation to be in any way uncomfortable."
 										+ " If anything, the feeling only seems to be boosting your maternal instincts, and you often catch yourself daydreaming about laying and incubating your eggs."
 									:" Some time in the last couple of hours, you felt a strange rumble in your pregnant bump, and after panicking for a little while, you realised that it was your offspring kicking about in your womb."
@@ -4507,7 +4511,7 @@ public class StatusEffect {
 								?" Clearly visible through the translucent slime which your body is made up of, you see that the "
 										+Util.intToString(target.getPregnantLitter().getTotalLitterCount())+" slime core"+(target.getPregnantLitter().getTotalLitterCount()==1?"":"s")+" growing inside of you "
 										+(target.getPregnantLitter().getTotalLitterCount()==1?"has":"have")+" grown to be just as large as your own, and you know that you're now ready to give birth."
-								:(target.getVaginaType()==VaginaType.HARPY
+								:(target.isVaginaEggLayer()
 									?" Although you can feel the hard shells of your clutch of eggs pressing out against the inner walls of your womb, you don't find the sensation to be in any way uncomfortable."
 										+ " If anything, the feeling only seems to be boosting your maternal instincts, and you often catch yourself daydreaming about laying and incubating your eggs."
 									:" Some time in the last couple of hours, you felt a familiar rumble in your pregnant bump, and from experience, you instantly recognised that it was your offspring kicking about in your womb."
@@ -7395,6 +7399,35 @@ public class StatusEffect {
 					&& ((NPC)target).getLastTimeOrgasmedSeconds()+(60*60*hoursToPentUp)<Main.game.getSecondsPassed();
 		}
 	};
+
+	/**
+	 * This status effect is automatically removed from a character when orgasming in sex.
+	 */
+	public static AbstractStatusEffect DESPERATELY_HORNY = new AbstractStatusEffect(80,
+			"Desperately horny",
+			"desperately_horny",
+			PresetColour.GENERIC_SEX,
+			false,
+			Util.newHashMapOfValues(
+					new Value<>(Attribute.RESTING_LUST, 25f),
+					new Value<>(Attribute.RESISTANCE_LUST, -15f),
+					new Value<>(Attribute.DAMAGE_LUST, 25f)),
+			null) {
+		@Override
+		public String getDescription(GameCharacter target) {
+			return UtilText.parse(target,
+					"[npc.NameIsFull] feeling incredibly horny at the moment."
+					+ " [npc.SheIs] struggling to get [npc.her] lust under control, and so [npc.are] far more vulnerable to seduction while also being able to more easily seduce others.");
+		}
+		@Override
+		public String extraRemovalEffects(GameCharacter target) {
+			return "";
+		}
+		@Override
+		public boolean isSexEffect() {
+			return true;
+		}
+	};
 	
 	public static AbstractStatusEffect CHASTITY_1 = new AbstractStatusEffect(80,
 			"Forced chastity (calm)",
@@ -8675,7 +8708,8 @@ public class StatusEffect {
 			"clothingSets/snowflake",
 			PresetColour.BASE_BLUE_LIGHT,
 			true,
-			Util.newHashMapOfValues(new Value<>(Attribute.MAJOR_ARCANE, 5f),
+			Util.newHashMapOfValues(
+					new Value<>(Attribute.MAJOR_ARCANE, 5f),
 					new Value<>(Attribute.DAMAGE_ICE, 15f)),
 			null) {
 		@Override
@@ -8698,9 +8732,12 @@ public class StatusEffect {
 	public static AbstractStatusEffect SET_SUN = new AbstractStatusEffect(70,
 			"Radiant",
 			"clothingSets/sun",
-			PresetColour.BASE_ORANGE,
+			PresetColour.CLOTHING_COPPER,
+			PresetColour.CLOTHING_YELLOW,
+			PresetColour.CLOTHING_ORANGE,
 			true,
-			Util.newHashMapOfValues(new Value<>(Attribute.MAJOR_ARCANE, 5f),
+			Util.newHashMapOfValues(
+					new Value<>(Attribute.MAJOR_ARCANE, 5f),
 					new Value<>(Attribute.DAMAGE_FIRE, 15f)),
 			null) {
 		@Override
@@ -9380,6 +9417,49 @@ public class StatusEffect {
 				return false;
 			}
 			return Main.sex.getImmobilisationTypes(target).containsKey(ImmobilisationType.CHAINS);
+		}
+		@Override
+		public boolean isRemoveAtEndOfSex() {
+			return true;
+		}
+	};
+
+	public static AbstractStatusEffect STOCKS_BOUND_SEX = new AbstractStatusEffect(10,
+			"Locked in stocks",
+			"immobilised_stocks",
+			PresetColour.CLOTHING_DESATURATED_BROWN,
+			false,
+			null,
+			Util.newArrayListOfValues("[style.colourTerrible(Cannot move!)]")) {
+		@Override
+		public String getDescription(GameCharacter target) {
+			return UtilText.parse(target, "[npc.Name] [npc.has] been locked into a set of stocks, and as such [npc.sheIs] unable to take any action!");
+		}
+		@Override
+		public String applyAdditionEffect(GameCharacter target) {
+//			if(Main.game.isInSex()) {
+//				Main.sex.addCharacterImmobilised(ImmobilisationType.STOCKS, Main.sex.getDominantParticipants(false).keySet().iterator().next(), target);
+//			}
+			return "";
+		}
+		@Override
+		protected String extraRemovalEffects(GameCharacter target){
+			if(Main.game.isInSex()) {
+				Main.sex.removeCharacterImmobilised(target, ImmobilisationType.STOCKS);
+			}
+			return "";
+		}
+		@Override
+		public boolean isSexEffect() {
+			return true;
+		}
+		@Override
+		public boolean isConditionsMet(GameCharacter target) {
+			if(!Main.game.isInSex()) {
+				return false;
+			}
+			return Main.sex.getImmobilisationTypes(target).containsKey(ImmobilisationType.STOCKS)
+					&& Main.sex.getSexPositionSlot(target).hasTag(SexSlotTag.LOCKED_IN_STOCKS);
 		}
 		@Override
 		public boolean isRemoveAtEndOfSex() {
@@ -11991,12 +12071,36 @@ public class StatusEffect {
 			null) {
 		@Override
 		public String getDescription(GameCharacter target) {
+			StringBuilder sb = new StringBuilder();
 			if(target.isPlayer()) {
-				return "Anyone with a strong arcane aura, such as yours, doesn't suffer from any sort of refractory period after orgasming...";
+				sb.append("Anyone with a strong arcane aura, such as yours, doesn't suffer from any sort of refractory period after orgasming...");
+				
 			} else {
-				return UtilText.parse(target, "Anyone in the presence of a strong arcane aura, such as yours, doesn't suffer from any sort of refractory period after orgasming...<br/>"
-						+ "[npc.Name] needs to orgasm [style.boldSex("+Util.intToCount(target.getOrgasmsBeforeSatisfied())+")] before [npc.sheIs] satisfied.");
+				sb.append("Anyone in the presence of a strong arcane aura, such as yours, doesn't suffer from any sort of refractory period after orgasming...");
 			}
+			
+			sb.append("<br/>[npc.Name] [npc.verb(need)] to orgasm [style.boldSex(" + Util.intToCount(target.getOrgasmsBeforeSatisfied()) + ")] before [npc.sheIs] satisfied.");
+			
+			return UtilText.parse(target, sb.toString());
+		}
+		@Override
+		public List<Value<Integer, String>> getAdditionalDescriptions(GameCharacter target) {
+			int bonus = Main.sex.getNumberOfAdditionalOrgasms(target);
+			if(!target.isPlayer() && bonus != 0) {
+				List<Value<Integer, String>> additionalDescriptions = new ArrayList<>();
+				
+				if(bonus>0) {
+					additionalDescriptions.add(
+							new Value<>(2, "[npc.Her] desire has been [style.boldExcellent(boosted)], and so this goal is [style.boldGood(" + Util.intToString(bonus) + " orgasm" + (bonus==1?"":"s") + ")] higher than normal!"));
+				} else {
+					additionalDescriptions.add(
+							new Value<>(2, "[npc.Her] desire has been [style.boldTerrible(suppressed)], and so this goal is [style.boldBad(" + Util.intToString(-bonus) + " orgasm" + (bonus==-1?"":"s") + ")] lower than normal!"));
+				}
+				
+				return additionalDescriptions;
+			}
+			
+			return super.getAdditionalDescriptions(target);
 		}
 		@Override
 		public List<String> getModifiersAsStringList(GameCharacter target) {

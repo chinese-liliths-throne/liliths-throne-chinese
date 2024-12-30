@@ -1709,7 +1709,7 @@
 		</p>
 	#ENDIF
 	<p>
-		As [npc.name] cleans [npc.herself] up a little, you walk around to the other side of the bar and collect the money which you paid for the glass of rum. After just a moment more, your [npc.companion] walks around to return to your side, and after throwing [npc.her] a lustful grin, [npc2.name] turns to you and says, [npc2.speech(Ya welcome ta buy another drink whenever ya want! Perhaps next time yer gonna be the one who's down on yer knees, eh?!)]
+		As [npc.name] cleans [npc.herself] up a little, you walk around to the other side of the bar and collect the money which you paid for the glass of rum. After just a moment more, your [npc.companion] walks around to return to your side, and after throwing [npc.herHim] a lustful grin, [npc2.name] turns to you and says, [npc2.speech(Ya welcome ta buy another drink whenever ya want! Perhaps next time yer gonna be the one who's down on yer knees, eh?!)]
 	</p>
 	<p>
 		With the [npc2.race]'s cackling laughter ringing out over the counter-top, you wonder what to do next...

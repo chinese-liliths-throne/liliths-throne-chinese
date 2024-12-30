@@ -397,6 +397,14 @@ public abstract class AbstractItem extends AbstractCoreItem implements XMLSaving
 	public String getUnableToBeUsedFromInventoryDescription() {
 		return itemType.getUnableToBeUsedFromInventoryDescription();
 	}
+
+	public boolean isAbleToBeUsedWhileTrading() {
+		return itemType.isAbleToBeUsedWhileTrading();
+	}
+	
+	public String getUnableToBeUsedWhileTradingDescription() {
+		return itemType.getUnableToBeUsedWhileTradingDescription();
+	}
 	
 	public boolean isAbleToBeUsed(GameCharacter user, GameCharacter target) {
 		return itemType.isAbleToBeUsed(user, target);

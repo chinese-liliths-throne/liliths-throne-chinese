@@ -232,16 +232,14 @@ import com.lilithsthrone.world.places.AbstractPlaceUpgrade;
 import com.lilithsthrone.world.places.PlaceType;
 import com.lilithsthrone.world.places.PlaceUpgrade;
 
+// Prepend 'org.open' to these if using JDK11+
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-// Use the following imports when using the org.openjdk.nashorn dependency:
-//import org.openjdk.nashorn.api.scripting.NashornScriptEngine;
-//import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 /**
  * @since 0.1.0
- * @version 0.4
- * @author Innoxia, Pimvgd, AlacoGit, Tad Unlikely
+ * @version 0.4.10.4
+ * @author Innoxia, Pimvgd, AlacoGit, Tad Unlikely, CognitiveMist, tarbh-uisge
  */
 public class UtilText {
 
@@ -494,7 +492,7 @@ public class UtilText {
 		
 		modifiedSentence = UtilText.parse(parsingCharactersForSpeech, splitOnConditional[splitOnConditional.length-1]);
 		
-		if(target.hasPersonalityTrait(PersonalityTrait.MUTE) && canBeMuted) {
+		if(target.isMute() && canBeMuted) {
 			modifiedSentence = Util.replaceWithMute(modifiedSentence, Main.game.isInSex() && Main.sex.getAllParticipants().contains(target));
 			
 		} else if(includeExtraEffects
@@ -9794,6 +9792,7 @@ public class UtilText {
 	
 	public static void resetParsingEngine() {
 		engine = null;
+		memo.clear();
 		specialParsingStrings = new ArrayList<>();
 	}
 	
@@ -9831,6 +9830,7 @@ public class UtilText {
 	public static void initScriptEngine() {
 		// http://hg.openjdk.java.net/jdk8/jdk8/nashorn/rev/eb7b8340ce3a
 		engine = factory.getScriptEngine("-strict", "--no-java", "--no-syntax-extensions");//, "-scripting");
+		memo.clear(); // cached scripts may reference the previous engine; drop them
 		try {
 			engine.getBindings(ScriptContext.ENGINE_SCOPE).remove("exit");
 			engine.getBindings(ScriptContext.ENGINE_SCOPE).remove("quit");
@@ -10982,12 +10982,8 @@ public class UtilText {
 	}
 	
 	
-	// Memoization improvement attempts follow from here:
-	
-//	private static final Map<String, CompiledScript> memo = new HashMap<>();
-//	private static final int memo_limit = 500;
-	// NOTE: This was causing a bug where upon loading a saved game, the player's race wasn't being recalculated properly for some reason.
-	// It seems to have been fixed by changing return script.eval(); to return script.eval(((NashornScriptEngine)engine).getContext());
+	private static final Map<String, CompiledScript> memo = new HashMap<>();
+	private static final int memo_limit = 500;
 	/**
 	 * Added in PR#1442 to increase performance by adding a memoization cache to compile scripting engine scripts.
 	 * <br/>- Adds a cache intended to hold compiled forms of script engine scripts.
@@ -10999,27 +10995,18 @@ public class UtilText {
 	 * @throws ScriptException
 	 */
 	private static Object evaluate(String command) throws ScriptException {
-		// Commented out in 0.4.0.10 as it was continuing to throw parsing errors
-		// Unable to reliably replicate the bug - sometimes everything worked fine, sometimes the #VAR parsing sections would fail to parse completely
-		
-//		CompiledScript script;
-//		if (!memo.containsKey(command)) {
-//			script = ((NashornScriptEngine)engine).compile(command);
-//			if (memo.size() < memo_limit) {
-//				memo.put(command, script);
-//				if (memo.size() == memo_limit) {
-//					System.err.println("Memo has reached capacity! Additional script commands will not be memoized.");
-//				}
-//			}
-//		} else {
-//			script = memo.get(command);
-//		}
-//		return script.eval(((NashornScriptEngine)engine).getContext());
-//		//return script.eval();
-		
-		
-		// This is the old code which works but is slow:
-		CompiledScript script = ((NashornScriptEngine)engine).compile(command);
+		CompiledScript script;
+		if (!memo.containsKey(command)) {
+			script = ((NashornScriptEngine)engine).compile(command);
+			if (memo.size() < memo_limit) {
+				memo.put(command, script);
+				if (memo.size() == memo_limit) {
+					System.err.println("Memo has reached capacity! Additional script commands will not be memoized.");
+				}
+			}
+		} else {
+			script = memo.get(command);
+		}
 		return script.eval();
 	}
 }

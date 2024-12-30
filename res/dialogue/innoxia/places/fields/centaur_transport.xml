@@ -83,6 +83,7 @@
 			<response>
 				<responseTabIndex><![CDATA[0]]></responseTabIndex>
 				<index><![CDATA[0]]></index>
+				<secondsPassed minutes="true"><![CDATA[2]]></secondsPassed>
 				<responseTitle><![CDATA[Leave]]></responseTitle>
 				<responseTooltip><![CDATA[
 					#IF(game.isHourBetween(5.75, 15))
@@ -226,6 +227,7 @@
 			<response>
 				<responseTabIndex><![CDATA[0]]></responseTabIndex>
 				<index><![CDATA[0]]></index>
+				<secondsPassed minutes="true"><![CDATA[2]]></secondsPassed>
 				<responseTitle><![CDATA[Leave]]></responseTitle>
 				<responseTooltip><![CDATA[
 					#IF(game.isHourBetween(5.75, 15))
@@ -1212,6 +1214,7 @@
 			<response>
 				<responseTabIndex><![CDATA[0]]></responseTabIndex>
 				<index><![CDATA[1]]></index>
+				<secondsPassed minutes="true"><![CDATA[2]]></secondsPassed>
 				<responseTitle><![CDATA[Leave]]></responseTitle>
 				<responseTooltip><![CDATA[Having finished helping her out, it's time to say goodbye to Astrapi.]]></responseTooltip>
 				<nextDialogue stripContent="true"><![CDATA[default]]></nextDialogue>
@@ -1309,6 +1312,7 @@
 			<response>
 				<responseTabIndex><![CDATA[0]]></responseTabIndex>
 				<index><![CDATA[1]]></index>
+				<secondsPassed minutes="true"><![CDATA[2]]></secondsPassed>
 				<responseTitle><![CDATA[Leave]]></responseTitle>
 				<responseTooltip><![CDATA[Having finished helping her out, it's time to say goodbye to Astrapi.]]></responseTooltip>
 				<nextDialogue stripContent="true"><![CDATA[default]]></nextDialogue>
@@ -1735,7 +1739,7 @@
 					<submissives>
 						<character>
 							<id>pc</id>
-							<slot><![CDATA[PERFORMING_ORAL_BEHIND]]></slot>
+							<slot><![CDATA[STANDING_PERFORMING_ORAL_BEHIND]]></slot>
 						</character>
 					</submissives>
 					<postSexDialogue><![CDATA[innoxia_places_fields_centaur_transport_vronti_post_sex]]></postSexDialogue>

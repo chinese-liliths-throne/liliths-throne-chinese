@@ -1819,6 +1819,9 @@ public class OptionsDialogue {
 							Main.getProperties().setFeminineSubspeciesPreference(subspecies, subspecies.getSubspeciesPreferenceDefault());
 							Main.getProperties().setMasculineSubspeciesPreference(subspecies, subspecies.getSubspeciesPreferenceDefault());
 						}
+						Main.getProperties().humanSpawnRate = 5;
+						Main.getProperties().taurSpawnRate = 5;
+						Main.getProperties().halfDemonSpawnRate = 5;
 						Main.saveProperties();
 					}
 				};
@@ -2514,8 +2517,9 @@ public class OptionsDialogue {
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("BAD_END",
 					PresetColour.GENERIC_TERRIBLE,
 					"Bad Ends",
-					"Toggle the ability to trigger 'bad ends', which effectively end the game for your character when encountered."
-							+"<br/>[style.italicsMinorBad(Please note that bad ends involve non-con content, regardless of whether or not your non-con option is enabled.)]",
+					"Toggle the ability to trigger 'bad ends', which end the game for your character when encountered."
+							+"<br/>[style.italicsMinorBad(Please note that bad ends involve non-con content, and so ignore your non-con setting.)]",
+//							+"<br/>[style.italicsTerrible(Please be aware that some bad ends are unaffected by this setting and are always present in the game.)]"
 					Main.getProperties().hasValue(PropertyValue.badEndContent)));
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("LEVEL_DRAIN",
 					PresetColour.GENERIC_TERRIBLE,

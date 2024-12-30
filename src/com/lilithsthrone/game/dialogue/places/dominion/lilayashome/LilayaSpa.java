@@ -745,7 +745,7 @@ public class LilayaSpa {
 			if(soloSlave) {
 				sb.append("[style.boldMinorGood(Slaves Present)]<b>:</b>"
 						+ "<br/>");
-				sb.append(UtilText.parse(slavesPresent, "Sitting on one of the loungers positioned beside the pools, your slave, "+Util.stringsToStringList(names, false)+", is waiting for you to give [npc.her] an order."));
+				sb.append(UtilText.parse(slavesPresent, "Sitting on one of the loungers positioned beside the pools, your slave, "+Util.stringsToStringList(names, false)+", is waiting for you to give [npc.herHim] an order."));
 				if(slavesPresent.get(0).hasSlaveJobSetting(SlaveJob.SPA, SlaveJobSetting.SPA_BATHING)) {
 					sb.append(UtilText.parse(slavesPresent,
 							"</p>"
@@ -2111,7 +2111,7 @@ public class LilayaSpa {
 				}
 				if(index==2) {
 					if(guest.isAbleToEquip(bikiniTop, true, guest) && guest.isAbleToEquip(bikiniBottom, true, guest)) {
-						return new Response("Bikni", UtilText.parse(guest, "Tell [npc.name] to wear a bikini."), SPA_GUEST_PLAYER_CLOTHING) {
+						return new Response("Bikini", UtilText.parse(guest, "Tell [npc.name] to wear a bikini."), SPA_GUEST_PLAYER_CLOTHING) {
 							@Override
 							public void effects() {
 								guest.unequipAllClothingIntoHoldingInventory(guest, false, false);
@@ -2121,7 +2121,7 @@ public class LilayaSpa {
 							}
 						};
 					} else {
-						return new Response("Bikni", UtilText.parse(guest, "[npc.Name] cannot wear a bikini, as some of [npc.her] sealed clothing is blocking [npc.herHim] from doing so..."), null);
+						return new Response("Bikini", UtilText.parse(guest, "[npc.Name] cannot wear a bikini, as some of [npc.her] sealed clothing is blocking [npc.herHim] from doing so..."), null);
 					}
 				}
 				if(index==3) {

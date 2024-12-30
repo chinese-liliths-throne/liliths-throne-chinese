@@ -429,7 +429,10 @@ public class Game implements XMLSaving {
 		startingDate = LocalDateTime.of(
 				2019, // LocalDateTime.now().getYear(),
 				LocalDateTime.now().getMonth(),
-				LocalDateTime.now().getDayOfMonth(),
+				// Handle leap years by just rolling the starting date back to the 28th (as 2019 is not a leap year):
+				LocalDateTime.now().getMonth()==Month.FEBRUARY && LocalDateTime.now().getDayOfMonth()==29
+					?28
+					:LocalDateTime.now().getDayOfMonth(),
 				00,
 				00);
 		secondsPassed = TIME_START_SECONDS;
@@ -2741,6 +2744,16 @@ public class Game implements XMLSaving {
 	private List<NPC> npcsToRemove = new ArrayList<>();
 	private List<NPC> npcsToAdd = new ArrayList<>();
 	
+	/** The time, in nano seconds, it took to complete the last turn.
+	 * <br/>Divide by 1000000000d to get the time in seconds.
+	 */
+	public float endTurnTimeTaken = 0;
+	/**
+	 * This is only set manually outside of the Game class and is reset to 0 at the end of each endTurn() method.
+	 * <br/>Its value is added to endTurnTimeTaken.
+	 */
+	public float endTurnTimeTakenAddition = 0;
+	
 	public void endTurn(int secondsPassedThisTurn, boolean advanceTime) {
 
 		boolean loopDebug = false;
@@ -2846,10 +2859,13 @@ public class Game implements XMLSaving {
 		
 		// If the time has passed midnight on this turn:
 		boolean newDay = getDayNumber(getSecondsPassed()) != getDayNumber(getSecondsPassed() - secondsPassedThisTurn);
-		
+
+		// Reset stocks each day, or if the player has freed the slaves then rest after 6 hours (without resetting close to midnight to prevent a quick double-reset)
+		pendingSlaveInStocksReset = Main.game.getDialogueFlags().hasSavedLong("slaver_alley_slaves_freed_time")
+				?((Main.game.getSecondsPassed() - secondsPassedThisTurn - Main.game.getDialogueFlags().getSavedLong("slaver_alley_slaves_freed_time") > 6*60*60) && !Main.game.isHourBetween(20, 01))
+				:newDay;
 		if(newDay) {
 			pendingSlaveShopsReset = true;
-			pendingSlaveInStocksReset = true;
 			Main.game.getPlayer().resetDaysOrgasmCount();
 			
 			for(String id : Main.game.getPlayer().getFriendlyOccupants()) {
@@ -2869,22 +2885,21 @@ public class Game implements XMLSaving {
 			VengarCaptiveDialogue.applyDailyReset();
 			calculateBankInterest();
 		}
-		// v0.4.8.4: Only generating slaves when the player enters slaver alley is marginally better performance-wise, but creates the issue of the newly-generated slaves not being saved, so I removed this check.
-//		if (WorldType.SLAVER_ALLEY.getPlacesMap().values().contains(Main.game.getPlayer().getLocationPlaceType())) {
-			if (pendingSlaveShopsReset
-					&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_ANAL)
-					&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_FEMALES)
-					&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_MALES)
-					&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_ORAL)
-					&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_VAGINAL)) {
-				SlaverAlleyDialogue.dailyReset();
-				pendingSlaveShopsReset = false;
-			}
-			if (pendingSlaveInStocksReset && !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_PUBLIC_STOCKS)) {
-				SlaverAlleyDialogue.stocksReset();
-				pendingSlaveInStocksReset = false;
-			}
-//		}
+		// v0.4.8.4: Only generating slaves when the player enters slaver alley is marginally better performance-wise, but creates the issue of the newly-generated slaves not being saved, so don't include that check
+		if (pendingSlaveShopsReset
+				&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_ANAL)
+				&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_FEMALES)
+				&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_MALES)
+				&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_ORAL)
+				&& !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_STALL_VAGINAL)) {
+			SlaverAlleyDialogue.dailyReset();
+			pendingSlaveShopsReset = false;
+		}
+		if (pendingSlaveInStocksReset && !Main.game.getPlayer().getLocationPlace().getPlaceType().equals(PlaceType.SLAVER_ALLEY_PUBLIC_STOCKS)) {
+			SlaverAlleyDialogue.stocksReset();
+			pendingSlaveInStocksReset = false;
+			Main.game.getDialogueFlags().removeSavedLong("slaver_alley_slaves_freed_time");
+		}
 		
 		// Angels Kiss update
 		for(int i=1; i <= hoursPassed; i++) {
@@ -2913,11 +2928,15 @@ public class Game implements XMLSaving {
 			// Non-slave NPCs clean clothes:
 			if(inGame) {
 				if(!Main.game.getCharactersPresent().contains(npc)) {
-					if(!npc.isSlave() || npc.hasSlavePermissionSetting(SlavePermissionSetting.CLEANLINESS_WASH_CLOTHES)) {
+					if(!npc.isSlave() || (!npc.getOwner().isPlayer() && npc.hasSlavePermissionSetting(SlavePermissionSetting.CLEANLINESS_WASH_CLOTHES))) {
 						npc.cleanAllClothing(true, false);
 					}
-					if(!npc.isSlave() || npc.hasSlavePermissionSetting(SlavePermissionSetting.CLEANLINESS_WASH_BODY)) {
+					if(!npc.isSlave() || (!npc.getOwner().isPlayer() && npc.hasSlavePermissionSetting(SlavePermissionSetting.CLEANLINESS_WASH_BODY))) {
 						npc.cleanAllDirtySlots(true);
+						// Do not remove odours as that would interfere with fetish content
+//						if(npc.hasSlavePermissionSetting(SlavePermissionSetting.CLEANLINESS_WASH_THOROUGH)) {
+//							npc.clearMuskMarkers();
+//						}
 					}
 				}
 			}
@@ -3384,6 +3403,13 @@ public class Game implements XMLSaving {
 		if(loopDebug) {
 			System.out.println((System.nanoTime()-tStart)/1000000000d+"s");
 		}
+		
+		// Debug turn time stuff:
+		endTurnTimeTaken = (System.nanoTime()-tStart) + endTurnTimeTakenAddition;
+		endTurnTimeTakenAddition = 0;
+		if(Main.game.isDebugMode() || Main.isDisplayingTurnTimer()) {
+			Main.refreshTitle();
+		}
 	}
 	
 	private static void calculateBankInterest() {
@@ -3392,6 +3418,7 @@ public class Game implements XMLSaving {
 		float interest = 0;
 
 		savings += Main.game.getWorlds().get(WorldType.getWorldTypeFromId("innoxia_dominion_bank")).getCell(PlaceType.getPlaceTypeFromId("innoxia_dominion_bank_deposit_box")).getInventory().getMoney();
+		savings += Main.game.getWorlds().get(WorldType.getWorldTypeFromId("innoxia_fields_elis_bank")).getCell(PlaceType.getPlaceTypeFromId("innoxia_fields_elis_bank_deposit_box")).getInventory().getMoney();
 		if(savings>0) {
 			interest = (savings * APR ) / 365f;
 			
@@ -4955,7 +4982,11 @@ public class Game implements XMLSaving {
 	public void applyStartingDateChange() {
 		startingDate = startingDate.plusYears(TIME_SKIP_YEARS);
 		for(NPC npc : Main.game.getAllNPCs()) {
-			npc.setBirthday(npc.getBirthday().plusYears(TIME_SKIP_YEARS)); // Have to do this to keep NPC starting ages as planned
+			int offset = 0;
+			if(startingDate.getDayOfYear()<npc.getBirthday().getDayOfYear()) {
+				offset = -1; // Add an offset if the NPC's birthday hasn't happened yet so that it only rolls back 2 years instead of 3
+			}
+			npc.setBirthday(npc.getBirthday().plusYears(TIME_SKIP_YEARS + offset)); // Have to do this to keep NPC starting ages as planned
 		}
 	}
 	

@@ -733,6 +733,15 @@ public abstract class AbstractItemType extends AbstractCoreType {
 	public String getUnableToBeUsedFromInventoryDescription() {
 		return "This item cannot be used in this way!";
 	}
+
+	public boolean isAbleToBeUsedWhileTrading() {
+		return true;
+	}
+	
+	public String getUnableToBeUsedWhileTradingDescription() {
+		return "You cannot use this item while trading!";
+	}
+	
 	
 	public boolean isAbleToBeUsed(GameCharacter user, GameCharacter target) {
 		return true;

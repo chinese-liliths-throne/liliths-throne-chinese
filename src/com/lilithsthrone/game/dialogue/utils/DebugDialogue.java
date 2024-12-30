@@ -1594,6 +1594,9 @@ public class DebugDialogue {
 	};
 	
 	private static NPC attacker;
+	private static RaceStage attackerRaceStage;
+	private static AbstractSubspecies attackerSubspecies;
+	private static AbstractSubspecies attackerHalfDemonSubspecies;
 	private static void initAttacker() {
 		if(Main.game.getPlayer().getWorldLocation()==WorldType.DOMINION) {
 			attacker = new DominionAlleywayAttacker(Gender.getGenderFromUserPreferences(false, false));
@@ -1617,6 +1620,8 @@ public class DebugDialogue {
 		@Override
 		public void applyPreParsingEffects() {
 			attacker = null;
+			attackerSubspecies = Subspecies.HUMAN;
+			attackerHalfDemonSubspecies = Subspecies.HUMAN;
 		}
 		@Override
 		public String getContent() {
@@ -1659,33 +1664,89 @@ public class DebugDialogue {
 				AbstractSubspecies subspecies = availableSubspecies.get(index - 1);
 				String name = subspecies.getName(null);
 				
-				return new ResponseEffectsOnly(
+				return new Response(
 						Util.capitaliseSentence(name),
-						"Spawn an attacker of the subspecies: "+name) {
+						"Spawn an attacker of the subspecies: "+name,
+						ATTACKER_SPAWN) {
+					@Override
+					public Colour getHighlightColour() {
+						return subspecies.getColour(null);
+					}
+					@Override
+					public void effects() {
+						attackerRaceStage = RaceStage.PARTIAL;
+						if(responseTab==1) {
+							attackerRaceStage = RaceStage.PARTIAL_FULL;
+						} else if(responseTab==2) {
+							attackerRaceStage = RaceStage.LESSER;
+						} else if(responseTab==3) {
+							attackerRaceStage = RaceStage.GREATER;
+						}
+						if(subspecies==Subspecies.HALF_DEMON || responseTab==4) {
+							attackerSubspecies = Subspecies.HALF_DEMON;
+							attackerHalfDemonSubspecies = responseTab==4?subspecies:Subspecies.HUMAN;
+						} else {
+							attackerSubspecies = subspecies;
+							attackerHalfDemonSubspecies = Subspecies.HUMAN;
+						}
+					}
+				};
+				
+			} else if (index == 0) {
+				return new Response("Back", "", DEBUG_MENU);
+			}
+			return null;
+		}
+	};
+	
+	public static final DialogueNode ATTACKER_SPAWN = new DialogueNode("Spawn Attacker", "", false) {
+		@Override
+		public String getContent() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("<p>");
+				sb.append("Choose the attacker's gender.");
+			sb.append("</p>");
+			return sb.toString();
+		}
+		@Override
+		public Response getResponse(int responseTab, int index) {
+			List<Gender> availableGedners = Arrays.asList(Gender.values());
+			
+			if (index!=0 && index<availableGedners.size()+1) {
+				Gender gender = availableGedners.get(index - 1);
+				String name = attackerSubspecies.getName(null);
+				
+				return new ResponseEffectsOnly(
+						Util.capitaliseSentence(gender.getName()),
+						"Spawn an attacker."
+						+ "<br/>Subspecies: "+name
+						+"<br/>Gender: "+gender.getName()
+						+" ("
+							+(gender.getGenderName().isHasPenis()?"[style.italicsGood(Penis)] ":"[style.italicsBad(Penis)] ")
+							+(gender.getGenderName().isHasVagina()?"[style.italicsGood(Vagina)] ":"[style.italicsBad(Vagina)] ")
+							+(gender.getGenderName().isHasBreasts()?"[style.italicsGood(Breasts)]":"[style.italicsBad(Breasts)]")
+						+")") {
+					@Override
+					public Colour getHighlightColour() {
+						return gender.getColour();
+					}
 					@Override
 					public void effects() {
 						initAttacker();
 						
-						if(subspecies==Subspecies.HALF_DEMON || responseTab==4) {
+						if(attackerSubspecies==Subspecies.HALF_DEMON) {
 							attacker.setSubspeciesOverride(null);
 							attacker.setBody(
-									Main.game.getCharacterUtils().generateHalfDemonBody(attacker, attacker.getGender(), responseTab==4?subspecies:Subspecies.HUMAN, false),
+									Main.game.getCharacterUtils().generateHalfDemonBody(attacker, gender, attackerHalfDemonSubspecies, false),
 									false);
 						} else {
 							attacker.setSubspeciesOverride(null);
-							RaceStage stage = responseTab==0
-									?RaceStage.PARTIAL
-									:(responseTab==1
-										?RaceStage.PARTIAL_FULL
-										:(responseTab==2
-											?RaceStage.LESSER
-											:RaceStage.GREATER));
 							
-							if(subspecies==Subspecies.DEMON) {
-								stage = RaceStage.GREATER;
+							if(attackerSubspecies==Subspecies.DEMON) {
+								attackerRaceStage = RaceStage.GREATER;
 							}
 							
-							attacker.setBody(attacker.getGender(), subspecies, stage, true);
+							attacker.setBody(gender, attackerSubspecies, attackerRaceStage, true);
 							
 //							Main.game.getCharacterUtils().reassignBody(
 //									attacker,

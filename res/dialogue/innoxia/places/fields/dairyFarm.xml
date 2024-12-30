@@ -2155,11 +2155,15 @@
 						[style.colourBad(Your alarm is unset!)]
 					#ELSE
 						Rest for
-						#IF((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')+1)-1) >= 60)
-							 [#~~((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')+1)-1) / 60)] hours,
-						#ENDIF
-						#IF((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')+1)-1) % 60 != 0)
-							 [#~~((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')+1)-1) % 60)] minutes,
+						#IF(game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm'))==0)
+							 24 hours,
+						#ELSE
+							#IF((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm'))) >= 60)
+								 [#~~((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm'))) / 60)] hours,
+							#ENDIF
+							#IF((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm'))) % 60 != 0)
+								 [#~~((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm'))) % 60)] minutes,
+							#ENDIF
 						#ENDIF
 						 until your alarm goes off. As well as replenishing your [#ATTRIBUTE_HEALTH_MAXIMUM.getName()] and [#ATTRIBUTE_MANA_MAXIMUM.getName()], you will also get the 'Well Rested' status effect.
 					#ENDIF
@@ -2172,13 +2176,21 @@
 					#ENDIF
 				]]></nextDialogue>
 				<secondsPassed minutes="true"><![CDATA[
-					[#~~(game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')+1)-1)]
+					#IF(game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm'))==0)
+						1440
+					#ELSE
+						[#~~(game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')))]
+					#ENDIF
 				]]></secondsPassed>
 				<effects><![CDATA[
 					[#game.appendToTextStartStringBuilder(game.parseFromFile('txt/places/fields/dairyFarm', 'DORMITORY_REST'))]
-					[#pc.applySleep(~~(game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')+1)-1))]
-					#IF(((game.getHourOfDay() + ((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')+1)-1)/60)) % 24 < 1) ||
-						((game.getHourOfDay() + ((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')+1)-1)/60)) % 24 >= 5))
+					#IF(game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm'))==0)
+						[#pc.applySleep(24*60)]
+					#ELSE
+						[#pc.applySleep(~~(game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm'))))]
+					#ENDIF
+					#IF(((game.getHourOfDay() + ((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')))/60)) % 24 < 1) ||
+						((game.getHourOfDay() + ((game.getMinutesUntilTimeInMinutes(flags.getSavedLong('player_phone_alarm')))/60)) % 24 >= 5))
 						[#dale.returnToHome()]
 					#ENDIF
 				]]></effects>

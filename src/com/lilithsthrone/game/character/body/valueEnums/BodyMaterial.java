@@ -9,13 +9,10 @@ import com.lilithsthrone.game.character.attributes.AbstractAttribute;
 import com.lilithsthrone.game.character.attributes.Attribute;
 import com.lilithsthrone.game.character.body.abstractTypes.AbstractTailType;
 import com.lilithsthrone.game.character.body.coverings.BodyCoveringType;
-import com.lilithsthrone.game.character.body.types.AntennaType;
 import com.lilithsthrone.game.character.body.types.BreastType;
-import com.lilithsthrone.game.character.body.types.HornType;
 import com.lilithsthrone.game.character.body.types.PenisType;
 import com.lilithsthrone.game.character.body.types.TailType;
 import com.lilithsthrone.game.character.body.types.VaginaType;
-import com.lilithsthrone.game.character.body.types.WingType;
 import com.lilithsthrone.game.character.effects.StatusEffect;
 import com.lilithsthrone.game.character.fetishes.AbstractFetish;
 import com.lilithsthrone.game.character.fetishes.Fetish;
@@ -583,10 +580,11 @@ public enum BodyMaterial {
 			doll.setLegConfiguration(doll.getLegType().getRace().getRacialBody().getLegType(), LegConfiguration.BIPEDAL, false);
 		}
 //		doll.setLegConfiguration(doll.getTrueRace().getRacialBody().getLegType(), LegConfiguration.BIPEDAL, false);
-		doll.setTailType(TailType.NONE);
-		doll.setHornType(HornType.NONE);
-		doll.setAntennaType(AntennaType.NONE);
-		doll.setWingType(WingType.NONE);
+		// Why was this added? Commented out in 0.4.10.4
+//		doll.setTailType(TailType.NONE);
+//		doll.setHornType(HornType.NONE);
+//		doll.setAntennaType(AntennaType.NONE);
+//		doll.setWingType(WingType.NONE);
 		
 		// Sexual orifices:
 		doll.completeVirginityReset();

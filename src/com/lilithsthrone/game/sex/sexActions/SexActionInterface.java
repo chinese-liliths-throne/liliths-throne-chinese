@@ -21,7 +21,6 @@ import com.lilithsthrone.game.character.body.valueEnums.LegConfiguration;
 import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.fetishes.AbstractFetish;
 import com.lilithsthrone.game.character.fetishes.Fetish;
-import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.responses.ResponseEffectsOnly;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
@@ -97,7 +96,10 @@ public interface SexActionInterface {
 			}
 			for(SexAreaInterface sa : this.getPerformingCharacterAreas()) {
 				if(sa.isPenetration() && ((SexAreaPenetration)sa).isTakesVirginity()) {
-					return false;
+					// Allow penetration-on-penetration actions, such as handjobs
+					if(!this.getTargetedCharacterAreas().stream().anyMatch(targetedArea -> targetedArea.isPenetration() && ((SexAreaPenetration)sa).isTakesVirginity())) {
+						return false;
+					}
 				}
 			}
 			return true;
@@ -361,35 +363,83 @@ public interface SexActionInterface {
 			stopSB.append(s);
 		}
 		
-		if(getActionType()==SexActionType.START_ONGOING) {
+		//TODO bugged!
+		// If starting a new ongoing action, then stop ongoing actions which involve the areas associated with this sex action
+		// TONGUE & MOUTH are associated with one another, so need a special catch for that
+		if(getActionType()==SexActionType.START_ONGOING || getActionType()==SexActionType.START_ADDITIONAL_ONGOING) {
 			for(Entry<SexAreaInterface, SexAreaInterface> entry : getSexAreaInteractions().entrySet()) {
 				try {
 					if(!entry.getKey().isFree(Main.sex.getCharacterPerformingAction())) {
 						Map<GameCharacter, Set<SexAreaInterface>> map = Main.sex.getOngoingActionsMap(Main.sex.getCharacterPerformingAction()).get(entry.getKey());
 						Entry<GameCharacter, Set<SexAreaInterface>> firstEntry = map.entrySet().iterator().next();
-						stopSB.append(Main.sex.stopOngoingAction(
-								Main.sex.getCharacterPerformingAction(),
-								entry.getKey(),
-								firstEntry.getKey(),
-								firstEntry.getValue().iterator().next(),
-								false));
+						// Only stop the action if it's engaged with an area that isn't the one involved in the additional ongoing:
+						if(getActionType()!=SexActionType.START_ADDITIONAL_ONGOING || !firstEntry.getValue().contains(entry.getValue())) {
+							stopSB.append(Main.sex.stopOngoingAction(
+									Main.sex.getCharacterPerformingAction(),
+									entry.getKey(),
+									firstEntry.getKey(),
+									firstEntry.getValue().iterator().next(),
+									false));
+						}
 					}
 				} catch(Exception ex) {
 					// No first entry in iterator found
 				}
 				try {
-					if(!entry.getValue().isFree(Main.sex.getCharacterTargetedForSexAction(this))) {
-						Map<GameCharacter, Set<SexAreaInterface>> map = Main.sex.getOngoingActionsMap(Main.sex.getCharacterTargetedForSexAction(this)).get(entry.getValue());
-						Entry<GameCharacter, Set<SexAreaInterface>> firstEntry = map.entrySet().iterator().next();
-						stopSB.append(Main.sex.stopOngoingAction(
-								firstEntry.getKey(),
-								firstEntry.getValue().iterator().next(),
-								Main.sex.getCharacterTargetedForSexAction(this),
-								entry.getValue(),
-								false));
+					if(entry.getKey()==SexAreaPenetration.TONGUE || entry.getKey()==SexAreaOrifice.MOUTH) {
+						SexAreaInterface associatedOral = entry.getKey()==SexAreaOrifice.MOUTH?SexAreaPenetration.TONGUE:SexAreaOrifice.MOUTH;
+						if(!associatedOral.isFree(Main.sex.getCharacterPerformingAction())) {
+							Map<GameCharacter, Set<SexAreaInterface>> map = Main.sex.getOngoingActionsMap(Main.sex.getCharacterPerformingAction()).get(associatedOral);
+							if(!map.isEmpty()) {
+								Entry<GameCharacter, Set<SexAreaInterface>> firstEntry = map.entrySet().iterator().next();
+								// Only stop the action if it's engaged with an area that isn't the one involved in the additional ongoing:
+								if(getActionType()!=SexActionType.START_ADDITIONAL_ONGOING || !firstEntry.getValue().contains(entry.getValue())) {
+									stopSB.append(Main.sex.stopOngoingAction(
+											Main.sex.getCharacterPerformingAction(),
+											associatedOral,
+											firstEntry.getKey(),
+											firstEntry.getValue().iterator().next(),
+											false));
+								}
+							}
+						}
 					}
 				} catch(Exception ex) {
 					// No first entry in iterator found
+				}
+				if(getActionType()!=SexActionType.START_ADDITIONAL_ONGOING) {
+					try {
+					// Do not stop ongoing for the targeted character if this is START_ADDITIONAL_ONGOING
+						if(!entry.getValue().isFree(Main.sex.getCharacterTargetedForSexAction(this))) {
+							Map<GameCharacter, Set<SexAreaInterface>> map = Main.sex.getOngoingActionsMap(Main.sex.getCharacterTargetedForSexAction(this)).get(entry.getValue());
+							Entry<GameCharacter, Set<SexAreaInterface>> firstEntry = map.entrySet().iterator().next();
+							stopSB.append(Main.sex.stopOngoingAction(
+									firstEntry.getKey(),
+									firstEntry.getValue().iterator().next(),
+									Main.sex.getCharacterTargetedForSexAction(this),
+									entry.getValue(),
+									false));
+						}
+					} catch(Exception ex) {
+						// No first entry in iterator found
+					}
+					try {
+						if(entry.getValue()==SexAreaPenetration.TONGUE || entry.getValue()==SexAreaOrifice.MOUTH) {
+							SexAreaInterface associatedOral = entry.getValue()==SexAreaOrifice.MOUTH?SexAreaPenetration.TONGUE:SexAreaOrifice.MOUTH;
+							if(!associatedOral.isFree(Main.sex.getCharacterTargetedForSexAction(this))) {
+								Map<GameCharacter, Set<SexAreaInterface>> map = Main.sex.getOngoingActionsMap(Main.sex.getCharacterTargetedForSexAction(this)).get(associatedOral);
+								Entry<GameCharacter, Set<SexAreaInterface>> firstEntry = map.entrySet().iterator().next();
+								stopSB.append(Main.sex.stopOngoingAction(
+										firstEntry.getKey(),
+										firstEntry.getValue().iterator().next(),
+										Main.sex.getCharacterTargetedForSexAction(this),
+										associatedOral,
+										false));
+							}
+						}
+					} catch(Exception ex) {
+						// No first entry in iterator found
+					}
 				}
 			}
 		}
@@ -1158,7 +1208,7 @@ public interface SexActionInterface {
 			} else if(getActionType()==SexActionType.SPEECH
 					|| getActionType()==SexActionType.SPEECH_WITH_ALTERNATIVE) {
 				// Check penetrations:
-				if(Main.sex.getCharacterPerformingAction().hasPersonalityTrait(PersonalityTrait.MUTE)) {//Sex.isOngoingActionsBlockingSpeech(Main.sex.getCharacterPerformingAction())) {
+				if(Main.sex.getCharacterPerformingAction().isMute()) {//Sex.isOngoingActionsBlockingSpeech(Main.sex.getCharacterPerformingAction())) {
 					return convertToNullResponse();
 				}
 				

@@ -99,6 +99,7 @@ public class RoomPlayer {
 		Main.game.getPlayer().setActive(false);
 		Main.game.endTurn(sleepTimeInMinutes*60);
 		Main.game.getPlayer().setActive(true);
+		Main.game.endTurnTimeTakenAddition = Main.game.endTurnTimeTaken;
 
 		slavesPresentWhenWaking = slavesInRoom(Main.game.getHourOfDay());
 		slavesToWakePlayer = slavesInRoom(Main.game.getHourOfDay()).stream().filter((npc) -> npc.hasSlaveJobSetting(SlaveJob.BEDROOM, SlaveJobSetting.BEDROOM_WAKE_UP)).collect(Collectors.toList());
@@ -217,15 +218,19 @@ public class RoomPlayer {
 				long alarmTime = Main.game.getDialogueFlags().getSavedLong("player_phone_alarm");
 				if(alarmTime >= 0) {
 					String alarmTimeStr = Main.game.getDisplayTime(LocalTime.ofSecondOfDay(alarmTime*60));
-					int timeUntilAlarm = Main.game.getMinutesUntilTimeInMinutes((int)alarmTime-1)+1; // -1+1 is so we get 1440 instead of 0
+					int timeUntilAlarm = Main.game.getMinutesUntilTimeInMinutes((int)alarmTime);
+					
 					return new Response("Rest until alarm (" + alarmTimeStr + ")",
-							"Rest for " + (timeUntilAlarm >= 60 ? timeUntilAlarm / 60 + " hours, " : "")
-									+ (timeUntilAlarm % 60 != 0 ? timeUntilAlarm % 60 + " minutes, " : "")
+							"Rest for "
+									+ (timeUntilAlarm==0
+										?"24 hours"
+										:((timeUntilAlarm >= 60 ? timeUntilAlarm / 60 + " hours, " : "")
+												+ (timeUntilAlarm % 60 != 0 ? timeUntilAlarm % 60 + " minutes, " : "")))
 									+ "until your alarm goes off. As well as replenishing your " + Attribute.HEALTH_MAXIMUM.getName() + " and " + Attribute.MANA_MAXIMUM.getName() + ", you will also get the 'Well Rested' status effect.",
 							AUNT_HOME_PLAYERS_ROOM_SLEEP) {
 						@Override
 						public void effects() {
-							sleepTimeInMinutes = timeUntilAlarm;
+							sleepTimeInMinutes = timeUntilAlarm==0?24*60:timeUntilAlarm;
 							RoomPlayer.applySleep(sleepTimeInMinutes);
 						}
 					};

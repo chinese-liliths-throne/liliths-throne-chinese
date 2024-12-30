@@ -244,6 +244,7 @@ public class Sex {
 	
 	// Counting for stats:
 	private Map<GameCharacter, Integer> orgasmCountMap;
+	private Map<GameCharacter, Integer> additionalOrgasmsNeededMap;
 	/**Maps: Characters performing denials -> Map of characters they've denied mapped to the number of times they were denied. */
 	private Map<GameCharacter, Map<GameCharacter, Integer>> deniedOrgasmsCountMap;
 	private Map<GameCharacter, Map<GameCharacter, Map<SexType, Integer>>> sexCountMap;
@@ -388,6 +389,7 @@ public class Sex {
 		sexFinished = false;
 		
 		orgasmCountMap = new HashMap<>();
+		additionalOrgasmsNeededMap = new HashMap<>();
 		deniedOrgasmsCountMap = new HashMap<>();
 		sexCountMap = new HashMap<>();
 		cummedInsideMap = new HashMap<>();
@@ -687,6 +689,16 @@ public class Sex {
 					case CHAINS:
 					case ROPE:
 						sexSB.append("Having been securely bound with "+(immobilisationType==ImmobilisationType.CHAINS?"chains":"ropes")+", ");
+						sexSB.append(Util.stringsToStringList(names, false));
+						if(names.size()>1 || immobilisedCharacters.contains(Main.game.getPlayer())) {
+							sexSB.append(" are");
+						} else {
+							sexSB.append(" is");
+						}
+						sexSB.append(" unable to move!");
+						break;
+					case STOCKS:
+						sexSB.append("Having been securely locked into a set of stocks, ");
 						sexSB.append(Util.stringsToStringList(names, false));
 						if(names.size()>1 || immobilisedCharacters.contains(Main.game.getPlayer())) {
 							sexSB.append(" are");
@@ -2931,7 +2943,8 @@ public class Sex {
 							vaginaClothing.setDirty(Main.sex.getCharacterPerformingAction(), true);
 							stringBuilderForAppendingDescriptions.append("<p style='text-align:center;'>");
 								stringBuilderForAppendingDescriptions.append("[style.italicsGirlCum(");
-									stringBuilderForAppendingDescriptions.append("[npc.NamePos] "+vaginaClothing.getName()+" "+(vaginaClothing.getClothingType().isPlural()?"are":"is")+" dirtied from [npc.her] squirting!");
+									stringBuilderForAppendingDescriptions.append(
+											UtilText.parse(Main.sex.getCharacterPerformingAction(), "[npc.NamePos] "+vaginaClothing.getName()+" "+(vaginaClothing.getClothingType().isPlural()?"are":"is")+" dirtied from [npc.her] squirting!"));
 								stringBuilderForAppendingDescriptions.append(")]");
 							stringBuilderForAppendingDescriptions.append("</p>");
 						}
@@ -3039,6 +3052,9 @@ public class Sex {
 			charactersRequestingKnot = new HashSet<>();
 			charactersRequestingPullout = new HashMap<>();
 			SexFlags.playerPreparedForCharactersOrgasm.remove(getCharacterPerformingAction());
+			
+			// Remove status effect:
+			getCharacterPerformingAction().removeStatusEffect(StatusEffect.DESPERATELY_HORNY);
 		}
 
 		// Handle if parts have just become exposed:
@@ -3178,8 +3194,8 @@ public class Sex {
 		List<String> clothingDirtied = new ArrayList<>();
 		List<String> slotsDirtied = new ArrayList<>();
 		StringBuilder dirtiedSlotsSB = new StringBuilder();
-		List<InventorySlot> slotsEncountered = new ArrayList<>();
-		List<AbstractClothing> clothingEncountered = new ArrayList<>();
+		Set<InventorySlot> slotsEncountered = new HashSet<>();
+		Set<InventorySlot> clothingEncounteredAsSlots = new HashSet<>();
 		boolean nonClothingAreaDirtied = false;
 		boolean forceSlotsPlural = false;
 		boolean forceClothingPlural = false;
@@ -3206,10 +3222,10 @@ public class Sex {
 					}
 					if(!dirtyClothing.isEmpty()) {
 						for(AbstractClothing c : dirtyClothing) {
-							if(!clothingEncountered.contains(c)) {
+							if(!clothingEncounteredAsSlots.contains(c.getSlotEquippedTo())) {
+								clothingEncounteredAsSlots.add(c.getSlotEquippedTo());
 								c.setDirty(cumTarget, true);
 								clothingDirtied.add(c.getName());
-								clothingEncountered.add(c);
 								if(c.getClothingType().isPlural()) {
 									forceClothingPlural = true;
 								}
@@ -6114,6 +6130,18 @@ public class Sex {
 		character.incrementTotalOrgasmCount(increment);
 		orgasmCountMap.putIfAbsent(character, 0);
 		orgasmCountMap.put(character, orgasmCountMap.get(character)+increment);
+	}
+	
+	public int getNumberOfAdditionalOrgasms(GameCharacter character) {
+		return additionalOrgasmsNeededMap.getOrDefault(character, 0);
+	}
+	
+	public void setNumberOfAdditionalOrgasms(GameCharacter character, int count) {
+		additionalOrgasmsNeededMap.put(character, count);
+	}
+	
+	public void incrementNumberOfAdditionalOrgasms(GameCharacter character, int increment) {
+		additionalOrgasmsNeededMap.merge(character, increment, Integer::sum);
 	}
 
 	public int getNumberOfDeniedOrgasms(GameCharacter characterDenied) {

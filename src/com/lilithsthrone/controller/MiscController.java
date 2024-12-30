@@ -498,7 +498,9 @@ public class MiscController {
 					id = "SPELL_UPGRADE_"+upgrade.getEntry();
 					if (MainController.document.getElementById(id) != null) {
 						((EventTarget) MainController.document.getElementById(id)).addEventListener("click", event->{
-							if (Spell.isSpellUpgradeAvailable(SpellManagement.getSpellOwner(), s, upgrade) && SpellManagement.getSpellOwner().getSpellUpgradePoints(upgrade.getCategory())>=upgrade.getEntry().getPointCost()) {
+							if (Spell.isSpellUpgradeAvailable(SpellManagement.getSpellOwner(), s, upgrade)
+									&& SpellManagement.getSpellOwner().getSpellUpgradePoints(upgrade.getCategory())>=upgrade.getEntry().getPointCost()
+									&& !SpellManagement.getSpellOwner().hasSpellUpgrade(upgrade.getEntry())) {
 								SpellManagement.getSpellOwner().addSpellUpgrade(upgrade.getEntry());
 								SpellManagement.getSpellOwner().incrementSpellUpgradePoints(upgrade.getCategory(), -upgrade.getEntry().getPointCost());
 								Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));

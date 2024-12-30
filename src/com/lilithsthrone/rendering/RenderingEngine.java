@@ -87,7 +87,6 @@ import com.lilithsthrone.world.population.Population;
 public enum RenderingEngine {
 	ENGINE;
 	
-	private static boolean zoomedIn = true;
 	private static boolean renderedDisabledMap = false;
 
 	private static int pageLeft = 0;
@@ -2162,10 +2161,10 @@ public enum RenderingEngine {
 //			renderedDisabledMap = true;
 //		}
 
-		int mapSize = zoomedIn ? 2 : 3;
-		float unit = zoomedIn ? 18f : 13.25f;
+		int mapSize = isZoomedIn() ? 2 : 3;
+		float unit = isZoomedIn() ? 18f : 13.25f;
 		
-		String tileWidthStyle = "width:" + unit + "%; border-width:1%; margin:"+(zoomedIn?1:0.5)+"%;";
+		String tileWidthStyle = "width:" + unit + "%; border-width:1%; margin:"+(isZoomedIn()?1:0.5)+"%;";
 		String tileMovementDisabledStyle = "border-color:#111;";
 		Vector2i playerPosition = Main.game.getPlayer().getLocation();
 		
@@ -2540,11 +2539,11 @@ public enum RenderingEngine {
 	}
 
 	public static boolean isZoomedIn() {
-		return zoomedIn;
+		return Main.getProperties().hasValue(PropertyValue.mapZoomedIn);
 	}
 
 	public static void setZoomedIn(boolean zoomedIn) {
-		RenderingEngine.zoomedIn = zoomedIn;
+		Main.getProperties().setValue(PropertyValue.mapZoomedIn, zoomedIn);
 	}
 
 	public static boolean isRenderedDisabledMap() {

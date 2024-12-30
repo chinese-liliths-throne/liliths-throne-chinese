@@ -873,8 +873,8 @@ public class TooltipInventoryEventListener implements EventListener {
 			for(ItemEffect ie : absItem.getEffects()) {
 				listIncrease += ie.getEffectsDescription(Main.game.getPlayer(), Main.game.getPlayer()).size();
 			}
-			listIncrease+=absItem.getEffectTooltipLines().size();
 		}
+		listIncrease+=absItem.getEffectTooltipLines().size();
 		
 		if(!absItem.getExtraDescriptions(equippedToCharacter).isEmpty()) { //TODO
 			yIncrease += 2 + absItem.getExtraDescriptions(equippedToCharacter).size();
@@ -929,6 +929,7 @@ public class TooltipInventoryEventListener implements EventListener {
 			}
 		}
 		yIncrease += Math.max(0, listIncrease-4);
+//		System.out.println(listIncrease + ", "+Math.max(0, listIncrease-4));
 		
 		for(String s : absItem.getEffectTooltipLines()) {
 			tooltipSB.append("</br>"+s);
@@ -1001,7 +1002,7 @@ public class TooltipInventoryEventListener implements EventListener {
 		}
 		
 		if(!author.isEmpty()) {
-			tooltipSB.append("<div class='description' style='height:52px;'>" + author + "</div>");
+			tooltipSB.append("<div class='description' style='min-height:52px;'>" + author + "</div>");
 		}
 		
 		tooltipSB.append("</body>");

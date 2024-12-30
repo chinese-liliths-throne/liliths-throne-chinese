@@ -71,6 +71,7 @@ import com.lilithsthrone.game.character.npc.dominion.Lilaya;
 import com.lilithsthrone.game.character.persona.NameTriplet;
 import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
+import com.lilithsthrone.game.character.persona.Relationship;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.quests.Quest;
 import com.lilithsthrone.game.character.quests.QuestLine;
@@ -936,6 +937,14 @@ public class Lyssieth extends NPC {
 	@Override
 	public boolean isAbleToBeImpregnated() {
 		return true;
+	}
+
+	@Override
+	public Set<Relationship> getRelationshipsTo(GameCharacter character, Relationship... excludedRelationships) {
+		if(character.isPlayer() && Main.game.getDialogueFlags().hasFlag("innoxia_child_of_lyssieth")) {
+			return Util.newHashSetOfValues(Relationship.Parent);
+		}
+		return super.getRelationshipsTo(character, excludedRelationships);
 	}
 	
 	public void growCock(AbstractPenisType type) {

@@ -7,6 +7,7 @@
 		<preParsingEffects><![CDATA[
 			[#fia.equipMainWeaponFromNowhere(itemGen.generateWeapon('innoxia_utility_flashlight'))]
 			[#fia.setLocation(pc)]
+			[#flags.setFlag(FLAG_innoxia_doll_factory_exterior_population_hidden, true)]
 		]]></preParsingEffects>
 		<content folderPath="txt/places/dominion/sex_shop/factory">MEET_FIA_START</content>
 		<secondsPassed minutes="true"><![CDATA[5]]></secondsPassed>
@@ -150,6 +151,7 @@
 			[#fia.setLocation(pc)]
 			[#saellatrix.setLocation(WORLD_TYPE_EMPTY, PLACE_TYPE_GENERIC_HOLDING_CELL)]
 			[#game.appendToTextEndStringBuilder(pc.setQuestProgress(QUEST_LINE_SIDE_DOLL_FACTORY, QUEST_DOLL_FACTORY_3))]
+			[#flags.setFlag(FLAG_innoxia_doll_factory_exterior_population_hidden, false)]
 		]]></preParsingEffects>
 		<content/>
 		<secondsPassed minutes="true"><![CDATA[5]]></secondsPassed>

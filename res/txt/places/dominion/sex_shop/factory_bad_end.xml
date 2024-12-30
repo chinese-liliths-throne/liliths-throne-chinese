@@ -11,14 +11,16 @@
 		#ENDIF
 	-->
 	<htmlContent tag="GENERIC_OBEDIENCE_DESCRIPTION"><![CDATA[
-	<p style='text-align:center;'><i>
-		[#pc.getObedience().getDescription(pc, true, true)]
-	</i></p>
+	#IF(game.isBadEndsEnabled())
+		<p style='text-align:center;'><i>
+			[#pc.getObedience().getDescription(pc, true, true)]
+		</i></p>
+	#ENDIF
 	]]>
 	</htmlContent>
 
 	<htmlContent tag="PLAYER_OBEDIENCE_POSTFIX"><![CDATA[
-	#IF(pc.isDoll())
+	#IF(pc.isDoll() && game.isBadEndsEnabled())
 		<p style='text-align:center;'><i>
 			Obedience (<span style='color: [#pc.getObedience().getColour().toWebHexString()]''>[#~~pc.getObedienceValue()]</span>/100)
 			<br/>[#pc.getObedience().getDescription(pc, true, true)]
@@ -550,7 +552,7 @@
 		 dildos of varying sizes, shapes, and colours which are lined up on the table before her. Seemingly satisfied with their order, the doll suddenly steps back and turns to leave, and at that moment she catches sight of you.
 	</p>
 	<p>
-		[doll.speech(Doll [#flags.getSavedLong('player_doll_number')]... You should be in storage,)] the doll states, having identified you via the barcode tattoo on your forehead. Gesturing to the floor beside the dildo-stacked table, she continues, [doll.speech(As you're here, you will assist me with quality control. Kneel down beside the table.)]
+		[doll.speech(Doll [#saellatrix.getPlayerDollNumberFullString()]... You should be in storage,)] the doll states, having identified you via the barcode tattoo on your forehead. Gesturing to the floor beside the dildo-stacked table, she continues, [doll.speech(As you're here, you will assist me with quality control. Kneel down beside the table.)]
 	</p>
 	<p>
 		Despite the fact that your mind is still your own, you find yourself obediently stepping forwards and preparing to carry out this red doll's order. Managing to catch yourself after taking a few steps, you realise that you don't have to do what this doll says. Then again, perhaps it'd be more rewarding to submit and act like a good little sex toy...
@@ -861,7 +863,7 @@
 	<!-- Angelixx encounters -->
 	
 	<htmlContent tag="ANGELIXX_ENCOUNTER"><![CDATA[
-	#IF(pc.getObedienceValue()==100)
+	#IF(pc.getObedienceValue()==100 && game.isBadEndsEnabled())
 		<p>
 			As you continue searching the factory for Fia, you suddenly spot the familiar figure of Angelixx up ahead. Instead of rushing to hide, however, your first instinct is to stand to attention and wait for her to approach. You've learned to be a good, obedient doll, and you now want nothing more than to submit to your Mistress and let her finish your transformation.
 		</p>
@@ -892,12 +894,16 @@
 			)] you hear her mutter.
 		</p>
 		<p>
-			#IF(pc.getObedienceValue()>=75)
-				As you hear Angelixx talk, you feel an overwhelming urge to reveal yourself and surrender to her. You want to be a good doll for Mistress...
-			#ELSEIF(pc.getObedienceValue()>=50)
-				As you hear Angelixx talk, you're gripped by a strong urge to reveal yourself and surrender to her. A part of you wants to be a good doll for Mistress...
+			#IF(game.isBadEndsEnabled())
+				#IF(pc.getObedienceValue()>=75)
+					As you hear Angelixx talk, you feel an overwhelming urge to reveal yourself and surrender to her. You want to be a good doll for Mistress...
+				#ELSEIF(pc.getObedienceValue()>=50)
+					As you hear Angelixx talk, you're gripped by a strong urge to reveal yourself and surrender to her. A part of you wants to be a good doll for Mistress...
+				#ELSE
+					As you hear Angelixx talk, your new body gives you a shameful urge to reveal yourself and surrender to her. A small part of you wants to be good doll for Mistress...
+				#ENDIF
 			#ELSE
-				As you hear Angelixx talk, your new body gives you a shameful urge urge to reveal yourself and surrender to her. A small part of you wants to be good doll for Mistress...
+				You can't help but shudder as you hear Angelixx's voice. Desperate not to be caught and fully transformed into a doll, you remain hidden...
 			#ENDIF
 		</p>
 	#ENDIF
@@ -1084,7 +1090,7 @@
 		[angelixx.speech(That fucking bitch! I can't find her anywhere! Not anywhere!)] Angelixx cries. Pulling her hair in frustration, she starts pacing back and forth while talking to herself, [angelixx.speech(Calm down, just calm down... Sae doesn't know yet. There's still time to fix this! She has the body of a doll now, perhaps she'll simply obey my commands? Yes... All I need to do is call out for her to come to me! My sisters won't know who I'm talking to, so they won't be able to report this to Sae... It's perfect!)]
 	</p>
 	<p>
-		With a desperate look on her pretty face, she starts to walk forwards, calling out as she does so, [angelixx.speech(Doll [#flags.getSavedLong('player_doll_number')]! Come to me, right this instant!)]
+		With a desperate look on her pretty face, she starts to walk forwards, calling out as she does so, [angelixx.speech(Doll [#saellatrix.getPlayerDollNumberFullString()]! Come to me, right this instant!)]
 	</p>
 	]]>
 	</htmlContent>
@@ -1597,10 +1603,10 @@
 		[saellatrix.speech(Tell me what number that doll was,)] your Mistress demands.
 	</p>
 	<p>
-		[angelixx.speech(She's doll [#flags.getSavedLong('player_doll_number')],)] Angelixx replies, [angelixx.speech(but if you wanted her, she's probably sold by now.)]
+		[angelixx.speech(She's doll [#saellatrix.getPlayerDollNumberFullString()],)] Angelixx replies, [angelixx.speech(but if you wanted her, she's probably sold by now.)]
 	</p>
 	<p>
-		[saellatrix.speech(Doll [#flags.getSavedLong('player_doll_number')]! Come here!)] your Mistress orders.
+		[saellatrix.speech(Doll [#saellatrix.getPlayerDollNumberFullString()]! Come here!)] your Mistress orders.
 	</p>
 	]]>
 	</htmlContent>

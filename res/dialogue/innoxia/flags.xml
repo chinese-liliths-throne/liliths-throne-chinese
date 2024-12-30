@@ -80,6 +80,7 @@
 			<flag dailyReset="false">sex_shop_escorted_out</flag>
 			
 		<!-- Lovienne's Luxuries - Factory: -->
+			<flag dailyReset="false">doll_factory_exterior_population_hidden</flag>
 			<flag dailyReset="false">doll_factory_intro_triggered</flag>
 			<flag dailyReset="false">doll_factory_encountered_locked_door_1</flag>
 			<flag dailyReset="false">doll_factory_unlocked_locked_door_1</flag>
@@ -479,6 +480,8 @@
 		
 	
 	<!-- You can ignore this section, I just use it to track the ids of saved long values (using [#flags.setSavedLong(id, value)] calls)
+	
+	slaver_alley_slaves_freed_time (the time in seconds at which slaves were set free from the stocks in Slaver Alley)
 	
 	meraxis_duel_player_wins (Meraxis duel player wins)
 	meraxis_duel_player_losses (Meraxis duel player losses)

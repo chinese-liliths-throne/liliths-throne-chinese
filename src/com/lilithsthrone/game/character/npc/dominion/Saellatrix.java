@@ -1330,6 +1330,9 @@ public class Saellatrix extends NPC {
 			doll.setBreastType(BreastType.HUMAN);
 			doll.setVaginaType(VaginaType.HUMAN);
 			doll.setAssType(AssType.HUMAN);
+			doll.setWingType(WingType.NONE);
+			doll.setHornType(HornType.NONE);
+			doll.setTailType(TailType.NONE);
 			BodyMaterial.applyGenericSiliconeBodyChange(doll);
 		}
 		doll.setBodyMaterial(BodyMaterial.SILICONE);
@@ -1344,10 +1347,10 @@ public class Saellatrix extends NPC {
 		int dollCount = getDollsSold();
 		if(doll instanceof Fiammetta) {
 			// Make sure that Fia's number is theplayer's +1
-			dollCount = (int) Main.game.getDialogueFlags().getSavedLong("player_doll_number");
+			dollCount = (int) Main.game.getDialogueFlags().getSavedLong("player_doll_number") + 1;
 		}
 		String dollNumber = "#"+String.format("%05d", dollCount);
-		UtilText.addSpecialParsingString(dollNumber, true);
+		UtilText.addSpecialParsingString(Util.intToIndividualNumbersString(dollCount), true);
 		
 		doll.addTattoo(InventorySlot.EYES,
 				new Tattoo("innoxia_property_barcode",
@@ -1362,6 +1365,10 @@ public class Saellatrix extends NPC {
 		if(doll.isPlayer()) {
 			Main.game.getDialogueFlags().setSavedLong("player_doll_number", dollCount);
 		}
+	}
+	
+	public String getPlayerDollNumberFullString() {
+		return Util.intToIndividualNumbersString((int) Main.game.getDialogueFlags().getSavedLong("player_doll_number"));
 	}
 
 	public void completeDollBodySiliconeDollification(GameCharacter doll) {

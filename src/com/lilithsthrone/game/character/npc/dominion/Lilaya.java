@@ -103,7 +103,7 @@ public class Lilaya extends NPC {
 						+ " Although she still exists in this world, she isn't your aunt any more, and in this reality, she's a half-demon called 'Lilaya'."
 						+ " Whereas your old aunt was a researcher at the city museum, Lilaya is a privately-funded researcher of the arcane."
 						+ " Due to her demonic appearance and the fact that she's the daughter of the Lilin Lyssieth, people usually regard Lilaya with a mixture of fear and respect.",
-				48, Month.DECEMBER, 28,
+				48, Month.DECEMBER, 28, // Note that Lilaya's age is always set to 22 years older than the player in CharacterCreation.applyGameStart(), so the age of 48 here doesn't mean much.
 				25,
 				Gender.F_V_B_FEMALE, Subspecies.DEMON, RaceStage.PARTIAL_FULL,
 				new CharacterInventory(10),

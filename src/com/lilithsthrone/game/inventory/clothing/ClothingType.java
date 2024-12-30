@@ -36,16 +36,6 @@ import com.lilithsthrone.utils.colours.PresetColour;
  */
 public class ClothingType {
 	
-	//TODO
-//	Replace tape crosses with special item "roll of tape"
-//		10 uses, and can:
-//			tape mouth
-//			bind wrists
-//			bind feet
-//			tape nipples
-//			tape pussy
-//			tape asshole
-	
 	public static AbstractClothingType TORSO_SLEEVELESS_TURTLENECK = new AbstractClothingType(350,
 			"a",
 			false,
@@ -2671,7 +2661,9 @@ public class ClothingType {
 		oldIdConversionMap.put("CHEST_SWIMSUIT", "innoxia_chest_swimsuit");
 		oldIdConversionMap.put("CHEST_TUBE_TOP", "innoxia_chest_tube_top");
 
-		oldIdConversionMap.put("NIPPLE_TAPE_CROSSES", "innoxia_nipple_tape_crosses");
+//		oldIdConversionMap.put("NIPPLE_TAPE_CROSSES", "innoxia_nipple_tape_crosses");
+		oldIdConversionMap.put("NIPPLE_TAPE_CROSSES", "innoxia_tape_roll");
+		oldIdConversionMap.put("innoxia_nipple_tape_crosses", "innoxia_tape_roll");
 		
 		oldIdConversionMap.put("LEG_SKIRT", "innoxia_leg_skirt");
 		oldIdConversionMap.put("LEG_PENCIL_SKIRT", "innoxia_leg_pencil_skirt");
@@ -2943,7 +2935,7 @@ public class ClothingType {
 						ClothingType.getClothingTypeFromId("innoxia_leg_skirt"),
 						ClothingType.getClothingTypeFromId("innoxia_neck_heart_necklace"),
 						ClothingType.getClothingTypeFromId("innoxia_neck_ankh_necklace"),
-						ClothingType.getClothingTypeFromId("innoxia_nipple_tape_crosses"),
+						ClothingType.getClothingTypeFromId("innoxia_tape_roll"),
 						ClothingType.getClothingTypeFromId("innoxia_hand_fishnet_gloves"),
 						ClothingType.getClothingTypeFromId("innoxia_sock_fishnets"),
 						ClothingType.getClothingTypeFromId("innoxia_sock_pantyhose"),

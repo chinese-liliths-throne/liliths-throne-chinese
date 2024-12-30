@@ -2965,6 +2965,8 @@ public class PhoneDialogue {
 		return Math.min(size, Main.getProperties().getItemsDiscoveredCount())+"/"+size;
 	}
 	
+	private static int encyclopediaItemIndex = 0;
+	
 	public static final DialogueNode ENCYCLOPEDIA = new DialogueNode("Encyclopedia", "", true) {
 		@Override
 		public String getContent() {
@@ -3034,6 +3036,7 @@ public class PhoneDialogue {
 						"Have a look at all the different items that you've encountered in your travels.", ITEM_CATALOGUE){
 					@Override
 					public void effects() {
+						encyclopediaItemIndex = 0;
 						Main.getProperties().setValue(PropertyValue.newItemDiscovered, false);
 					}
 				};
@@ -3187,9 +3190,10 @@ public class PhoneDialogue {
 								+ "</div>";
 				sbDamageTypes.setLength(0);
 				if(discovered) {
+					float width = weaponType.getAvailableDamageTypes().size()>4?(72/weaponType.getAvailableDamageTypes().size()):18;
 					for(DamageType dt : weaponType.getAvailableDamageTypes()) {
 						sbDamageTypes.append("<div class='square-button' "+(discovered?"id='"+(weaponType.getId()+"_"+dt.toString())+"'":"")
-												+ " style='cursor:default; width:18%; margin:1%; padding:0; background-color:"+dt.getMultiplierAttribute().getColour().toWebHexString()+";'>"
+												+ " style='cursor:default; width:"+width+"%; margin:1%; padding:0; background-color:"+dt.getMultiplierAttribute().getColour().toWebHexString()+";'>"
 											+ "</div>");
 					}
 				}
@@ -3386,45 +3390,91 @@ public class PhoneDialogue {
 				}
 			}
 			
-			sb.append("<div class='container-full-width'>");
-				sb.append("<p style='width:100%; text-align:center; padding:0 margin:0;'>");
-					sb.append("[style.boldBlueLight(Items ("+itemKnownCount+"/"+itemCount+"))]");
-				sb.append("</p>");
-				sb.append(sbItems.toString());
-			sb.append("</div>");
+			if(encyclopediaItemIndex==0) {
+				sb.append("<div class='container-full-width'>");
+					sb.append("<p style='width:100%; text-align:center; padding:0 margin:0;'>");
+						sb.append("[style.boldBlueLight(Items ("+itemKnownCount+"/"+itemCount+"))]");
+					sb.append("</p>");
+					sb.append(sbItems.toString());
+				sb.append("</div>");
+			}
 
-			sb.append("<div class='container-full-width'>");
-				sb.append("<p style='width:100%; text-align:center; padding:0 margin:0;'>");
-					sb.append("[style.boldOrange(Books ("+bookKnownCount+"/"+bookCount+"))]");
-				sb.append("</p>");
-				sb.append(sbBooks.toString());
-			sb.append("</div>");
+			if(encyclopediaItemIndex==1) {
+				sb.append("<div class='container-full-width'>");
+					sb.append("<p style='width:100%; text-align:center; padding:0 margin:0;'>");
+						sb.append("[style.boldOrange(Books ("+bookKnownCount+"/"+bookCount+"))]");
+					sb.append("</p>");
+					sb.append(sbBooks.toString());
+				sb.append("</div>");
+				
+				sb.append("<div class='container-full-width'>");
+					sb.append("<p style='width:100%; text-align:center; padding:0 margin:0;'>");
+						sb.append("[style.boldArcane(Essences ("+essenceKnownCount+"/"+essenceCount+"))]");
+					sb.append("</p>");
+					sb.append(sbEssences.toString());
+				sb.append("</div>");
+			}
 
-			sb.append("<div class='container-full-width'>");
-				sb.append("<p style='width:100%; text-align:center; padding:0 margin:0;'>");
-					sb.append("[style.boldArcane(Essences ("+essenceKnownCount+"/"+essenceCount+"))]");
-				sb.append("</p>");
-				sb.append(sbEssences.toString());
-			sb.append("</div>");
-
-			sb.append("<div class='container-full-width'>");
-				sb.append("<p style='width:100%; text-align:center; padding:0 margin:0;'>");
-					sb.append("[style.boldSpells(Spells ("+spellKnownCount+"/"+spellCount+"))]");
-				sb.append("</p>");
-				sb.append(sbSpells.toString());
-			sb.append("</div>");
+			if(encyclopediaItemIndex==2) {
+				sb.append("<div class='container-full-width'>");
+					sb.append("<p style='width:100%; text-align:center; padding:0 margin:0;'>");
+						sb.append("[style.boldSpells(Spells ("+spellKnownCount+"/"+spellCount+"))]");
+					sb.append("</p>");
+					sb.append(sbSpells.toString());
+				sb.append("</div>");
+			}
 			
 			return sb.toString();
 		}
 
 		@Override
 		public Response getResponse(int responseTab, int index) {
-			if (index == 0) {
+			if(index==1) {
+				return new Response("Items",
+						encyclopediaItemIndex==0
+							?"You're already viewing all of the items that you've discovered..."
+							:"View all of the items that you've discovered.",
+						encyclopediaItemIndex==0
+							?null
+							:ITEM_CATALOGUE){
+					@Override
+					public void effects() {
+						encyclopediaItemIndex = 0;
+					}
+				};
+				
+			} else if(index==2) {
+				return new Response("Books & essences",
+						encyclopediaItemIndex==1
+							?"You're already viewing all of the racial books and essences that you've discovered..."
+							:"View all of the racial books and essences that you've discovered.",
+						encyclopediaItemIndex==1
+							?null
+							:ITEM_CATALOGUE){
+					@Override
+					public void effects() {
+						encyclopediaItemIndex = 1;
+					}
+				};
+				
+			} else if(index==3) {
+				return new Response("Spell books",
+						encyclopediaItemIndex==2
+							?"You're already viewing all of the spell books that you've discovered..."
+							:"View all of the spell books that you've discovered.",
+						encyclopediaItemIndex==2
+							?null
+							:ITEM_CATALOGUE){
+					@Override
+					public void effects() {
+						encyclopediaItemIndex = 2;
+					}
+				};
+				
+			} else if (index == 0) {
 				return new Response("Back", "Return to the encyclopedia.", ENCYCLOPEDIA);
-			
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		@Override
@@ -3754,6 +3804,9 @@ public class PhoneDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index==1) {
+				if(Main.game.getPlayer().isDoll()) {
+					return new Response("Reset", "You cannot reset your perks and traits while you're a doll!", null);
+				}
 				return new Response("Reset", "Reset all perks and traits, refunding all points spent. (This is a temporary action while the perk tree is still under development.)", CHARACTER_PERK_TREE) {
 					@Override
 					public void effects() {
@@ -4227,8 +4280,10 @@ public class PhoneDialogue {
 					"<i>You spend the next ").append(period).append("loitering about, doing nothing in particular...</i>").append("</p>");
 			Main.game.getPlayer().setActive(false);
 			Main.game.endTurn(60*minutes);
+			Main.game.endTurnTimeTakenAddition = Main.game.endTurnTimeTaken;
 			Main.game.getPlayer().setActive(true);
 			Main.game.setContent(new Response("", "", Main.game.getDefaultDialogue()));
+			Main.game.endTurnTimeTakenAddition = Main.game.endTurnTimeTaken;
 		}
 
 		@Override

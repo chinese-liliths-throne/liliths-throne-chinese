@@ -18,7 +18,7 @@ public enum SlavePermissionSetting {
 
 	// General/Misc.:
 	
-	GENERAL_SILENCE(false, "Silence", "Forbid this slave from talking."),
+	GENERAL_SILENCE(false, "Silence", "Forbid this slave from talking. [style.italics(This slave will be treated as though they're mute while this permission is active.)]"),
 	GENERAL_CRAWLING(false, "Crawling", "Forbid this slave from walking, forcing them to crawl around on all fours."),
 	GENERAL_HOUSE_FREEDOM(false, "House Freedom", "Grant this slave the freedom to walk around Lilaya's house in their free time."),
 	GENERAL_OUTSIDE_FREEDOM(false, "Outside Freedom", "Grant this slave the freedom to leave Lilaya's house in their free time."),
@@ -199,10 +199,11 @@ public enum SlavePermissionSetting {
 					+ " eventually making them <b style='color:"+Muscle.FOUR_RIPPED.getColour().toWebHexString()+";'>"+Muscle.FOUR_RIPPED.getName(false)+"</b>."),
 	
 	
-	// Claenliness:
+	// Cleanliness:
 	
 	CLEANLINESS_WASH_CLOTHES(true, "Wash Clothing", "Tell this slave to keep their clothing washed and clean."),
 	CLEANLINESS_WASH_BODY(true, "Wash Body", "Tell this slave to keep their body washed and clean, which will keep their orifices free of creampies."),
+	CLEANLINESS_WASH_THOROUGH(false, "Remove Odours", "When this slave washes their body, they will also remove any musky odours they might be marked with."),
 	
 	
 	// Sleeping:

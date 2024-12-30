@@ -4,7 +4,7 @@ import com.lilithsthrone.game.character.GameCharacter;
 
 /**
  * @since 0.2.2
- * @version 0.4
+ * @version 0.4.10.7
  * @author Innoxia
  */
 public enum SlaveEvent {

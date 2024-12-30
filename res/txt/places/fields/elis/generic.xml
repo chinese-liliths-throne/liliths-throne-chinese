@@ -149,9 +149,9 @@
 	<p>
 		Just like those out in the rest of the Foloi Fields, the fields surrounding Elis
 		#IF(game.getSeason()==SEASON_WINTER)
-			 are primarily given over to the production of crops, which at this time of year include, among many others, things such as
-		#ELSE
 			 have been ploughed and slurried in preparation for the coming year.
+		#ELSE
+			 are primarily given over to the production of crops, which at this time of year include, among many others, things such as
 		#ENDIF
 		#IF(game.getSeason()==SEASON_SPRING)
 			 potatoes, rhubarb, and cauliflower. Although not as common as these crop fields, there's also a significant amount of land dedicated to fruit orchards, which at this time of year are filled with beautifully-blossoming trees.

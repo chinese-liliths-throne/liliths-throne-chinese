@@ -62,8 +62,20 @@ public class Tattoo extends AbstractCoreItem implements XMLSaving {
 				tattooToCopy.secondaryColour,
 				tattooToCopy.tertiaryColour,
 				tattooToCopy.glowing,
-				new TattooWriting(tattooToCopy.writing),
-				new TattooCounter(tattooToCopy.counter));
+				tattooToCopy.writing==null
+					?new TattooWriting(
+							"",
+							PresetColour.BASE_GREY,
+							false)
+					:new TattooWriting(tattooToCopy.writing),
+				tattooToCopy.counter==null
+					?new TattooCounter(
+							TattooCounterType.NONE,
+							TattooCountType.NUMBERS,
+							PresetColour.BASE_GREY,
+							false,
+							0)
+					:new TattooCounter(tattooToCopy.counter));
 		this.effects = new ArrayList<>(tattooToCopy.effects);
 		this.attributeModifiers = new HashMap<>(tattooToCopy.attributeModifiers);
 	}

@@ -428,6 +428,10 @@ public class SlaveDialogue {
 				}
 				enslavementWorked = true;
 				
+				// Apply effects after content has been generated due to conditional checks:
+				Main.game.getPlayer().addSlave((NPC) enslavementTarget);
+				enslavementTarget.setLocation(WorldType.SLAVER_ALLEY, PlaceType.SLAVER_ALLEY_SLAVERY_ADMINISTRATION, true);
+				
 			} else {
 				if(target.isSlave()) {
 					Main.game.appendToTextStartStringBuilder(UtilText.parseFromXMLFile(path, "ENSLAVEMENT_FAIL_ALREADY_SLAVE", target));
@@ -446,9 +450,6 @@ public class SlaveDialogue {
 				enslavementWorked = false;
 			}
 			
-			// Apply effects after content has been generated due to conditional checks:
-			Main.game.getPlayer().addSlave((NPC) enslavementTarget);
-			enslavementTarget.setLocation(WorldType.SLAVER_ALLEY, PlaceType.SLAVER_ALLEY_SLAVERY_ADMINISTRATION, true);
 		}
 		@Override
 		public String getContent() {
@@ -781,20 +782,24 @@ public class SlaveDialogue {
 			public void effects() {
 				getSlave().wakeUp();
 				
-				Main.game.appendToTextEndStringBuilder("<p>");
-					Main.game.appendToTextEndStringBuilder("Wanting to interact with [npc.name], you [pc.step] over to where [npc.sheIs] sleeping and ");
+				StringBuilder sb = new StringBuilder();
+				sb.append("<p>");
+					sb.append("Wanting to interact with [npc.name], you [pc.step] over to where [npc.sheIs] sleeping and ");
 					if(Main.game.getPlayer().isMute()) {
-						Main.game.appendToTextEndStringBuilder(" give [npc.herHim] a shake.");
+						sb.append(" give [npc.herHim] a shake.");
 					} else {
-						Main.game.appendToTextEndStringBuilder(" call out [npc.her] name.");
+						sb.append(" call out [npc.her] name.");
 					}
 					if(getSlave().hasTrait(Perk.HEAVY_SLEEPER, true)) {
-						Main.game.appendToTextEndStringBuilder(" Being such a heavy sleeper, this isn't enough to wake [npc.herHim],"
+						sb.append(" Being such a heavy sleeper, this isn't enough to wake [npc.herHim],"
 								+ " and you have to give [npc.herHim] several forceful shoves before [npc.she] finally begins to sleepily open [npc.her] [npc.eyes].");
 					}
-					Main.game.appendToTextEndStringBuilder(" Waking to see you standing over [npc.herHim], [npc.she] quickly stands up and turns to face you.");
-				Main.game.appendToTextEndStringBuilder("</p>");
-				Main.game.appendToTextEndStringBuilder(UtilText.parse(getSlave(), "<p style='text-align:center;'>[style.italicsMinorBad([npc.Name] doesn't appreciate being woken up...)]</p>"));
+					sb.append(" Waking to see you standing over [npc.herHim], [npc.she] quickly stands up and turns to face you.");
+				sb.append("</p>");
+				
+				sb.append("<p style='text-align:center;'>[style.italicsMinorBad([npc.Name] doesn't appreciate being woken up...)]</p>");
+				
+				Main.game.appendToTextEndStringBuilder(UtilText.parse(getSlave(), sb.toString()));
 				Main.game.appendToTextEndStringBuilder(getSlave().incrementAffection(Main.game.getPlayer(), -1));
 				Main.game.appendToTextEndStringBuilder(getSlaveStartCoreContent());
 			}
@@ -2215,7 +2220,7 @@ public class SlaveDialogue {
 				
 			} else {
 				UtilText.nodeContentSB.append("<p>"
-							+ "You decide to try and make some small talk with [npc.name], and ask [npc.her] a series of questions ranging from how [npc.sheIs] finding life as your slave,"
+							+ "You decide to try and make some small talk with [npc.name], and ask [npc.herHim] a series of questions ranging from how [npc.sheIs] finding life as your slave,"
 							+ " to what [npc.she] thinks of the peculiar arcane weather here in Dominion.");
 				
 				switch(AffectionLevelBasic.getAffectionLevelFromValue(getSlave().getAffection(Main.game.getPlayer()))) {
