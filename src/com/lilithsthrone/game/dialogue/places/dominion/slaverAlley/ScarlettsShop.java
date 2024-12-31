@@ -3139,7 +3139,7 @@ public class ScarlettsShop {
 							"Your slave does not have a spinneret!<br/><i>Spinnerets are gained via certain tail or leg types.</i>",
 							null);
 				}
-				return new Response("Spinneret", "Customise aspects of your slave's spinneret.", HELENAS_SHOP_CUSTOM_SLAVE_BODY_SPINNERET);
+				return new Response("Spinneret", "Customise aspects of your slave's spinneret.", HELENAS_SHOP_CUSTOM_SLAVE_BODY_SPINNERET) {
 					@Override
 					public int getSecondsPassed() {
 						return 10;
