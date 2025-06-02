@@ -128,6 +128,8 @@ public class ItemEffect implements XMLSaving {
 			secondaryMod = parentElement.getAttribute("secondaryModifier"); // Support for effects prior to 0.3.1.5
 		}
 		
+		TFPotency loadedPotency = parentElement.getAttribute("potency").equals("null")?null:TFPotency.valueOf(parentElement.getAttribute("potency"));
+		
 //		if(itemEffectType.equals("RACE_DEMON")) {
 //			throw new NullPointerException();
 //		}
@@ -180,6 +182,11 @@ public class ItemEffect implements XMLSaving {
 			case "TF_MOD_ORIFICE_DEEP_2":
 				secondaryMod = "TF_MOD_DEPTH_2";
 				break;
+			case "CLOTHING_SEALING":
+				if(loadedPotency==TFPotency.MAJOR_BOOST || loadedPotency==TFPotency.BOOST) {
+					loadedPotency = TFPotency.MINOR_BOOST;
+				}
+				break;
 		}
 		
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.1") && itemEffectType=="TF_TAIL" && primaryMod=="TF_MOD_SIZE") { // Girth TF was moved from TF_MOD_SIZE to TF_MOD_SIZE_SECONDARY in v0.4
@@ -204,7 +211,7 @@ public class ItemEffect implements XMLSaving {
 					ItemEffectType.getItemEffectTypeFromId(itemEffectType),
 					primary,
 					secondary,
-					(parentElement.getAttribute("potency").equals("null")?null:TFPotency.valueOf(parentElement.getAttribute("potency"))),
+					loadedPotency,
 					Integer.valueOf(parentElement.getAttribute("limit")));
 			
 		} catch(Exception ex) {

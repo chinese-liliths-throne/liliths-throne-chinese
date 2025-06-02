@@ -834,14 +834,14 @@ public class SlaveDialogue {
 					}
 				}
 			UtilText.nodeContentSB.append("</p>");
-
+			
 			if(!getSlave().isAsleep() && !isDollStatue()) {
 				UtilText.nodeContentSB.append(getSlaveStartCoreContent());
 			}
 			
 			return UtilText.parse(getSlave(), UtilText.nodeContentSB.toString());
 		}
-
+		
 		@Override
 		public String getResponseTabTitle(int index) {
 			if(index == 0) {

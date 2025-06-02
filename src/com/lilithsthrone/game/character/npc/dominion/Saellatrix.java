@@ -142,7 +142,7 @@ public class Saellatrix extends NPC {
 					+ " The fact that she works at her mother's sex shop shows how important the business is to Lovienne.",
 				187, Month.AUGUST, 2,
 				35, Gender.F_V_B_FEMALE, Subspecies.DEMON, RaceStage.GREATER,
-				new CharacterInventory(10),
+				new CharacterInventory(false, 10),
 				WorldType.getWorldTypeFromId("innoxia_dominion_sex_shop"), PlaceType.getPlaceTypeFromId("innoxia_dominion_sex_shop_counter"),
 				true);
 		

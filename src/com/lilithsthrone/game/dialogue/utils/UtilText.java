@@ -113,6 +113,7 @@ import com.lilithsthrone.game.character.body.valueEnums.FluidFlavour;
 import com.lilithsthrone.game.character.body.valueEnums.FluidModifier;
 import com.lilithsthrone.game.character.body.valueEnums.FootStructure;
 import com.lilithsthrone.game.character.body.valueEnums.GenitalArrangement;
+import com.lilithsthrone.game.character.body.valueEnums.HairLength;
 import com.lilithsthrone.game.character.body.valueEnums.HornLength;
 import com.lilithsthrone.game.character.body.valueEnums.LegConfiguration;
 import com.lilithsthrone.game.character.body.valueEnums.Muscle;
@@ -206,16 +207,18 @@ import com.lilithsthrone.game.occupantManagement.slave.SlavePermissionSetting;
 import com.lilithsthrone.game.settings.ForcedFetishTendency;
 import com.lilithsthrone.game.settings.ForcedTFTendency;
 import com.lilithsthrone.game.sex.GenericSexFlag;
+import com.lilithsthrone.game.sex.LubricationType;
 import com.lilithsthrone.game.sex.OrgasmCumTarget;
 import com.lilithsthrone.game.sex.SexAreaOrifice;
 import com.lilithsthrone.game.sex.SexAreaPenetration;
 import com.lilithsthrone.game.sex.SexPace;
 import com.lilithsthrone.game.sex.SexParticipantType;
+import com.lilithsthrone.game.sex.positions.AbstractSexPosition;
+import com.lilithsthrone.game.sex.positions.SexPosition;
 import com.lilithsthrone.game.sex.positions.slots.SexSlot;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotManager;
 import com.lilithsthrone.game.sex.sexActions.baseActions.ToyVagina;
 import com.lilithsthrone.main.Main;
-import com.lilithsthrone.rendering.SVGImages;
 import com.lilithsthrone.utils.Units;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
@@ -530,7 +533,7 @@ public class UtilText {
 					
 				} else if(Main.game.isInSex() && Main.sex.getAllParticipants().contains(target)) {
 					if(Main.sex.isCharacterEngagedInOngoingAction(target)) {
-						modifiedSentence = Util.addSexSounds(modifiedSentence, 6);
+						modifiedSentence = Util.addSexSounds(modifiedSentence, 6, Main.sex.getSexPace(target)==SexPace.SUB_RESISTING);
 					}
 					
 				}
@@ -687,7 +690,7 @@ public class UtilText {
 	}
 	
 	public static String getPentagramSymbol() {
-		return "&#9737;"; // Java doesn't support unicode 6 ;_;   No pentagram for me... ;_;  "&#9956";
+		return "&#9956;";//"&#9737;"; // Java doesn't support unicode 6 ;_;   No pentagram for me... ;_;  "&#9956";
 	}
 	
 	public static String getShieldSymbol() {
@@ -720,18 +723,35 @@ public class UtilText {
 	}
 	
 	public static String formatAsEssencesUncoloured(int amount, String tag, boolean withOverlay) {
-		return "<div class='item-inline'>"
-					+ SVGImages.SVG_IMAGE_PROVIDER.getEssenceUncoloured() + (withOverlay?"<div class='overlay no-pointer' id='ESSENCE_ICON'></div>":"")
-				+"</div>"
-				+ " <"+tag+" style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>"+Units.number(amount)+"</"+tag+">";
+		String disabledColour = PresetColour.TEXT_GREY.toWebHexString();
+		return
+//				"<div class='item-inline'>"
+//					+ SVGImages.SVG_IMAGE_PROVIDER.getEssenceUncoloured() + (withOverlay?"<div class='overlay no-pointer' id='ESSENCE_ICON'></div>":"")
+//				+"</div>"
+				"<b style='color:"+disabledColour+"; -webkit-text-stroke: 1px "+disabledColour+"; padding-right:2px;'>"+getPentagramSymbol()+"</b>"
+				+ "<"+tag+" style='color:"+disabledColour+";'>"+Units.number(amount)+"</"+tag+">";
 	}
 	
+
+	public static String formatAsEssences(String essences, String tag) {
+		try {
+			int essenceInt = Integer.parseInt(UtilText.parse(essences));
+			return formatAsEssences(essenceInt, tag, false);
+		} catch(Exception ex) {
+		}
+		return formatAsMoney(essences, tag, PresetColour.TEXT);
+	}
 	
 	public static String formatAsEssences(int amount, String tag, boolean withOverlay) {
-		return "<div class='item-inline'>"
-					+ SVGImages.SVG_IMAGE_PROVIDER.getEssence() + (withOverlay?"<div class='overlay no-pointer' id='ESSENCE_ICON'></div>":"")
-				+"</div>"
-				+ " <"+tag+" style='color:"+PresetColour.GENERIC_ARCANE.toWebHexString()+";'>"+Units.number(amount)+"</"+tag+">";
+		String arcaneColour = PresetColour.GENERIC_ARCANE.toWebHexString();
+		return
+//				"<div class='item-inline'>"
+//					+ SVGImages.SVG_IMAGE_PROVIDER.getEssence() + (withOverlay?"<div class='overlay no-pointer' id='ESSENCE_ICON'></div>":"")
+//				+"</div>"
+//				 "<b style='color:"+arcaneColour+"; text-shadow: "+PresetColour.BASE_PINK_LIGHT.toWebHexString()+" 0 0 16px;'>&#9956;</b>"
+
+				 "<b style='color:"+arcaneColour+"; -webkit-text-stroke: 1px "+arcaneColour+"; padding-right:2px;'>"+getPentagramSymbol()+"</b>"
+				+ "<"+tag+" style='color:"+arcaneColour+";'>"+Units.number(amount)+"</"+tag+">";
 	}
 
 	// Money formatting:
@@ -1474,10 +1494,36 @@ public class UtilText {
 				"Formats the supplied number as money, using the tag as the html tag."){
 			@Override
 			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
-				return UtilText.formatAsMoney(arguments.split(", ")[0], arguments.split(", ")[1]);
+				String secondArgument = "span";
+				try {
+					secondArgument = arguments.split(", ")[1];
+				} catch(Exception ex) {
+					System.err.println("Formatting 'moneyFormat' missing second argument, so 'span' used instead.");
+					ex.printStackTrace();
+				}
+				return UtilText.formatAsMoney(arguments.split(", ")[0], secondArgument);
 			}
 		});
 
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues("essenceFormat"),
+				true,
+				false,
+				"(amount, tag)",
+				"Formats the supplied number as essences, using the tag as the html tag."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				String secondArgument = "span";
+				try {
+					secondArgument = arguments.split(", ")[1];
+				} catch(Exception ex) {
+					System.err.println("Formatting 'moneyFormat' missing second argument, so 'span' used instead.");
+					ex.printStackTrace();
+				}
+				return UtilText.formatAsEssences(arguments.split(", ")[0], secondArgument);
+			}
+		});
+		
 		commandsList.add(new ParserCommand(
 				Util.newArrayListOfValues(
 						"intFormat",
@@ -9973,6 +10019,9 @@ public class UtilText {
 		for(CupSize cupSize : CupSize.values()) {
 			engine.put("CUP_SIZE_"+cupSize.toString(), cupSize);
 		}
+		for(HairLength hairLength : HairLength.values()) {
+			engine.put("HAIR_LENGTH_"+hairLength.toString(), hairLength);
+		}
 		for(FootStructure footStructure : FootStructure.values()) {
 			engine.put("FOOT_STRUCTURE_"+footStructure.toString(), footStructure);
 		}
@@ -10206,8 +10255,14 @@ public class UtilText {
 		for(OrgasmCumTarget oct : OrgasmCumTarget.values()) {
 			engine.put("OCT_"+oct.toString(), oct);
 		}
+		for(Entry<String, AbstractSexPosition> position : SexPosition.idToSexPositionMap.entrySet()) {
+			engine.put("SEX_POSITION_"+position.getKey(), position.getValue());
+		}
 		for(Entry<String, SexSlot> slot : SexSlotManager.getIdToSexSlotMap().entrySet()) {
 			engine.put("SEX_SLOT_"+slot.getKey(), slot.getValue());
+		}
+		for(LubricationType lube : LubricationType.values()) {
+			engine.put("LUBRICATION_"+lube.toString(), lube);
 		}
 		
 		

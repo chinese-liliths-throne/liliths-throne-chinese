@@ -304,6 +304,9 @@ h6{
 	padding:0;
 	cursor:pointer;
 }
+.overlay.no-pointer{
+	cursor:default;
+}
 
 /*ITEM VIEW SPECIFIC*/
 .colour-box {

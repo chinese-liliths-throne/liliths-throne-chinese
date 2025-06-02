@@ -2036,6 +2036,9 @@ public class PlaceType {
 				
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_LOUNGE)) {
 				return PlaceUpgrade.getSlaveLoungeUpgrades();
+				
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_DRESSING_ROOM)) {
+				return PlaceUpgrade.getDressingRoomUpgrades();
 			}
 			
 			return PlaceUpgrade.getCoreRoomUpgrades();

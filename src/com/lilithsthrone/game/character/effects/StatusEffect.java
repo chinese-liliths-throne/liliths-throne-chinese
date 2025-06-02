@@ -81,6 +81,7 @@ import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.world.Weather;
 import com.lilithsthrone.world.WorldRegion;
 import com.lilithsthrone.world.WorldType;
+import com.lilithsthrone.world.places.GenericPlace;
 import com.lilithsthrone.world.places.PlaceType;
 
 /**
@@ -1548,21 +1549,26 @@ public class StatusEffect {
 				sb.append(" As an arcane-powered sex doll, [npc.nameIsFull] filled with a colossal amount of energy!");
 				
 			} else {
-				if(!target.isVulnerableToArcaneStorm()) {
-					sb.append(" [npc.NamePos] affinity with the arcane has rendered [npc.herHim] almost completely immune to the arousing effects of arcane storms, with the only effect being feeling a little hornier than usual.");
+				if(target.getWorldLocation().getWorldRegion()!=WorldRegion.DOMINION && target.getWorldLocation().getWorldRegion()!=WorldRegion.HARPY_NESTS) {
+					sb.append(" [npc.NameIsFull] far enough away from the storm's epicentre to be rendered all but immune to its arousing effects.");
 				} else {
-					sb.append(" [npc.NameIsFull] far enough away from the storm's epicentre to be rendered all but immune to its arousing effects!");
+					sb.append(" [npc.NamePos] affinity with the arcane has rendered [npc.herHim] almost completely immune to the arousing effects of arcane storms.");
 				}
 			}
 			return UtilText.parse(target, sb.toString());
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
+			GenericPlace targetPlace =
+					(target.isElemental() && ((Elemental)target).getSummoner()!=null)
+						?((Elemental)target).getSummoner().getLocationPlace()
+						:target.getLocationPlace();
+			
 			return Main.game.getCurrentWeather()==Weather.MAGIC_STORM
 					&& Main.game.isInNewWorld()
 					&& Main.game.isStarted()
-					&& ((!target.isVulnerableToArcaneStorm() && !(target.isElemental() && ((Elemental)target).getSummoner()!=null?((Elemental)target).getSummoner().getLocationPlace():target.getLocationPlace()).isStormImmune())
-							|| (target.getWorldLocation().getWorldRegion()!=WorldRegion.DOMINION && target.getWorldLocation().getWorldRegion()!=WorldRegion.HARPY_NESTS));
+					&& !targetPlace.isStormImmune()
+					&& (!target.isVulnerableToArcaneStorm() || (target.getWorldLocation().getWorldRegion()!=WorldRegion.DOMINION && target.getWorldLocation().getWorldRegion()!=WorldRegion.HARPY_NESTS));
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -1641,11 +1647,16 @@ public class StatusEffect {
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
+			GenericPlace targetPlace =
+					(target.isElemental() && ((Elemental)target).getSummoner()!=null)
+						?((Elemental)target).getSummoner().getLocationPlace()
+						:target.getLocationPlace();
+			
 			return Main.game.getCurrentWeather()==Weather.MAGIC_STORM
 					&& Main.game.isInNewWorld()
 					&& Main.game.isStarted()
 					&& target.isVulnerableToArcaneStorm()
-					&& (!(target.isElemental() && ((Elemental)target).getSummoner()!=null?((Elemental)target).getSummoner().getLocationPlace():target.getLocationPlace()).isStormImmune() && !target.isProtectedFromArcaneStorm())
+					&& (!targetPlace.isStormImmune() && !target.isProtectedFromArcaneStorm())
 					&& (target.getWorldLocation().getWorldRegion()==WorldRegion.DOMINION || target.getWorldLocation().getWorldRegion()==WorldRegion.HARPY_NESTS);
 		}
 		@Override
@@ -1726,11 +1737,15 @@ public class StatusEffect {
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
+			GenericPlace targetPlace =
+					(target.isElemental() && ((Elemental)target).getSummoner()!=null)
+						?((Elemental)target).getSummoner().getLocationPlace()
+						:target.getLocationPlace();
+			
 			return Main.game.getCurrentWeather()==Weather.MAGIC_STORM
 					&& Main.game.isInNewWorld()
 					&& Main.game.isStarted()
-					&& ((target.isElemental() && ((Elemental)target).getSummoner()!=null?((Elemental)target).getSummoner().getLocationPlace():target.getLocationPlace()).isStormImmune() || target.isProtectedFromArcaneStorm())
-					&& (target.getWorldLocation().getWorldRegion()==WorldRegion.DOMINION || target.getWorldLocation().getWorldRegion()==WorldRegion.HARPY_NESTS);
+					&& (targetPlace.isStormImmune() || target.isProtectedFromArcaneStorm());
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -2429,6 +2444,9 @@ public class StatusEffect {
 					if(clothing.getSlotEquippedTo()==InventorySlot.ANUS && (tags.contains(ItemTag.SEALS_ANUS) || tags.contains(ItemTag.PLUGS_ANUS))
 							|| clothing.getSlotEquippedTo()==InventorySlot.VAGINA && (tags.contains(ItemTag.SEALS_VAGINA) || tags.contains(ItemTag.PLUGS_VAGINA))
 							|| clothing.getSlotEquippedTo()==InventorySlot.NIPPLE && (tags.contains(ItemTag.SEALS_NIPPLES) || tags.contains(ItemTag.PLUGS_NIPPLES))) {
+						if(sb.length()>0) {
+							sb.append("<br/>");
+						}
 						sb.append("You use your <b>"+clothing.getDisplayName(true)+"</b> to clean your "+clothing.getSlotEquippedTo().getName()
 								+(seals
 										?" as you equip "+(clothing.getClothingType().isPlural()?"them":"it")
@@ -5302,6 +5320,38 @@ public class StatusEffect {
 			return UtilText.parse(target,
 					"After consuming a '[#ITEM_innoxia_pills_broodmother.getName(false)]', [npc.namePos] fertility and virility have been temporarily boosted,"
 							+ " and if [npc.she] impregnates someone or becomes impregnated [npc.herself], [npc.she] will conceive far more offspring than usual!");
+		}
+		@Override
+		public boolean isSexEffect() {
+			return true;
+		}
+	};
+
+	public static AbstractStatusEffect LUBE_PILL = new AbstractStatusEffect(80,
+			"lubricated body",
+			"lube_pill",
+			PresetColour.WETNESS,
+			PresetColour.GENERIC_EXCELLENT,
+			PresetColour.GENERIC_EXCELLENT,
+			true,
+			Util.newHashMapOfValues(
+					new Value<>(Attribute.RESTING_LUST, 5f)),
+			Util.newArrayListOfValues(
+					"[style.colourSex(During sex:)]",
+					"[style.colourWetness(Instantly lubricates)] orifices",
+					"[style.colourWetness(Instantly produces)] precum")) {
+		@Override
+		public String getDescription(GameCharacter target) {
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("[npc.NameHasFull] consumed a '[#ITEM_innoxia_pills_lubrication.getName(false)]', and now during sexual situations ");
+			if(target.hasPenisIgnoreDildo()) {
+				sb.append("[npc.her] cock will instantly start producing precum, while [npc.her] orifices will drip with natural lubrication.");
+			} else {
+				sb.append("[npc.her] orifices will drip with natural lubrication.");
+			}
+			
+			return UtilText.parse(target, sb.toString());
 		}
 		@Override
 		public boolean isSexEffect() {
@@ -12080,27 +12130,36 @@ public class StatusEffect {
 			}
 			
 			sb.append("<br/>[npc.Name] [npc.verb(need)] to orgasm [style.boldSex(" + Util.intToCount(target.getOrgasmsBeforeSatisfied()) + ")] before [npc.sheIs] satisfied.");
+
 			
 			return UtilText.parse(target, sb.toString());
 		}
 		@Override
 		public List<Value<Integer, String>> getAdditionalDescriptions(GameCharacter target) {
-			int bonus = Main.sex.getNumberOfAdditionalOrgasms(target);
-			if(!target.isPlayer() && bonus != 0) {
-				List<Value<Integer, String>> additionalDescriptions = new ArrayList<>();
-				
-				if(bonus>0) {
-					additionalDescriptions.add(
-							new Value<>(2, "[npc.Her] desire has been [style.boldExcellent(boosted)], and so this goal is [style.boldGood(" + Util.intToString(bonus) + " orgasm" + (bonus==1?"":"s") + ")] higher than normal!"));
-				} else {
-					additionalDescriptions.add(
-							new Value<>(2, "[npc.Her] desire has been [style.boldTerrible(suppressed)], and so this goal is [style.boldBad(" + Util.intToString(-bonus) + " orgasm" + (bonus==-1?"":"s") + ")] lower than normal!"));
-				}
-				
-				return additionalDescriptions;
+			List<Value<Integer, String>> additionalDescriptions = new ArrayList<>();
+			
+			if(Main.sex.getNumberOfOrgasms(target)>=target.getOrgasmsBeforeSatisfied()) {
+				additionalDescriptions.add(new Value<>(2, UtilText.parse(target, "[npc.NameIsFull] [style.colourExcellent(satisfied)] and will be happy if the sex is brought to an end.")));
+			} else {
+				additionalDescriptions.add(new Value<>(2, UtilText.parse(target, "[npc.NameIsFull] [style.colourTerrible(not satisfied yet)] and [npc.do]n't want the sex to come to an end.")));
 			}
 			
-			return super.getAdditionalDescriptions(target);
+			int bonus = Main.sex.getNumberOfAdditionalOrgasms(target);
+			if(!target.isPlayer() && bonus != 0) {
+				if(bonus>0) {
+					additionalDescriptions.add(
+							new Value<>(2,
+									UtilText.parse(target,
+											"[npc.Her] desire has been [style.boldExcellent(boosted)], and so this goal is [style.boldGood(" + Util.intToString(bonus) + " orgasm" + (bonus==1?"":"s") + ")] higher than normal!")));
+				} else {
+					additionalDescriptions.add(
+							new Value<>(2,
+									UtilText.parse(target,
+											"[npc.Her] desire has been [style.boldTerrible(suppressed)], and so this goal is [style.boldBad(" + Util.intToString(-bonus) + " orgasm" + (bonus==-1?"":"s") + ")] lower than normal!")));
+				}
+			}
+
+			return additionalDescriptions;
 		}
 		@Override
 		public List<String> getModifiersAsStringList(GameCharacter target) {
@@ -12133,6 +12192,13 @@ public class StatusEffect {
 				}
 			}
 			return modList;
+		}
+		@Override
+		public String getPathName(GameCharacter owner) {
+			if(Main.sex.getNumberOfOrgasms(owner)>=owner.getOrgasmsBeforeSatisfied()) {
+				return "sexEffects/orgasmsSatisfied";
+			}
+			return super.getPathName(owner);
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {

@@ -803,7 +803,7 @@ public class Race {
 				PresetColour.SPELL_SCHOOL_ARCANE,
 				Disposition.NEUTRAL,
 				RacialClass.OTHER,
-				CombatBehaviour.BALANCED,
+				CombatBehaviour.SPELLS,
 				0.5f,
 				1,
 				1,

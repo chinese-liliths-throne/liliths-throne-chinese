@@ -62,8 +62,9 @@
 		</secondaryColours> 
 		<secondaryColoursDye values="ALL"/>
 		
-		<itemTags/>
-		
+		<itemTags> 
+			<tag>NOT_FOR_SALE</tag>
+		</itemTags>
 	</coreAttributes>
 	
 	<hitDescriptions>

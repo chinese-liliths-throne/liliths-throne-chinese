@@ -102,7 +102,7 @@ public class Natalya extends NPC {
 				84, Month.OCTOBER, 12,
 				15,
 				null, null, null,
-				new CharacterInventory(10),
+				new CharacterInventory(false, 10),
 				WorldType.DOMINION_EXPRESS, PlaceType.DOMINION_EXPRESS_OFFICE_STABLE,
 				true);
 		
@@ -131,6 +131,10 @@ public class Natalya extends NPC {
 		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9.8")) {
 			this.setAge(84);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.10.9")) {
+			this.setEyeCovering(new Covering(BodyCoveringType.EYE_DEMON_COMMON, PresetColour.EYE_GREEN));
+			this.setEyeCovering(new Covering(BodyCoveringType.EYE_SCLERA, PresetColour.EYE_BLACK));
 		}
 	}
 
@@ -184,7 +188,9 @@ public class Natalya extends NPC {
 		this.setBodySize(BodySize.ONE_SLENDER.getMedianValue());
 		
 		// Coverings:
-		this.setEyeCovering(new Covering(BodyCoveringType.EYE_DEMON_COMMON, PresetColour.EYE_GREY_GREEN));
+		this.setEyeCovering(new Covering(BodyCoveringType.EYE_DEMON_COMMON, PresetColour.EYE_GREEN));
+		this.setEyeCovering(new Covering(BodyCoveringType.EYE_SCLERA, PresetColour.EYE_BLACK));
+		
 		this.setSkinCovering(new Covering(BodyCoveringType.DEMON_COMMON, PresetColour.SKIN_LILAC_LIGHT), true);
 		this.setSkinCovering(new Covering(BodyCoveringType.HORSE_HAIR, PresetColour.COVERING_BLACK), true);
 
@@ -302,6 +308,11 @@ public class Natalya extends NPC {
 	@Override
 	public boolean isUnique() {
 		return true;
+	}
+
+	@Override
+	public String getArtworkFolderName() {
+		return "Natalya";
 	}
 	
 	@Override

@@ -33,6 +33,7 @@ import com.lilithsthrone.game.combat.Attack;
 import com.lilithsthrone.game.combat.DamageType;
 import com.lilithsthrone.game.combat.moves.AbstractCombatMove;
 import com.lilithsthrone.game.combat.spells.Spell;
+import com.lilithsthrone.game.dialogue.places.dominion.lilayashome.LilayaDressingRoomDialogue;
 import com.lilithsthrone.game.dialogue.utils.EnchantmentDialogue;
 import com.lilithsthrone.game.dialogue.utils.InventoryDialogue;
 import com.lilithsthrone.game.dialogue.utils.InventoryInteraction;
@@ -137,9 +138,11 @@ public class TooltipInventoryEventListener implements EventListener {
 				slotEquippedTo = dyeClothing.getClothingType().getEquipSlots().get(0);
 			}
 			
+			boolean isInventoryDialogue = Main.game.getCurrentDialogueNode()!=LilayaDressingRoomDialogue.OUTFIT_EDITOR_ITEM_DYE;
+			
 			tooltipSB.setLength(0);
 			if(colour!=null) {
-				List<Colour> dyeColours = new ArrayList<>(InventoryDialogue.dyePreviews);
+				List<Colour> dyeColours = new ArrayList<>(isInventoryDialogue?InventoryDialogue.dyePreviews:LilayaDressingRoomDialogue.getClothingSelected().getColours());
 				dyeColours.remove(colourIndex);
 				dyeColours.add(colourIndex, colour);
 				tooltipSB.append("<div class='title' style='color:" + subtitleColour.toWebHexString() + ";'>" + Util.capitaliseSentence(dyeClothing.getName()) + "</div>"
@@ -155,24 +158,24 @@ public class TooltipInventoryEventListener implements EventListener {
 						+ dyeClothing.getClothingType().getSVGImage(
 								slotEquippedTo,
 								dyeColours,
-								InventoryDialogue.dyePreviewPattern,
-								InventoryDialogue.dyePreviewPatternColours,
-								InventoryDialogue.getDyePreviewStickersAsStrings())
+								isInventoryDialogue?InventoryDialogue.dyePreviewPattern:LilayaDressingRoomDialogue.getClothingSelected().getPattern(),
+								isInventoryDialogue?InventoryDialogue.dyePreviewPatternColours:LilayaDressingRoomDialogue.getClothingSelected().getPatternColours(),
+								isInventoryDialogue?InventoryDialogue.getDyePreviewStickersAsStrings():LilayaDressingRoomDialogue.getClothingSelected().getStickers())
 						+ "</div>");
 			
 			} else if(patternColour!=null) {
-				List<Colour> dyeColours = new ArrayList<>(InventoryDialogue.dyePreviewPatternColours);
+				List<Colour> dyeColours = new ArrayList<>(isInventoryDialogue?InventoryDialogue.dyePreviewPatternColours:LilayaDressingRoomDialogue.getClothingSelected().getPatternColours());
 				dyeColours.remove(colourIndex);
 				dyeColours.add(colourIndex, patternColour);
 				tooltipSB.append("<div class='title' style='color:" + subtitleColour.toWebHexString() + ";'>" + Util.capitaliseSentence(dyeClothing.getName()) + "</div>"
-						+ "<div class='subTitle'>" + Util.capitaliseSentence(Pattern.getPattern(InventoryDialogue.dyePreviewPattern).getNiceName()) + "</div>"
+						+ "<div class='subTitle'>" + Util.capitaliseSentence(Pattern.getPattern(isInventoryDialogue?InventoryDialogue.dyePreviewPattern:LilayaDressingRoomDialogue.getClothingSelected().getPattern()).getNiceName()) + "</div>"
 						+ "<div class='picture full' style='position:relative; margin:8px; padding:0; width:calc("+TOOLTIP_WIDTH+"px - 24px); height:calc("+TOOLTIP_WIDTH+"px - 24px);'>"
 						+ dyeClothing.getClothingType().getSVGImage(
 								slotEquippedTo,
-								InventoryDialogue.dyePreviews,
-								InventoryDialogue.dyePreviewPattern,
+								isInventoryDialogue?InventoryDialogue.dyePreviews:LilayaDressingRoomDialogue.getClothingSelected().getColours(),
+								isInventoryDialogue?InventoryDialogue.dyePreviewPattern:LilayaDressingRoomDialogue.getClothingSelected().getPattern(),
 								dyeColours,
-								InventoryDialogue.getDyePreviewStickersAsStrings())
+								isInventoryDialogue?InventoryDialogue.getDyePreviewStickersAsStrings():LilayaDressingRoomDialogue.getClothingSelected().getStickers())
 						+ "</div>");
 				
 			}
@@ -184,9 +187,11 @@ public class TooltipInventoryEventListener implements EventListener {
 
 			tooltipSB.setLength(0);
 			tooltipSB.append("<div class='title' style='color:" + dyeWeapon.getRarity().getColour().toWebHexString() + ";'>" + Util.capitaliseSentence(dyeWeapon.getName()) + "</div>");
+
+			boolean isInventoryDialogue = Main.game.getCurrentDialogueNode()!=LilayaDressingRoomDialogue.OUTFIT_EDITOR_ITEM_DYE;
 			
 			if(colour!=null) {
-				List<Colour> dyeColours = new ArrayList<>(InventoryDialogue.dyePreviews);
+				List<Colour> dyeColours = new ArrayList<>(isInventoryDialogue?InventoryDialogue.dyePreviews:LilayaDressingRoomDialogue.getWeaponSelected().getColours());
 				dyeColours.remove(colourIndex);
 				dyeColours.add(colourIndex, colour);
 				tooltipSB.append("<div class='subTitle'>"
@@ -204,7 +209,7 @@ public class TooltipInventoryEventListener implements EventListener {
 			} else if(damageType!=null) {
 				tooltipSB.append("<div class='subTitle'>" + Util.capitaliseSentence(damageType.getName()) + "</div>"
 						+ "<div class='picture full' style='position:relative; margin:8px; padding:0; width:calc("+TOOLTIP_WIDTH+"px - 24px); height:calc("+TOOLTIP_WIDTH+"px - 24px);'>"
-							+ dyeWeapon.getWeaponType().getSVGImage(damageType, InventoryDialogue.dyePreviews)
+							+ dyeWeapon.getWeaponType().getSVGImage(damageType, isInventoryDialogue?InventoryDialogue.dyePreviews:LilayaDressingRoomDialogue.getWeaponSelected().getColours())
 						+ "</div>");
 			}
 			
@@ -1204,7 +1209,7 @@ public class TooltipInventoryEventListener implements EventListener {
 									+ "</div>");
 				}
 			} else {
-				if (InventoryDialogue.isBuyback()) {
+				if (InventoryDialogue.isBuyback() && !owner.hasWeaponEquipped(absWep)) {
 					tooltipSB.append("<div class='container-full-width titular'>"
 											+ "Value: "+UtilText.formatAsMoney(absWep.getValue())
 											+" | "
@@ -1446,7 +1451,7 @@ public class TooltipInventoryEventListener implements EventListener {
 									+ "</div>");
 				}
 			} else {
-				if (InventoryDialogue.isBuyback()) {
+				if (InventoryDialogue.isBuyback() && !owner.getClothingCurrentlyEquipped().contains(absClothing)) {
 					tooltipSB.append("<div class='container-full-width titular'>"
 											+ "Value: "+(absClothing.isEnchantmentKnown() ? UtilText.formatAsMoney(absClothing.getValue()) : UtilText.formatAsMoney("?", "b"))
 											+" | "

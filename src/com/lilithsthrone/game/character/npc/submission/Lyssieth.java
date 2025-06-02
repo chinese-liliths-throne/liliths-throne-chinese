@@ -122,7 +122,7 @@ public class Lyssieth extends NPC {
 				7734, Month.OCTOBER, 13,
 				1000,
 				Gender.F_V_B_FEMALE, Subspecies.HUMAN, RaceStage.GREATER,
-				new CharacterInventory(10),
+				new CharacterInventory(false, 10),
 				WorldType.LYSSIETH_PALACE, PlaceType.LYSSIETH_PALACE_OFFICE,
 				true);
 		
