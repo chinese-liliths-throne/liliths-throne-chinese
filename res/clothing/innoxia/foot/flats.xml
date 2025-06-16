@@ -59,13 +59,13 @@
 
 	<displacementText type="REMOVE_OR_EQUIP">
 		<self>
-			<![CDATA[[npc.Name] [npc.verb(slip)] off [npc.her] heels.]]>
+			<![CDATA[[npc.Name] [npc.verb(slip)] off [npc.her] flats.]]>
 		</self>
 		<other>
-			<![CDATA[[npc.Name] [npc.verb(slip)] off [npc2.namePos] heels.]]>
+			<![CDATA[[npc.Name] [npc.verb(slip)] off [npc2.namePos] flats.]]>
 		</other>
 		<otherRough>
-			<![CDATA[[npc.Name] roughly [npc.verb(pull)] off [npc2.namePos] heels.]]>
+			<![CDATA[[npc.Name] roughly [npc.verb(pull)] off [npc2.namePos] flats.]]>
 		</otherRough>
 	</displacementText>
 	

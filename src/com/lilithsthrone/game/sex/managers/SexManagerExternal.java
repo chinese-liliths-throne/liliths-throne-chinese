@@ -374,7 +374,11 @@ public class SexManagerExternal extends SexManagerDefault {
 			}
 			
 			if(control!=null && !control.isEmpty()) {
-				controlParsed = SexControl.valueOf(UtilText.parse(control).trim());
+				try {
+					controlParsed = SexControl.valueOf(UtilText.parse(control).trim());
+				} catch(Exception ex) {
+					controlParsed = null;
+				}
 			}
 			
 			

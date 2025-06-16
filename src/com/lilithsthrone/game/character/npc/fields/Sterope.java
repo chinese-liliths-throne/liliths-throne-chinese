@@ -650,7 +650,7 @@ public class Sterope extends NPC {
 	
 	public void wearDildo() {
 		AbstractClothing dildo = Main.game.getItemGen().generateClothing("norin_dildos_realistic_dildo", PresetColour.CLOTHING_PINK_HOT, false);
-		dildo.addEffect(new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_SPECIAL, TFModifier.CLOTHING_VIBRATION, TFPotency.MAJOR_BOOST, 0));
+		dildo.addEffect(new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_SEXUAL, TFModifier.CLOTHING_VIBRATION, TFPotency.MAJOR_BOOST, 0));
 		dildo.setName("Sterope's cunt filler");
 		this.equipClothingFromNowhere(dildo, true, this);
 	}

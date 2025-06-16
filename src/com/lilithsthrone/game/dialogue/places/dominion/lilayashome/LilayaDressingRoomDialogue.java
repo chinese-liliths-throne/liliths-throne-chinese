@@ -1059,7 +1059,7 @@ public class LilayaDressingRoomDialogue {
 						
 						if(outfitObtainedViaPurchase) {
 							for(Entry<InventorySlot, AbstractCoreItem> entry: failureToEquipMap.entrySet()) {
-								if(entry.getValue() instanceof AbstractClothing) {
+								if(entry.getValue() instanceof AbstractClothing && !((AbstractClothing)entry.getValue()).isDiscardedOnUnequip(entry.getKey())) {
 									Main.game.getPlayerCell().getInventory().addClothing((AbstractClothing)entry.getValue());
 								} else if(entry.getValue() instanceof AbstractWeapon) {
 									Main.game.getPlayerCell().getInventory().addWeapon((AbstractWeapon)entry.getValue());
@@ -1161,7 +1161,7 @@ public class LilayaDressingRoomDialogue {
 
 							if(outfitObtainedViaPurchase) {
 								for(Entry<InventorySlot, AbstractCoreItem> entry: failureToEquipMap.entrySet()) {
-									if(entry.getValue() instanceof AbstractClothing) {
+									if(entry.getValue() instanceof AbstractClothing && !((AbstractClothing)entry.getValue()).isDiscardedOnUnequip(entry.getKey())) {
 										Main.game.getPlayerCell().getInventory().addClothing((AbstractClothing)entry.getValue());
 									} else if(entry.getValue() instanceof AbstractWeapon) {
 										Main.game.getPlayerCell().getInventory().addWeapon((AbstractWeapon)entry.getValue());
@@ -1604,7 +1604,7 @@ public class LilayaDressingRoomDialogue {
 					for(AbstractWeaponType weaponType : PhoneDialogue.getWeaponsDiscoveredList()) {
 						if(weaponType.getRarity()==Rarity.QUEST
 								|| weaponType.getRarity()==Rarity.LEGENDARY
-								|| weaponType.getItemTags().contains(ItemTag.NOT_FOR_SALE)) {
+								|| weaponType.getItemTags().contains(ItemTag.REMOVE_FROM_DRESSING_ROOM_OUTFITS)) {
 							continue;
 						}
 						boolean discovered = Main.getProperties().isWeaponDiscovered(weaponType) || Main.game.isDebugMode();
@@ -1624,7 +1624,7 @@ public class LilayaDressingRoomDialogue {
 					for(AbstractClothingType clothingType : PhoneDialogue.getClothingDiscoveredList()) {
 						if(clothingType.getRarity()==Rarity.QUEST
 								|| clothingType.getRarity()==Rarity.LEGENDARY
-								|| clothingType.getDefaultItemTags().contains(ItemTag.NOT_FOR_SALE)
+								|| clothingType.getDefaultItemTags().contains(ItemTag.REMOVE_FROM_DRESSING_ROOM_OUTFITS)
 								|| clothingType.getDefaultItemTags().contains(ItemTag.MILKING_EQUIPMENT)) {
 							continue;
 						}
@@ -1635,7 +1635,7 @@ public class LilayaDressingRoomDialogue {
 						
 						// Warn player if this clothing is incompatible with any of the outfit's currently selected clothing
 						List<AbstractClothing> incompatibleClothing = new ArrayList<>();
-						for(InventorySlot slot : Main.game.getItemGen().generateClothing(clothingType).getIncompatibleSlots(getDoll(), selectedSlot)) {
+						for(InventorySlot slot : Main.game.getItemGen().generateClothing(clothingType, false).getIncompatibleSlots(getDoll(), selectedSlot)) {
 							if(getDoll().getClothingInSlot(slot)!=null) {
 								incompatibleClothing.add(getDoll().getClothingInSlot(slot));
 							}
@@ -1785,7 +1785,7 @@ public class LilayaDressingRoomDialogue {
 													+ "<b style='color:" + PresetColour.TEXT_GREY.toWebHexString() + ";'>" + Util.capitaliseSentence(sticker.getName()) + (specialSticker?"*":"") + "</b>"
 											+ "</div>");
 									
-								} else if(clothingSelected.getStickers().get(cat.getId())==sticker.getId()) {
+								} else if(clothingSelected.getStickers().get(cat.getId()).equalsIgnoreCase(sticker.getId())) {
 									stickerSB.append(
 											"<div id='"+id+"' class='cosmetics-button active'>"
 													+ "<b style='color:" + sticker.getColourSelected().toWebHexString() + ";'>" + Util.capitaliseSentence(sticker.getName()) + (specialSticker?"*":"") + "</b>"
@@ -2273,8 +2273,8 @@ public class LilayaDressingRoomDialogue {
 	public static void initModifiers() {
 		effects = new ArrayList<>(getSelectedItem().getEffects());
 		
-		if(!getSelectedItem().getEnchantmentEffect().getPrimaryModifiers().contains(primaryMod)) {
-			primaryMod = getSelectedItem().getEnchantmentEffect().getPrimaryModifiers().get(0);
+		if(!getSelectedItem().getEnchantmentEffect().getPrimaryModifiers(getSelectedItem()).contains(primaryMod)) {
+			primaryMod = getSelectedItem().getEnchantmentEffect().getPrimaryModifiers(getSelectedItem()).get(0);
 		}
 		if(!getSelectedItem().getEnchantmentEffect().getSecondaryModifiers(getSelectedItem(), primaryMod).contains(secondaryMod)) {
 			secondaryMod = getSelectedItem().getEnchantmentEffect().getSecondaryModifiers(getSelectedItem(), primaryMod).get(0);
@@ -2292,17 +2292,18 @@ public class LilayaDressingRoomDialogue {
 		
 		ItemEffect effect = getCurrentEffect();
 		
-		int displaySlots = Math.max(32, 8*(int)Math.ceil(Math.max(getSelectedItem().getEnchantmentEffect().getPrimaryModifiers().size(), getSelectedItem().getEnchantmentEffect().getSecondaryModifiers(getSelectedItem(), primaryMod).size())/8f));
+		int displaySlots = Math.max(32, 8*(int)Math.ceil(
+				Math.max(getSelectedItem().getEnchantmentEffect().getPrimaryModifiers(getSelectedItem()).size(), getSelectedItem().getEnchantmentEffect().getSecondaryModifiers(getSelectedItem(), primaryMod).size())/8f));
 		
 		// Primary mods:
 		inventorySB.append("<div class='container-half-width' style='padding-bottom:0;'>");
-		for (TFModifier tfMod : getSelectedItem().getEnchantmentEffect().getPrimaryModifiers()) {
+		for (TFModifier tfMod : getSelectedItem().getEnchantmentEffect().getPrimaryModifiers(getSelectedItem())) {
 			inventorySB.append("<div class='modifier-icon' style='width:11.5%; background-color:"+tfMod.getRarity().getBackgroundColour().toWebHexString()+";'>"
 					+ "<div class='modifier-icon-content'>"+tfMod.getSVGString()+"</div>"
 					+ "<div class='overlay' id='MOD_PRIMARY_"+tfMod.hashCode()+"'></div>"
 					+ "</div>");
 		}
-		for (int i = displaySlots; i > getSelectedItem().getEnchantmentEffect().getPrimaryModifiers().size(); i--) {
+		for (int i = displaySlots; i > getSelectedItem().getEnchantmentEffect().getPrimaryModifiers(getSelectedItem()).size(); i--) {
 			inventorySB.append("<div class='modifier-icon empty' style='width:11.5%;'></div>");
 		}
 		
@@ -2445,8 +2446,8 @@ public class LilayaDressingRoomDialogue {
 								}
 								inventorySB.append("<br/>"
 										+ (cost>0
-												?"[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+" cost)]: [style.boldBad("+cost+")]"
-												:Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+" cost: [style.boldDisabled(0)]"));
+												?"[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "+UtilText.formatAsEnchantmentCapacity(cost, "b")
+												:Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+": [style.colourDisabled("+UtilText.formatAsEnchantmentCapacityUncoloured(cost, "b")+")]"));
 							}
 						}
 					}
@@ -2531,7 +2532,9 @@ public class LilayaDressingRoomDialogue {
 				if(effects.isEmpty()) {
 					inventorySB.append("<br/><span style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No effects added</span>");
 				} else {
-					inventorySB.append("<br/><i>Default effects are marked with a [style.boldDisabled('D')], and are free.</i>");
+					if(!Collections.disjoint(effects, defaultEffects)) {
+						inventorySB.append("<br/>[style.italicsMinorGood(Default effects are marked as "+UtilText.getEssenceSymbol(PresetColour.TEXT_GREY)+"[style.boldDisabled(D)], and are free.)]");
+					}
 					int capcityCost = 0;
 					
 					int it = 0;
@@ -2562,11 +2565,11 @@ public class LilayaDressingRoomDialogue {
 											+ " style='background:"+RenderingEngine.getEntryBackgroundColour(it%2==0)+"; width:98%; margin:0 1%; padding:0;'>");
 
 								inventorySB.append("<div style='width:calc(100% - 94px); line-height:22px; margin:0; padding:0; float:left;'>");
-									if(isDefaultEffect) {
-										inventorySB.append("<div style='position:absolute; left:0; margin-right:24px;'>"
-													+ "<i>[style.boldDisabled(D)]</i>"
-												+ "</div>");
-									}
+//									if(isDefaultEffect) {
+//										inventorySB.append("<div style='position:absolute; left:-18px;'>"
+//													+ "<i>[style.boldDisabled(D)]</i>"
+//												+ "</div>");
+//									}
 									inventorySB.append(Util.capitaliseSentence(s));
 								inventorySB.append("</div>");
 								if(i==0) {
@@ -2581,7 +2584,12 @@ public class LilayaDressingRoomDialogue {
 											}
 										}
 										if(essenceCost==0) {
-											inventorySB.append(UtilText.formatAsEssencesUncoloured(essenceCost, "b", false));
+											if(isDefaultEffect) {
+												inventorySB.append(UtilText.getEssenceSymbol(PresetColour.TEXT_GREY));
+												inventorySB.append("[style.boldDisabled(D)]");
+											} else {
+												inventorySB.append(UtilText.formatAsEssencesUncoloured(essenceCost, "b", false));
+											}
 										} else {
 											inventorySB.append(UtilText.formatAsEssences(essenceCost, "b", false));
 										}
@@ -2613,8 +2621,8 @@ public class LilayaDressingRoomDialogue {
 								|| (getSelectedItem() instanceof Tattoo)) {
 							inventorySB.append("<br/>"
 									+ (capcityCost>0
-											?"[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+" cost)]: [style.boldBad("+capcityCost+")]"
-											:Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+" cost: [style.boldDisabled(0)]"));
+											?"[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "+UtilText.formatAsEnchantmentCapacity(capcityCost, "b")
+											:Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+": [style.colourDisabled("+UtilText.formatAsEnchantmentCapacityUncoloured(capcityCost, "b")+")]"));
 						}
 					}
 				}
@@ -2846,7 +2854,12 @@ public class LilayaDressingRoomDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index == 1) {
-				return new Response("Continue", "Lyssieth's wardrobe is once again functional, allowing you to create outfits from nothing.", ROOM_DRESSING_ROOM);
+				return new Response("Continue", "Lyssieth's wardrobe is once again functional, allowing you to create outfits from nothing.", ROOM_DRESSING_ROOM) {
+					@Override
+					public void effects() {
+						Main.game.getDialogueFlags().setFlag(DialogueFlagValue.dressingRoomLyssiethsWardrobeActivated, true);
+					}
+				};
 			}
 			return null;
 		}

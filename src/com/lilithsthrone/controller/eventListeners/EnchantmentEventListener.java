@@ -52,8 +52,8 @@ public class EnchantmentEventListener implements EventListener {
 				LilayaDressingRoomDialogue.setLimit(limit);
 			}
 			
-			if(!LilayaDressingRoomDialogue.getSelectedItem().getEnchantmentEffect().getPrimaryModifiers().contains(LilayaDressingRoomDialogue.getPrimaryMod())) {
-				LilayaDressingRoomDialogue.setPrimaryMod(LilayaDressingRoomDialogue.getSelectedItem().getEnchantmentEffect().getPrimaryModifiers().get(0));
+			if(!LilayaDressingRoomDialogue.getSelectedItem().getEnchantmentEffect().getPrimaryModifiers(LilayaDressingRoomDialogue.getSelectedItem()).contains(LilayaDressingRoomDialogue.getPrimaryMod())) {
+				LilayaDressingRoomDialogue.setPrimaryMod(LilayaDressingRoomDialogue.getSelectedItem().getEnchantmentEffect().getPrimaryModifiers(LilayaDressingRoomDialogue.getSelectedItem()).get(0));
 			}
 			if(!LilayaDressingRoomDialogue.getSelectedItem().getEnchantmentEffect().getSecondaryModifiers(LilayaDressingRoomDialogue.getSelectedItem(), LilayaDressingRoomDialogue.getPrimaryMod()).contains(LilayaDressingRoomDialogue.getSecondaryMod())) {
 				LilayaDressingRoomDialogue.setSecondaryMod(LilayaDressingRoomDialogue.getSelectedItem().getEnchantmentEffect().getSecondaryModifiers(LilayaDressingRoomDialogue.getSelectedItem(), LilayaDressingRoomDialogue.getPrimaryMod()).get(0));
@@ -90,8 +90,8 @@ public class EnchantmentEventListener implements EventListener {
 				EnchantmentDialogue.setLimit(limit);
 			}
 			
-			if(!EnchantmentDialogue.getIngredient().getEnchantmentEffect().getPrimaryModifiers().contains(EnchantmentDialogue.getPrimaryMod())) {
-				EnchantmentDialogue.setPrimaryMod(EnchantmentDialogue.getIngredient().getEnchantmentEffect().getPrimaryModifiers().get(0));
+			if(!EnchantmentDialogue.getIngredient().getEnchantmentEffect().getPrimaryModifiers(EnchantmentDialogue.getIngredient()).contains(EnchantmentDialogue.getPrimaryMod())) {
+				EnchantmentDialogue.setPrimaryMod(EnchantmentDialogue.getIngredient().getEnchantmentEffect().getPrimaryModifiers(EnchantmentDialogue.getIngredient()).get(0));
 			}
 			if(!EnchantmentDialogue.getIngredient().getEnchantmentEffect().getSecondaryModifiers(EnchantmentDialogue.getIngredient(), EnchantmentDialogue.getPrimaryMod()).contains(EnchantmentDialogue.getSecondaryMod())) {
 				EnchantmentDialogue.setSecondaryMod(EnchantmentDialogue.getIngredient().getEnchantmentEffect().getSecondaryModifiers(EnchantmentDialogue.getIngredient(), EnchantmentDialogue.getPrimaryMod()).get(0));

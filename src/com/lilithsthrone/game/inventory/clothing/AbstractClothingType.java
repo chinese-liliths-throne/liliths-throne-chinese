@@ -73,6 +73,7 @@ public abstract class AbstractClothingType extends AbstractCoreType {
 	private String authorDescription;
 	
 	private boolean appendColourName;
+	private boolean appendEnchantmentPostfix;
 	private boolean plural;
 	private boolean isMod;
 	private boolean isColourDerivedFromPattern;
@@ -229,6 +230,7 @@ public abstract class AbstractClothingType extends AbstractCoreType {
 		isColourDerivedFromPattern = false;
 		
 		this.appendColourName = true;
+		this.appendEnchantmentPostfix = true;
 		this.determiner = determiner;
 		this.plural = plural;
 		this.name = name;
@@ -349,10 +351,17 @@ public abstract class AbstractClothingType extends AbstractCoreType {
 			}
 			
 			if(!coreAttributes.getMandatoryFirstOf("name").getAttribute("appendColourName").isEmpty()) {
-				this.appendColourName  =  Boolean.valueOf(coreAttributes.getMandatoryFirstOf("name").getAttribute("appendColourName"));
+				this.appendColourName = Boolean.valueOf(coreAttributes.getMandatoryFirstOf("name").getAttribute("appendColourName"));
 			} else {
 				this.appendColourName = true;
 			}
+			if(!coreAttributes.getMandatoryFirstOf("name").getAttribute("appendEnchantmentPostfix").isEmpty()) {
+				this.appendEnchantmentPostfix = Boolean.valueOf(coreAttributes.getMandatoryFirstOf("name").getAttribute("appendEnchantmentPostfix"));
+			} else {
+				this.appendEnchantmentPostfix = true;
+			}
+			
+			
 			this.plural =             Boolean.valueOf(coreAttributes.getMandatoryFirstOf("namePlural").getAttribute("pluralByDefault"));
 			this.baseValue =          Integer.valueOf(coreAttributes.getMandatoryFirstOf("value").getTextContent());
 			this.physicalResistance = Float.valueOf(coreAttributes.getMandatoryFirstOf("physicalResistance").getTextContent());	
@@ -1925,6 +1934,10 @@ public abstract class AbstractClothingType extends AbstractCoreType {
 	public boolean isAppendColourName() {
 		return appendColourName;
 	}
+
+	public boolean isAppendEnchantmentPostfix() {
+		return appendEnchantmentPostfix;
+	}
 	
 	public String getDeterminer() {
 		return determiner;
@@ -1997,14 +2010,14 @@ public abstract class AbstractClothingType extends AbstractCoreType {
 	 * <b>You should probably be using AbstractClothing's version of this!</b>
 	 */
 	public boolean isConcealsSlot(GameCharacter character, InventorySlot slotToCheck) {
-		return Main.game.getItemGen().generateClothing(this).isConcealsSlot(character, this.getEquipSlots().get(0), slotToCheck);
+		return Main.game.getItemGen().generateClothing(this, false).isConcealsSlot(character, this.getEquipSlots().get(0), slotToCheck);
 	}
 
 	/**
 	 * <b>You should probably be using AbstractClothing's version of this!</b>
 	 */
 	public boolean isConcealsCoverableArea(GameCharacter character, CoverableArea area) {
-		return Main.game.getItemGen().generateClothing(this).isConcealsCoverableArea(character, this.getEquipSlots().get(0), area);
+		return Main.game.getItemGen().generateClothing(this, false).isConcealsCoverableArea(character, this.getEquipSlots().get(0), area);
 	}
 	
 	public String getPathName() {

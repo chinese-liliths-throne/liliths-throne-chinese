@@ -2012,7 +2012,7 @@ public class CharacterUtils {
 				dayOfMonth = Math.min(dayOfMonth, 28);
 			}
 			if(character.getSubspeciesOverride()!=null && character.getSubspeciesOverride().isDoesNotAge()) {
-				character.setBirthday(LocalDateTime.of(Main.game.getDateNow().getYear()-(Util.random.nextInt(101)-GameCharacter.MINIMUM_AGE), character.getBirthMonth(), dayOfMonth, 12, 0));
+				character.setBirthday(LocalDateTime.of(Main.game.getDateNow().getYear()-Util.random.nextInt(101), character.getBirthMonth(), dayOfMonth, 12, 0));
 			} else {
 				character.setBirthday(LocalDateTime.of(Main.game.getDateNow().getYear()-(AgeCategory.getAgeFromPreferences(character.getGender())-GameCharacter.MINIMUM_AGE), character.getBirthMonth(), dayOfMonth, 12, 0));
 			}
@@ -2571,7 +2571,10 @@ public class CharacterUtils {
 		if(character.hasFetish(Fetish.FETISH_BONDAGE_APPLIER)) {
 			maxClothingCount+=1;
 			List<InventorySlot> prohibitedSlots = Util.newArrayListOfValues(InventorySlot.VAGINA, InventorySlot.PENIS, InventorySlot.ANUS, InventorySlot.NIPPLE, InventorySlot.GROIN);
-			for(AbstractClothingType ct : ClothingType.getAllClothingInSet(SetBonus.getSetBonusFromId("innoxia_bdsm"))) {
+			List<AbstractClothingType> bondageClothing = ClothingType.getAllClothingInSet(SetBonus.getSetBonusFromId("innoxia_bdsm"));
+			bondageClothing.addAll(ClothingType.getAllClothingInSet(SetBonus.getSetBonusFromId("sage_ltxset")));
+			bondageClothing.remove(ClothingType.getClothingTypeFromId("innoxia_bdsm_metal_collar"));
+			for(AbstractClothingType ct : bondageClothing) {
 				InventorySlot defaultSlot = ct.getEquipSlots().get(0);
 				// Do not add clothing types which are sex toys, as conditionals for those are added in the next logic block, and do not add enslavement clothing as the NPC will not want to equip it.
 				if(!ct.getEffects().stream().anyMatch(ie -> ie.getSecondaryModifier()==TFModifier.CLOTHING_ENSLAVEMENT) && !prohibitedSlots.contains(defaultSlot)) {
@@ -3148,7 +3151,7 @@ public class CharacterUtils {
 				canEquip = false;
 				
 			} else if(character.hasFetish(Fetish.FETISH_EXHIBITIONIST)) {
-				AbstractClothing clothingExample = Main.game.getItemGen().generateClothing(ct);
+				AbstractClothing clothingExample = Main.game.getItemGen().generateClothing(ct, false);
 				for(BlockedParts bp : clothingExample.getBlockedPartsMap(character, slot)) {
 					boolean leavesAnusExposed = character.isCoverableAreaExposed(CoverableArea.ANUS) && !bp.blockedBodyParts.contains(CoverableArea.ANUS);
 					boolean leavesNipplesExposed = character.isCoverableAreaExposed(CoverableArea.NIPPLES) && !bp.blockedBodyParts.contains(CoverableArea.NIPPLES);
@@ -3162,7 +3165,7 @@ public class CharacterUtils {
 				
 				
 			} else {
-				AbstractClothing clothingExample = Main.game.getItemGen().generateClothing(ct);
+				AbstractClothing clothingExample = Main.game.getItemGen().generateClothing(ct, false);
 				for(InventorySlot is : clothingExample.getIncompatibleSlots(character, slot)) {
 					if(character.getClothingInSlot(is) != null) {
 						canEquip = false;

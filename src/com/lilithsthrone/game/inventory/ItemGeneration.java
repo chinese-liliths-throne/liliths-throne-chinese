@@ -196,7 +196,9 @@ public class ItemGeneration {
 		return this.generateClothing(ClothingType.getClothingTypeFromId(clothingTypeId), colourShade, null, null, allowRandomEnchantment);
 	}
 
-	/** Uses random colour.*/
+	/** Uses random colour.
+	 * <br/><b>Should not be used, as random enchantment is true by default which may not be intended behaviour.</b> */
+	@Deprecated
 	public AbstractClothing generateClothing(AbstractClothingType clothingType) {
 		return this.generateClothing(clothingType, null, true);
 	}

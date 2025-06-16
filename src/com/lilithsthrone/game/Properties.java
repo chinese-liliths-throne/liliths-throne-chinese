@@ -70,6 +70,7 @@ public class Properties {
 	public String lastQuickSaveName = "";
 	public String nameColour = "";
 	public String name = "";
+	public String raceColour = "";
 	public String race = "";
 	public String quest = "";
 	public String versionNumber = "";
@@ -334,6 +335,7 @@ public class Properties {
 			createXMLElementWithValue(doc, previousSave, "location", lastSaveLocation);
 			createXMLElementWithValue(doc, previousSave, "nameColour", nameColour);
 			createXMLElementWithValue(doc, previousSave, "name", name);
+			createXMLElementWithValue(doc, previousSave, "raceColour", raceColour);
 			createXMLElementWithValue(doc, previousSave, "race", race);
 			createXMLElementWithValue(doc, previousSave, "quest", quest);
 			createXMLElementWithValue(doc, previousSave, "level", String.valueOf(level));
@@ -729,6 +731,11 @@ public class Properties {
 				lastSaveLocation = ((Element)element.getElementsByTagName("location").item(0)).getAttribute("value");
 				nameColour = ((Element)element.getElementsByTagName("nameColour").item(0)).getAttribute("value");
 				name = ((Element)element.getElementsByTagName("name").item(0)).getAttribute("value");
+				raceColour = "";
+				try {
+					raceColour = ((Element)element.getElementsByTagName("raceColour").item(0)).getAttribute("value");
+				} catch(Exception ex) {
+				}
 				race = ((Element)element.getElementsByTagName("race").item(0)).getAttribute("value");
 				quest = ((Element)element.getElementsByTagName("quest").item(0)).getAttribute("value");
 				level = Integer.valueOf(((Element)element.getElementsByTagName("level").item(0)).getAttribute("value"));

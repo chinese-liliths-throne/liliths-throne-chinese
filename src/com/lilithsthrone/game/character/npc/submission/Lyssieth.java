@@ -347,6 +347,11 @@ public class Lyssieth extends NPC {
 		return true;
 	}
 	
+	@Override
+	public int getLevel() {
+		return 1000;
+	}
+	
 //	@Override
 //	public void turnUpdate() {
 //		if(!Main.game.getCharactersPresent().contains(this)) {

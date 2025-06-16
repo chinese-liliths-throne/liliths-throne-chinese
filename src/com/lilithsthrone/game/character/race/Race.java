@@ -1575,6 +1575,18 @@ public class Race {
 					public String getDescription(GameCharacter owner) {
 						return "Increases damage vs "+race.getNamePlural(true)+".";
 					}
+					@Override
+					public int getOrderPriority() {
+						// Come on now...
+						int i = name.toLowerCase().charAt(0) * 1_000_000;
+						if(name.length()>1) {
+							i += name.toLowerCase().charAt(1) * 1_000;
+						}
+						if(name.length()>2) {
+							i += name.toLowerCase().charAt(2);
+						}
+						return i;
+					}
 				};
 				String id = "DAMAGE_"+Race.getIdFromRace(race);
 //				System.out.println(name+", "+id);

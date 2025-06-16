@@ -6,7 +6,7 @@
 		<determiner><![CDATA[a]]></determiner>
 		<name><![CDATA[latex hood]]></name>
 		<namePlural pluralByDefault="false"><![CDATA[latex hood]]></namePlural>
-		<description><![CDATA[A latex hood which completely encapsulates the wearer's head.]]></description>
+		<description><![CDATA[A latex hood which completely encapsulates the wearer's head. Thanks to some trick of the arcane, this hood reshapes itself to fit the head of any wearer, no matter if they have an anthropomorphic muzzle, beak, or other such non-human facial configuration.]]></description>
 		<physicalResistance>0</physicalResistance>
 		<femininity>ANDROGYNOUS</femininity>
 		<slot>HEAD</slot>
@@ -17,13 +17,37 @@
 		<effects/>
 		
 		<stickers>
-			<!--
-			<category id="Eye holes" priority="1">
+			<category id="ponytail" priority="1">
+				<categoryName><![CDATA[Ponytail]]></categoryName>
 				<sticker id="present" priority="1" defaultSticker="true" zLayer="1" colourDisabled="" colourSelected="">
 					<stickerName><![CDATA[Present]]></stickerName>
 					<namePrefix/>
 					<descriptionModification/>
-					<imageName zLayer="1" slot="HEAD">hood_eyes.svg</imageName>
+					<imageName zLayer="-1" slot="HEAD">hood_stickers/ponytail.svg</imageName>
+					<itemTagsAdded/>
+					<itemTagsRemoved/>
+					<unavailabilityText/>
+					<availabilityText/>
+				</sticker>
+				<sticker id="absent" priority="2" defaultSticker="false" zLayer="1">
+					<stickerName><![CDATA[Absent]]></stickerName>
+					<namePrefix/>
+					<namePostfix/>
+					<descriptionModification/>
+					<imageName/>
+					<itemTagsAdded/>
+					<itemTagsRemoved/>
+					<unavailabilityText/>
+					<availabilityText/>
+				</sticker>
+			</category>
+			<category id="eyes" priority="2">
+				<categoryName><![CDATA[Eye holes]]></categoryName>
+				<sticker id="present" priority="1" defaultSticker="true" zLayer="1" colourDisabled="" colourSelected="">
+					<stickerName><![CDATA[Present]]></stickerName>
+					<namePrefix/>
+					<descriptionModification/>
+					<imageName zLayer="1" slot="HEAD">hood_stickers/eyes.svg</imageName>
 					<itemTagsAdded/>
 					<itemTagsRemoved/>
 					<unavailabilityText/>
@@ -36,6 +60,7 @@
 					<descriptionModification/>
 					<imageName/>
 					<itemTagsAdded>
+						<tag>APPLIES_BLOCKED_BODY_PART_EYES</tag>
 						<tag>BLOCKS_SIGHT</tag>
 					</itemTagsAdded>
 					<itemTagsRemoved/>
@@ -43,12 +68,13 @@
 					<availabilityText/>
 				</sticker>
 			</category>
-			<category id="Mouth hole" priority="1">
+			<category id="mouth" priority="3">
+				<categoryName><![CDATA[Mouth holes]]></categoryName>
 				<sticker id="present" priority="1" defaultSticker="true" zLayer="1" colourDisabled="" colourSelected="">
 					<stickerName><![CDATA[Present]]></stickerName>
 					<namePrefix/>
 					<descriptionModification/>
-					<imageName zLayer="1" slot="HEAD">hood_mouth.svg</imageName>
+					<imageName zLayer="1" slot="HEAD">hood_stickers/mouth.svg</imageName>
 					<itemTagsAdded/>
 					<itemTagsRemoved/>
 					<unavailabilityText/>
@@ -60,31 +86,10 @@
 					<namePostfix/>
 					<descriptionModification/>
 					<imageName/>
-					<itemTagsAdded/>
-					<itemTagsRemoved/>
-					<unavailabilityText/>
-					<availabilityText/>
-				</sticker>
-			</category>
-			-->
-			<category id="Ponytail" priority="1">
-				<sticker id="present" priority="1" defaultSticker="true" zLayer="1" colourDisabled="" colourSelected="">
-					<stickerName><![CDATA[Present]]></stickerName>
-					<namePrefix/>
-					<descriptionModification/>
-					<imageName zLayer="-1" slot="HEAD">hood_ponytail.svg</imageName>
-					<itemTagsAdded/>
-					<itemTagsRemoved/>
-					<unavailabilityText/>
-					<availabilityText/>
-				</sticker>
-				<sticker id="absent" priority="2" defaultSticker="false" zLayer="1">
-					<stickerName><![CDATA[Absent]]></stickerName>
-					<namePrefix/>
-					<namePostfix/>
-					<descriptionModification/>
-					<imageName/>
-					<itemTagsAdded/>
+					<itemTagsAdded>
+						<tag>APPLIES_BLOCKED_BODY_PART_MOUTH</tag>
+						<tag>MUFFLES_SPEECH</tag>
+					</itemTagsAdded>
 					<itemTagsRemoved/>
 					<unavailabilityText/>
 					<availabilityText/>

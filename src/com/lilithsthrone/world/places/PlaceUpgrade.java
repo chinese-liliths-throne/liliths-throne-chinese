@@ -1181,7 +1181,10 @@ public class PlaceUpgrade {
 		}
 		@Override
 		public DialogueNode getInstallationDialogue(Cell c) {
-			return LilayaDressingRoomDialogue.INSTALLATION;
+			if(!Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.dressingRoomLyssiethsWardrobeActivated)) {
+				return LilayaDressingRoomDialogue.INSTALLATION;
+			}
+			return super.getInstallationDialogue(c);
 		}
 		@Override
 		public DialogueNode getRoomDialogue(Cell c) {
@@ -1196,6 +1199,10 @@ public class PlaceUpgrade {
 			if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_ARTHUR_ROOM)) {
 				return new Value<>(false, "");
 			}
+			if(!Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_GROUND_FLOOR).getCells(LILAYA_DRESSING_ROOM).isEmpty()
+					|| !Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_FIRST_FLOOR).getCells(LILAYA_DRESSING_ROOM).isEmpty()) {
+				return new Value<>(false, "You can only have one dressing room.");
+			}
 			if(!Main.game.getCharactersTreatingCellAsHome(cell).isEmpty()) {
 				return new Value<>(false, "This room needs to be unoccupied in order to purchase this modification.");
 			}
@@ -1208,6 +1215,9 @@ public class PlaceUpgrade {
 				if(upgrade != LILAYA_DRESSING_ROOM) {
 					place.removePlaceUpgrade(c, upgrade);
 				}
+			}
+			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.dressingRoomLyssiethsWardrobeActivated)) {
+				place.addPlaceUpgrade(c, LILAYA_DRESSING_ROOM_LYSSIETH_WARDROBE);
 			}
 		}
 	};

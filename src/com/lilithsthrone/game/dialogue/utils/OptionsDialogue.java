@@ -59,7 +59,7 @@ import com.lilithsthrone.utils.colours.PresetColour;
 
 /**
  * @since 0.1.0
- * @version 0.4.2
+ * @version 0.4.10.10
  * @author Innoxia, Maxis
  */
 public class OptionsDialogue {
@@ -68,6 +68,8 @@ public class OptionsDialogue {
 	public static boolean startingNewGame = false;
 	
 	private static boolean alphabeticalFileSort = false;
+	
+	private static boolean defaultResetConfirmation = false;
 	
 	public static final DialogueNode MENU = new DialogueNode("Menu", "Menu", true) {
 		
@@ -78,36 +80,47 @@ public class OptionsDialogue {
 		
 		@Override
 		public String getContent(){
-			return "<h1 class='special-text' style='font-size:48px; line-height:52px; text-align:center;'>"+Main.GAME_NAME+"</h1>"
-					+ (Main.game.isSillyMode()
-						?"<p class='special-text' style='text-align:center; margin:0 0; padding:0 0;'><i>Or, I can't believe I fell into a magic mirror and entered a world in which my aunt is a demon?!</i></p>"
-						:"")
-					+ "<h5 class='special-text' style='text-align:center;'>Created by "+Main.AUTHOR+"</h5>"
-					+ "<br/>"
-					+ "<p>"
-						+ "This game is a text-based erotic RPG, and contains a lot of graphic sexual content. You must agree to the game's disclaimer before playing this game!"
-					+ "</p>"
-					+"<p>"
-						+ "You can visit my blog (https://lilithsthrone.blogspot.co.uk) to check on development progress (use the 'Blog' button below to open the blog in your default browser)."
-						+ " [style.italicsMinorBad(<b>Note:</b> Intrusive age verification is being rolled out on blogspot, so I will likely create a new blog soon.)]"
-					+ "</p>"
-					+ "<p style='text-align:center'>"
-						+ "<b>Please use either my blog or github to get the latest official version of Lilith's Throne!</b>"
-					+ "</p>"
-					+ getJavaVersionInformation()
-					+ (Toolkit.getDefaultToolkit().getScreenSize().getHeight()<800
-							?"<p style='text-align:center; color:"+PresetColour.GENERIC_ARCANE.toWebHexString()+";'>"
-								+ "If the game's resolution isn't fitting to your screen, press the keys: 'Windows' + 'Up Arrow' to maximise!"
-							+ "</p>"
-							:"")
-					+ (Main.game.isStarted() || Main.getProperties().name.isEmpty()
-							?""
-							:"<h4 style='text-align:center;'>Last save:</h4>"
-								+ "<h5 style='color:" + Main.getProperties().nameColour + ";text-align:center;'>" + Main.getProperties().name + "</h5>"
-								+ "<p style='text-align:center;'><b>Level " + Main.getProperties().level + " " + Util.capitaliseSentence(Main.getProperties().race) + "</b></p>"
-								+ "<p style='text-align:center;'>" + UtilText.formatAsMoney(Main.getProperties().money, "b") + "</p>"
-								+ "<div style='text-align:center; display:block; margin:auto;'>" + UtilText.formatAsEssences(Main.getProperties().arcaneEssences, "b", false) + "</div>"
-								+ "<p style='text-align:center;'>Quest: " + Util.capitaliseSentence(Main.getProperties().quest) + "</p>");
+			StringBuilder sb = new StringBuilder();
+			sb.append("<h1 class='special-text' style='font-size:48px; line-height:52px; text-align:center;'>"+Main.GAME_NAME+"</h1>");
+			if(Main.game.isSillyMode()) {
+				sb.append("<p class='special-text' style='text-align:center; margin:0 0; padding:0 0;'><i>Or, I can't believe I fell into a magic mirror and entered a world in which my aunt is a demon?!</i></p>");
+			}
+			
+			sb.append("<h5 class='special-text' style='text-align:center;'>Created by "+Main.AUTHOR+"</h5><br/>");
+			
+			if (Main.CheckNotUnpacked()) {
+				sb.append("<h3 class='special-text' style='text-align:center;'>[style.italicsBad("+Main.GAME_NAME+" is currently running from a temporary directory!");
+				sb.append("<br/>Please unpack the .zip file before playing!)]</h3>");
+//				return sb.toString();
+			}
+			
+			sb.append("<p>This game is a text-based erotic RPG, and contains a lot of graphic sexual content. You must agree to the game's disclaimer before playing this game!</p>")
+					.append("<p>You can visit my blog (https://lilithsthrone.blogspot.co.uk) to check on development progress (use the 'Blog' button below to open the blog in your default browser).")
+					.append(" [style.italicsMinorBad(<b>Note:</b> Intrusive age verification is being rolled out on blogspot, so I will likely create a new blog soon.)]</p>")
+					.append("<p style='text-align:center'><b>Please use either my blog or github to get the latest official version of Lilith's Throne!</b></p>");
+			
+			sb.append(getJavaVersionInformation());
+			
+			if(Toolkit.getDefaultToolkit().getScreenSize().getHeight()<800) {
+				sb.append("<p style='text-align:center; color:").append(PresetColour.GENERIC_ARCANE.toWebHexString()).append(";'>")
+					.append("If the game's resolution isn't fitting to your screen, press the keys: 'Windows' + 'Up Arrow' to maximise!</p>");
+			}
+			if(!Main.game.isStarted() && !Main.getProperties().name.isEmpty()) {
+				sb.append("<h4 style='text-align:center;'>Last save:</h4>");
+				sb.append("<div class='container-full-width' style='width:50%;margin:0 25%;'>");
+					sb.append("<h5 style='color:").append(Main.getProperties().nameColour).append(";text-align:center;'>").append(Main.getProperties().name).append("</h5>");
+					sb.append("<p style='text-align:center;margin:0;padding:0;'><b>Level ").append(Main.getProperties().level).append("</b></p>");
+					String colourString = Main.getProperties().raceColour;
+					if(!colourString.isEmpty()) {
+						colourString = "color:"+colourString+";";
+					}
+					sb.append("<p style='text-align:center;margin:0;padding:0;").append(colourString).append("'><b>").append(Util.capitaliseSentence(Main.getProperties().race)).append("</b></p>");
+					sb.append("<p style='text-align:center;margin:0;padding:0;'>").append(UtilText.formatAsMoney(Main.getProperties().money, "b")).append("</p>");
+					sb.append("<p style='text-align:center;margin:0;padding:0;'>").append(UtilText.formatAsEssences(Main.getProperties().arcaneEssences, "b", false)).append("</p>");
+					sb.append("<p style='text-align:center;margin:0;padding:0;'>Quest: ").append(Util.capitaliseSentence(Main.getProperties().quest)).append("</p>");
+				sb.append("</div>");
+			}
+			return sb.toString();
 		}
 		
 		@Override
@@ -286,9 +299,15 @@ public class OptionsDialogue {
 	
 	private static String getJavaVersionInformation() {
 		StringBuilder sb = new StringBuilder();
+		String version = System.getProperty("java.version");
 		
-		sb.append("<p style='text-align:center;'>"
-					+ "Your java version: "+System.getProperty("java.version"));
+		sb.append("<p style='text-align:center;'>");
+			sb.append("Your java version: "+System.getProperty("java.version"));
+			if (!version.equals("1.8.0_172")) {
+				sb.append("<br/>[style.italicsBad(1.8.0_172 is the recommended java version!)]");
+				sb.append("<br/>[style.italicsMinorBad(This may result in abnormal behaviour such as tooltips getting stuck! Please launch with the recommended version or use the .exe build.)]");
+			}
+		sb.append("</p>");
 //				+" | ");
 		
 //		String[] version = System.getProperty("java.version").split("\\.");
@@ -319,7 +338,6 @@ public class OptionsDialogue {
 //			}
 //		}
 		
-		sb.append("</p>");
 		
 		return sb.toString();
 	}
@@ -959,7 +977,10 @@ public class OptionsDialogue {
 	}
 	
 	public static final DialogueNode OPTIONS_PRONOUNS = new DialogueNode("Options", "Options", true) {
-
+		@Override
+		public void applyPreParsingEffects() {
+			defaultResetConfirmation = false;
+		}
 		@Override
 		public String getContent() {
 			StringBuilder sb = new StringBuilder();
@@ -1031,24 +1052,6 @@ public class OptionsDialogue {
 				};
 				
 			} else if (index == 2) {
-				return new Response("Defaults", "Resets all pronouns to their default values.", OPTIONS_PRONOUNS){
-					@Override
-					public void effects() {
-						for(GenderNames gn : GenderNames.values()) {
-							Main.getProperties().genderNameMale.put(gn, gn.getMasculine());
-							Main.getProperties().genderNameNeutral.put(gn, gn.getNeutral());
-							Main.getProperties().genderNameFemale.put(gn, gn.getFeminine());
-						}
-						for (GenderPronoun gp : GenderPronoun.values()) {
-							Main.getProperties().genderPronounFemale.put(gp, gp.getFeminine());
-							Main.getProperties().genderPronounMale.put(gp, gp.getMasculine());
-						}
-						Main.saveProperties();
-						
-					}
-				};
-				
-			} else if (index == 3) {
 				return new Response("<span style='color:"+Main.getProperties().androgynousIdentification.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(Main.getProperties().androgynousIdentification.getName())+"</span>",
 						"Cycle the way the game treats androgynous bodies as described above.", OPTIONS_PRONOUNS){
 					@Override
@@ -1074,6 +1077,27 @@ public class OptionsDialogue {
 					}
 				};
 				
+			} else if (index == 11) {
+				if(!defaultResetConfirmation) {
+					return getDefaultResetConfirmationResponse();
+				}
+				return new Response("[style.colourMinorBad(Confirm Defaults)]", "Resets all pronouns to their default values.", OPTIONS_PRONOUNS){
+					@Override
+					public void effects() {
+						for(GenderNames gn : GenderNames.values()) {
+							Main.getProperties().genderNameMale.put(gn, gn.getMasculine());
+							Main.getProperties().genderNameNeutral.put(gn, gn.getNeutral());
+							Main.getProperties().genderNameFemale.put(gn, gn.getFeminine());
+						}
+						for (GenderPronoun gp : GenderPronoun.values()) {
+							Main.getProperties().genderPronounFemale.put(gp, gp.getFeminine());
+							Main.getProperties().genderPronounMale.put(gp, gp.getMasculine());
+						}
+						Main.saveProperties();
+						
+					}
+				};
+				
 			} else if (index == 0) {
 				return new Response("Back", "Go back to the options menu.", OPTIONS);
 				
@@ -1087,6 +1111,16 @@ public class OptionsDialogue {
 			return DialogueNodeType.OPTIONS;
 		}
 	};
+	
+	private static Response getDefaultResetConfirmationResponse() {
+		return new ResponseEffectsOnly("Defaults", "Resets all pronouns to their default values.<br/>[style.italicsMinorBad(Requires a second activation to confirm.)]") {
+			@Override
+			public void effects() {
+				defaultResetConfirmation = true;
+				Main.game.updateResponses();
+			}
+		};
+	}
 	
 	private static String getGenderNameTableRow(GenderNames name) {
 		return "<tr>"
@@ -1183,6 +1217,10 @@ public class OptionsDialogue {
 	
 	
 	public static final DialogueNode GENDER_PREFERENCE = new DialogueNode("Gender preferences", "", true) {
+		@Override
+		public void applyPreParsingEffects() {
+			defaultResetConfirmation = false;
+		}
 		
 		@Override
 		public String getHeaderContent(){
@@ -1233,7 +1271,10 @@ public class OptionsDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			 if (index == 11) {
-				return new Response("Defaults", "Restore all gender preferences to their default values.", GENDER_PREFERENCE) {
+				if(!defaultResetConfirmation) {
+					return getDefaultResetConfirmationResponse();
+				}
+				return new Response("[style.colourMinorBad(Confirm Defaults)]", "Restore all gender preferences to their default values.", GENDER_PREFERENCE) {
 					@Override
 					public void effects() {
 						Main.getProperties().resetGenderPreferences();
@@ -1326,6 +1367,10 @@ public class OptionsDialogue {
 	}
 	
 	public static final DialogueNode ORIENTATION_PREFERENCE = new DialogueNode("Orientation preferences", "", true) {
+		@Override
+		public void applyPreParsingEffects() {
+			defaultResetConfirmation = false;
+		}
 		
 		@Override
 		public String getHeaderContent(){
@@ -1359,7 +1404,10 @@ public class OptionsDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 11) {
-				return new Response("Defaults", "Restore all orientation preferences to their default values.", ORIENTATION_PREFERENCE) {
+				if(!defaultResetConfirmation) {
+					return getDefaultResetConfirmationResponse();
+				}
+				return new Response("[style.colourMinorBad(Confirm Defaults)]", "Restore all orientation preferences to their default values.", ORIENTATION_PREFERENCE) {
 					@Override
 					public void effects() {
 						Main.getProperties().resetOrientationPreferences();
@@ -1377,6 +1425,10 @@ public class OptionsDialogue {
 	};
 	
 	public static final DialogueNode FETISH_PREFERENCE = new DialogueNode("Fetish preferences", "", true) {
+		@Override
+		public void applyPreParsingEffects() {
+			defaultResetConfirmation = false;
+		}
 		
 		@Override
 		public String getHeaderContent(){
@@ -1409,7 +1461,10 @@ public class OptionsDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index == 11) {
-				return new Response("Defaults", "Reset all fetish preferences to their default settings.", FETISH_PREFERENCE) {
+				if(!defaultResetConfirmation) {
+					return getDefaultResetConfirmationResponse();
+				}
+				return new Response("[style.colourMinorBad(Confirm Defaults)]", "Reset all fetish preferences to their default settings.", FETISH_PREFERENCE) {
 					@Override
 					public void effects() {
 						Main.getProperties().resetFetishPreferences();
@@ -1561,6 +1616,10 @@ public class OptionsDialogue {
 	}
 	
 	public static final DialogueNode AGE_PREFERENCE = new DialogueNode("Age preferences", "", true) {
+		@Override
+		public void applyPreParsingEffects() {
+			defaultResetConfirmation = false;
+		}
 		
 		@Override
 		public String getHeaderContent(){
@@ -1590,7 +1649,10 @@ public class OptionsDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 11) {
-				return new Response("Defaults", "Restore all age preferences to their default values.", AGE_PREFERENCE) {
+				if(!defaultResetConfirmation) {
+					return getDefaultResetConfirmationResponse();
+				}
+				return new Response("[style.colourMinorBad(Confirm Defaults)]", "Restore all age preferences to their default values.", AGE_PREFERENCE) {
 					@Override
 					public void effects() {
 						Main.getProperties().resetAgePreferences();
@@ -1674,6 +1736,10 @@ public class OptionsDialogue {
 	}
 	
 	public static final DialogueNode FURRY_PREFERENCE = new DialogueNode("Furry preferences", "", true) {
+		@Override
+		public void applyPreParsingEffects() {
+			defaultResetConfirmation = false;
+		}
 		
 		@Override
 		public String getHeaderContent(){
@@ -1829,7 +1895,10 @@ public class OptionsDialogue {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index==11) {
-				return new Response("Defaults", "Reset all furry and spawn preferences to their default settings.", FURRY_PREFERENCE) {
+				if(!defaultResetConfirmation) {
+					return getDefaultResetConfirmationResponse();
+				}
+				return new Response("[style.colourMinorBad(Confirm Defaults)]", "Reset all furry and spawn preferences to their default settings.", FURRY_PREFERENCE) {
 					@Override
 					public void effects() {
 						for(AbstractSubspecies subspecies : Subspecies.getAllSubspecies()) {
@@ -2523,7 +2592,7 @@ public class OptionsDialogue {
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("SILLY",
 					PresetColour.GENERIC_GOOD,
 					"Silly mode",
-					"This enables funny flavour text throughout the game.",
+					"This enables additional silly content throughout the game.",
 					Main.getProperties().hasValue(PropertyValue.sillyMode)));
 			
 			return UtilText.nodeContentSB.toString();
@@ -2547,8 +2616,8 @@ public class OptionsDialogue {
 			
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("ENCHANTMENT_LIMITS",
 					PresetColour.GENERIC_ARCANE,
-					"Enchantment Capacity",
-					"Toggle the 'enchantment capacity' mechanic, which restricts how many enchanted items you can wear. This is on by default, and you will potentially break the balance of the game's combat by turning it off.",
+					"Enchantment Instability",
+					"Toggle the '"+Attribute.ENCHANTMENT_LIMIT.getName()+"' mechanic, which restricts how many enchanted items you can wear. This is on by default, and you will potentially break the balance of the game's combat by turning it off.",
 					Main.getProperties().hasValue(PropertyValue.enchantmentLimits)));
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("BAD_END",
 					PresetColour.GENERIC_TERRIBLE,
@@ -2570,11 +2639,11 @@ public class OptionsDialogue {
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("OFFSPRING_ENCOUNTERS",
 					PresetColour.BASE_INDIGO,
 					"Offspring Encounters",
-					"This enables you to randomly encounter your offspring throught the world."
+					"This enables you to randomly encounter your offspring throughout the world."
 					+ "<br/><i>This setting has no effect on the Offspring Map, nor on offspring who you've already met.</i>",
 					Main.game.isOffspringEncountersEnabled()));
 			
-			UtilText.nodeContentSB.append(getCustomContentPreferenceDivStart(PresetColour.BASE_BLUE_LIGHT, "Clothing Femininity", "This sets the limitations of clothings' femininity values."));
+			UtilText.nodeContentSB.append(getCustomContentPreferenceDivStart(PresetColour.BASE_BLUE_LIGHT, "Clothing Femininity", "This sets the limitations of clothing femininity values."));
 			for (int i=Main.getProperties().clothingFemininityTitles.length-1; i>=0; i--) {
 				if (Main.getProperties().getClothingFemininityLevel() == i) {
 					UtilText.nodeContentSB.append("<div id='CLOTHING_FEMININITY_"+i
@@ -2732,7 +2801,7 @@ public class OptionsDialogue {
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("LIPSTICK_MARKING",
 					PresetColour.BASE_RED_DARK,
 					"Lipstick marking",
-					"This enables lipstick marking of bodyparts via kisses during sex.",
+					"This enables lipstick marking of body parts via kisses during sex.",
 					Main.getProperties().hasValue(PropertyValue.lipstickMarkingContent)));
 			
 			
@@ -2825,7 +2894,7 @@ public class OptionsDialogue {
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("FURRY_TAIL_PENETRATION",
 					PresetColour.BASE_MAGENTA,
 					"Furry tail penetrations",
-					"This marks all tail types as being suitable for penetration, thereby enabling furry tails to engage in penetrative actions in sex.",
+					"This marks all prehensile tail types as being suitable for penetration, thereby enabling furry prehensile tails to engage in penetrative actions in sex.",
 					Main.getProperties().hasValue(PropertyValue.furryTailPenetrationContent)));
 			
 			UtilText.nodeContentSB.append(getContentPreferenceDiv("INFLATION_CONTENT",

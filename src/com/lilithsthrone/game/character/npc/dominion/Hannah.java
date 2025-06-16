@@ -258,32 +258,39 @@ public class Hannah extends NPC {
 
 	@Override
 	public String getArtworkFolderName() {
+
 		if(this.getWorldLocation()==WorldType.getWorldTypeFromId("innoxia_dominion_shopping_arcade_gym")) {
-			if(this.getBreastRows()>1) {
-				if(this.isVisiblyPregnant()) {
-					return "HannahMultiBoobPregnant/gym";
-				}
-				return "HannahMultiBoob/gym";
-			} else {
-				if(this.isVisiblyPregnant()) {
-					return "HannahPregnant/gym";
-				}
-				return "Hannah/gym";
-			}
-			
+			return "Hannah";
 		} else {
-			if(this.getBreastRows()>1) {
-				if(this.isVisiblyPregnant()) {
-					return "HannahMultiBoobPregnant";
-				}
-				return "HannahMultiBoob";
-			} else {
-				if(this.isVisiblyPregnant()) {
-					return "HannahPregnant";
-				}
-				return "Hannah";
-			}
+			return "HannahCasual";
 		}
+		
+//		if(this.getWorldLocation()==WorldType.getWorldTypeFromId("innoxia_dominion_shopping_arcade_gym")) {
+//			if(this.getBreastRows()>1) {
+//				if(this.isVisiblyPregnant()) {
+//					return "HannahMultiBoobPregnant/gym";
+//				}
+//				return "HannahMultiBoob/gym";
+//			} else {
+//				if(this.isVisiblyPregnant()) {
+//					return "HannahPregnant/gym";
+//				}
+//				return "Hannah/gym";
+//			}
+//			
+//		} else {
+//			if(this.getBreastRows()>1) {
+//				if(this.isVisiblyPregnant()) {
+//					return "HannahMultiBoobPregnant";
+//				}
+//				return "HannahMultiBoob";
+//			} else {
+//				if(this.isVisiblyPregnant()) {
+//					return "HannahPregnant";
+//				}
+//				return "Hannah";
+//			}
+//		}
 	}
 	
 	@Override

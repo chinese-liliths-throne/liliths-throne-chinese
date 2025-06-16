@@ -56,7 +56,6 @@ import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.inventory.CharacterInventory;
 import com.lilithsthrone.game.inventory.InventorySlot;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
-import com.lilithsthrone.game.inventory.clothing.ClothingType;
 import com.lilithsthrone.game.inventory.enchanting.ItemEffect;
 import com.lilithsthrone.game.inventory.enchanting.ItemEffectType;
 import com.lilithsthrone.game.inventory.enchanting.TFModifier;
@@ -331,7 +330,7 @@ public class Ghost extends NPC {
 
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("phlarx_sunglasses_round_sunglasses", PresetColour.CLOTHING_BLACK_STEEL, PresetColour.CLOTHING_BLUE_DARK, PresetColour.CLOTHING_PINK_DARK, false), true, this);
 
-		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing(ClothingType.TORSO_LONG_SLEEVE_DRESS, PresetColour.CLOTHING_PURPLE_ROYAL, false), true, this);
+		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_torso_long_sleeve_dress", PresetColour.CLOTHING_PURPLE_ROYAL, false), true, this);
 
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_sock_trainer_socks", PresetColour.CLOTHING_WHITE, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_foot_flats", PresetColour.CLOTHING_BLACK, false), true, this);

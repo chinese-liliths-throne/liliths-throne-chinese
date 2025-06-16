@@ -286,7 +286,7 @@ public class Ralph extends NPC {
 					}
 					
 				} else {
-					this.addClothing(Main.game.getItemGen().generateClothing(clothing), false);
+					this.addClothing(Main.game.getItemGen().generateClothing(clothing, false), false);
 				}
 			}
 		}

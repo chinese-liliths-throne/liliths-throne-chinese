@@ -25,17 +25,17 @@
 	<areasCummedOn/>
 	<title><![CDATA[Decorated doughnut]]></title>
 	<tooltip><![CDATA[
-		The filly slut has turned your asshole into a fancy doughnut!
+		The [style.mule] slut has turned your asshole into a fancy doughnut!
 	]]></tooltip>
 	<descriptions>
 		<description>
 			<text><![CDATA[
 				#IF(npc==natalya)
-					[natalya.speechNoEffects(Filly! Fetch me a mirror and show me what it looks like!)] Mistress Natalya demands. Callie helpfully points to one side of the counter, and you quickly discover and retrieve a small mirror from the place where the horse-girl motioned towards. Holding this mirror bahind your Mistress's feral equine rump, you enable her to turn her head and see the state of her asshole.
+					[natalya.speechNoEffects([style.Mule]! Fetch me a mirror and show me what it looks like!)] Mistress Natalya demands. Callie helpfully points to one side of the counter, and you quickly discover and retrieve a small mirror from the place where the horse-girl motioned towards. Holding this mirror bahind your Mistress's feral equine rump, you enable her to turn her head and see the state of her asshole.
 					
 					<br/><br/>
 					
-					[natalya.speechNoEffects(Excellent job, filly!)] the centauress happily declares, before flashing you a horny grin and teasing, [natalya.speechNoEffects(Now you can eat it!)]
+					[natalya.speechNoEffects(Excellent job, [style.mule]!)] the centauress happily declares, before flashing you a horny grin and teasing, [natalya.speechNoEffects(Now you can eat it!)]
 					
 				#ELSE
 					[callie.speechNoEffects(Great job, [pc.name],)] Callie giggles, before biting her lip and moaning, [callie.speechNoEffects(Now for the best part...)]

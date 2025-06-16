@@ -262,31 +262,43 @@ public abstract class AbstractItem extends AbstractCoreItem implements XMLSaving
 	// Getters & setters:
 	
 	public String getName(boolean withDeterminer, boolean withRarityColour) {
-		return (withDeterminer
-				? (!itemType.getDeterminer().equalsIgnoreCase("a") && !itemType.getDeterminer().equalsIgnoreCase("an")
-					? itemType.getDeterminer()
-					: UtilText.generateSingularDeterminer(name))
-				: "")
-				+ " "+(withRarityColour ? (" <span style='color: " + rarity.getColour().toWebHexString() + ";'>" + name + "</span>") : " "+name);
+		return UtilText.parse(this,
+				(withDeterminer
+					? (!itemType.getDeterminer().equalsIgnoreCase("a") && !itemType.getDeterminer().equalsIgnoreCase("an")
+						? itemType.getDeterminer()
+						: UtilText.generateSingularDeterminer(name))
+					: "")
+				+ " "+(withRarityColour ? (" <span style='color: " + rarity.getColour().toWebHexString() + ";'>" + name + "</span>") : " "+name));
 	}
 
 	@Override
 	public String getDisplayName(boolean withRarityColour) {
-		return Util.capitaliseSentence(
+		return UtilText.parse(this,
+				Util.capitaliseSentence(
 				(!itemType.getDeterminer().equalsIgnoreCase("a") && !itemType.getDeterminer().equalsIgnoreCase("an")
 						? itemType.getDeterminer()
 						: UtilText.generateSingularDeterminer(name))
-				+ " "+ (withRarityColour ? ("<span style='color: " + rarity.getColour().toWebHexString() + ";'>" + name + "</span>") : name));
+				+ " "+ (withRarityColour ? ("<span style='color: " + rarity.getColour().toWebHexString() + ";'>" + name + "</span>") : name)));
 	}
 
 	@Override
 	public String getDisplayNamePlural(boolean withRarityColour) {
-		return Util.capitaliseSentence((withRarityColour ? ("<span style='color: " + rarity.getColour().toWebHexString() + ";'>" + namePlural + "</span>") : namePlural));
+		return UtilText.parse(this,
+				Util.capitaliseSentence((withRarityColour ? ("<span style='color: " + rarity.getColour().toWebHexString() + ";'>" + namePlural + "</span>") : namePlural)));
 	}
 
+	/**
+	 * @return A basic, parsed, description of this clothing's type. (To be used in tooltips.)
+	 */
+	public String getTypeDescription(GameCharacter characterEquippedOn) {
+		String description = this.getItemType().getDescription();
+		
+		return UtilText.parse(characterEquippedOn, this, description);
+	}
+	
 	@Override
-	public String getDescription() {
-		return itemType.getDescription();
+	public String getDescription(GameCharacter characterEquippedOn) {
+		return getTypeDescription(characterEquippedOn);
 	}
 	
 	@Override

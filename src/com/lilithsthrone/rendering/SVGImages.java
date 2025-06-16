@@ -42,7 +42,7 @@ public enum SVGImages {
 			deniedIcon, deniedIconDisabled,
 			eyeIcon,
 			
-			diskSave, diskSaveDisabled, diskSaveConfirm, diskOverwrite,
+			diskSave, diskSaveDisabled, diskSaveConfirm, diskOverwrite, diskSaveQuick,
 			diskLoad, diskLoadConfirm, diskLoadDisabled, diskLoadQuick,
 			diskDelete, diskDeleteConfirm,
 			
@@ -316,6 +316,9 @@ public enum SVGImages {
 			diskOverwrite = Util.inputStreamToString(is);
 			diskOverwrite = setColour(diskOverwrite, PresetColour.BASE_ORANGE, PresetColour.BASE_YELLOW_LIGHT, PresetColour.BASE_GREY);
 //			diskOverwrite = setColour(diskOverwrite, PresetColour.BASE_BLACK, PresetColour.BASE_YELLOW_LIGHT, PresetColour.BASE_GREY);
+			is = this.getClass().getResourceAsStream("/com/lilithsthrone/res/UIElements/diskSave.svg");
+			diskSaveQuick = Util.inputStreamToString(is);
+			diskSaveQuick = setColour(diskSaveQuick, PresetColour.BASE_BLACK, PresetColour.BASE_YELLOW_LIGHT, PresetColour.BASE_GREY);
 			is = this.getClass().getResourceAsStream("/com/lilithsthrone/res/UIElements/diskSave.svg");
 			diskSaveConfirm = Util.inputStreamToString(is);
 			diskSaveConfirm = setColour(diskSaveConfirm, PresetColour.GENERIC_EXCELLENT, PresetColour.BASE_YELLOW_LIGHT, PresetColour.BASE_GREY);
@@ -1033,9 +1036,15 @@ public enum SVGImages {
 	public String getDiskSave() {
 		return diskSave;
 	}
+	
 	public String getDiskSaveDisabled() {
 		return diskSaveDisabled;
 	}
+
+	public String getDiskSaveQuick() {
+		return diskSaveQuick;
+	}
+	
 	
 	public String getDiskSaveConfirm() {
 		return diskSaveConfirm;

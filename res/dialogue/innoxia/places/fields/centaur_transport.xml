@@ -827,7 +827,7 @@
 				<responseTitle><![CDATA[Service ass]]></responseTitle>
 				<responseTooltip><![CDATA[
 					#IF(pc.getClothingInSlot(IS_NECK)!=null && pc.getClothingInSlot(IS_NECK).getClothingType().getId().equals('innoxia_neck_filly_choker'))
-						Tell Astrapi about how fillies such as yourself are well trained to perform anilingus, before demonstrating this fact on her.
+						Tell Astrapi about how [style.mules] such as yourself are well trained to perform anilingus, before demonstrating this fact on her.
 					#ELSE
 						Get Astrapi to fully present her rear end to you so that you can finger her anus and perform anilingus.
 					#ENDIF
@@ -1602,13 +1602,13 @@
 					<dominants>
 						<character>
 							<id>pc</id>
-							<slot><![CDATA[STANDING_STANDING_DOMINANT]]></slot>
+							<slot><![CDATA[STANDING_PERFORMING_ORAL]]></slot>
 						</character>
 					</dominants>
 					<submissives>
 						<character>
 							<id>vronti</id>
-							<slot><![CDATA[STANDING_PERFORMING_ORAL]]></slot>
+							<slot><![CDATA[STANDING_STANDING_DOMINANT]]></slot>
 						</character>
 					</submissives>
 					<postSexDialogue><![CDATA[innoxia_places_fields_centaur_transport_vronti_post_sex]]></postSexDialogue>
@@ -1718,7 +1718,7 @@
 				<responseTitle><![CDATA[Service ass]]></responseTitle>
 				<responseTooltip><![CDATA[
 					#IF(pc.getClothingInSlot(IS_NECK)!=null && pc.getClothingInSlot(IS_NECK).getClothingType().getId().equals('innoxia_neck_filly_choker'))
-						Having successfully given him an erection, tell Vronti about how fillies such as yourself are well trained to perform anilingus, before demonstrating this fact on him.
+						Having successfully given him an erection, tell Vronti about how [style.mules] such as yourself are well trained to perform anilingus, before demonstrating this fact on him.
 					#ELSE
 						Having successfully given him an erection, tell Vronti that you'll help him deal with it by anally fingering him, after which you could also perform anilingus on him.
 					#ENDIF

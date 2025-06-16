@@ -257,7 +257,7 @@ public class Ceridwen extends NPC {
 					}
 					
 				} else {
-					this.addClothing(Main.game.getItemGen().generateClothing(clothing), false);
+					this.addClothing(Main.game.getItemGen().generateClothing(clothing, false), false);
 				}
 			}
 		}

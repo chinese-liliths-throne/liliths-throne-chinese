@@ -33,7 +33,7 @@
 			<text><![CDATA[
 				Deciding that you should give [npc2.name] a little more attention, you shuffle over to position yourself behind her.
 				#IF(npc2==natalya)
-					 Now giving your Mistress most of your attention, you can't help but let out a happy [pc.moan] as she looks back at you over her shoulder and says, [natalya.speech(Good filly... Keep eating my ass!)]
+					 Now giving your Mistress most of your attention, you can't help but let out a happy [pc.moan] as she looks back at you over her shoulder and says, [natalya.speech(Good [style.mule]... Keep eating my ass!)]
 				#ELSE
 					 Now giving Callie most of your attention, you can't help but let out a happy [pc.moan] as she looks back at you over her shoulder and exclaims, [callie.speech(That feels so good! Don't stop!)]
 				#ENDIF

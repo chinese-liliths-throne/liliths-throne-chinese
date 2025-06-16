@@ -507,7 +507,7 @@
 		#IF(!flags.hasFlag(FLAG_innoxia_yui_public_toy_unavailable_today) && (!pc.hasFetish(FETISH_MASOCHIST) || pc.isAnyEquippedClothingSealed() || pc.isHasAnyPregnancyEffects() || pc.getDirtySlots().size()>0 || (!game.isAnalContentEnabled() && !pc.hasVagina()) || pc.getLegConfiguration()!=LEG_CONFIGURATION_BIPEDAL))
 			<p>
 				#IF(!pc.hasFetish(FETISH_MASOCHIST))
-					As you think about Yui's sadistic nature, you realise that whatever offer she's going to make is sure to involve putting you in a situation where you'll be abused. As you're [style.italicsBad(not a masochist)], you've got a bad feeling about this and [style.italicsBad(decide not to meet with Yui)]...
+					As you think about Yui's sadistic nature, you realise that whatever offer she's going to make is sure to involve putting you in a situation where you'll be abused. As [style.italicsBad(you're not a masochist)], you've got a bad feeling about this and [style.italicsBad(decide not to meet with Yui)]...
 				#ELSE
 					Remembering Yui's conditions for your meeting, you realise that she's not going to show up.
 					#IF(pc.isAnyEquippedClothingSealed())
@@ -613,7 +613,7 @@
 		#IF(!flags.hasFlag(FLAG_innoxia_yui_dungeon_unavailable_today) && (!pc.hasFetish(FETISH_MASOCHIST) || pc.isAnyEquippedClothingSealed() || pc.isHasAnyPregnancyEffects() || pc.getDirtySlots().size()>0))
 			<p>
 				#IF(!pc.hasFetish(FETISH_MASOCHIST))
-					As you think about Yui's sadistic nature, you realise that whatever offer she's going to make is sure to involve putting you in a situation where you'll be abused. As you're [style.italicsBad(not a masochist)], you've got a bad feeling about this and [style.italicsBad(decide not to meet with Yui)]...
+					As you think about Yui's sadistic nature, you realise that whatever offer she's going to make is sure to involve putting you in a situation where you'll be abused. As [style.italicsBad(you're not a masochist)], you've got a bad feeling about this and [style.italicsBad(decide not to meet with Yui)]...
 				#ELSE
 					Remembering Yui's conditions for your meeting, you realise that she's not going to show up.
 					#IF(pc.isAnyEquippedClothingSealed())

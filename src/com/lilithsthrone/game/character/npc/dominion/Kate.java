@@ -298,7 +298,7 @@ public class Kate extends NPC {
 
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_groin_vstring", PresetColour.CLOTHING_PINK, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_leg_micro_skirt_belted", PresetColour.CLOTHING_BLACK, false), true, this);
-		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing(ClothingType.TORSO_CAMITOP_STRAPS, PresetColour.CLOTHING_PINK, false), true, this);
+		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_torso_cami_straps", PresetColour.CLOTHING_PINK, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_torsoOver_womens_leather_jacket", PresetColour.CLOTHING_BLACK, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_sock_fishnets", PresetColour.CLOTHING_BLACK, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_foot_heels", PresetColour.CLOTHING_BLACK, false), true, this);
@@ -458,8 +458,8 @@ public class Kate extends NPC {
 	
 	@Override
 	public String getCondomEquipEffects(AbstractClothingType condomClothingType, GameCharacter equipper, GameCharacter target, boolean rough) {
-		if(!target.equals(equipper) && Main.game.isInSex()) {
-			if(!target.isPlayer()) {
+		if(Main.game.isInSex() && !target.isAsleep()) {
+			if(!target.equals(equipper) && !target.isPlayer()) {
 				if(condomClothingType.equals(ClothingType.getClothingTypeFromId("innoxia_penis_condom_webbing"))) {
 					return null;
 				}
@@ -468,7 +468,8 @@ public class Kate extends NPC {
 							+ " Quickly ripping it out of its little foil wrapper, [kate.she] rolls it down the length of [kate.her] [kate.cock+] as [kate.she] whines at you,"
 							+ " [kate.speech(Do I really have to? It feels so much better without one...)]"
 						+ "</p>";
-			} else {
+			}
+			if(target.equals(equipper) && target.isPlayer()) {
 				AbstractClothing clothing = target.getClothingInSlot(InventorySlot.PENIS);
 				if(clothing!=null && clothing.isCondom()) {
 					target.unequipClothingIntoVoid(clothing, true, equipper);
@@ -476,15 +477,15 @@ public class Kate extends NPC {
 				}
 				if(condomClothingType.equals(ClothingType.getClothingTypeFromId("innoxia_penis_condom_webbing"))) {
 					return UtilText.parse(equipper, target,
-							"[npc.Name] [npc.verb(direct)] [npc.her] spinneret at [npc2.namePos] [npc2.cock], but, sensing what [npc.sheIs] about to do, Kate slaps it away and laughs,"
-							+ " [kate.speech(No way! It's no fun if I don't get any cum!)]");
+							"You direct your spinneret at your own [npc.cock], with the intention of weaving a silky web condom around it, but as Kate sees what it is you're about to do, she firmly slaps it away and giggles,"
+							+ " [kate.speech(Don't do that! It's no fun if I don't get any cum!)]");
 				}
 				return "<p>"
 							+ "As you pull out a condom, a worried frown flashes across Kate's face, "
 							+ "[kate.speech(Oh! Erm, let me put that on for you!)]"
 							+"<br/>"
-							+ "Before you can react, Kate snatches the condom out of your hands, and with a devious smile, uses her sharp little canines to bite a big hole straight through the centre."
-							+ " She laughs at your shocked reaction, "
+							+ "Before you can react, Kate snatches the condom out of your hands, and with a devious smile, uses her sharp little canines to [style.colourBad(tear a big hole in it)]."
+							+ " She laughs at your shocked reaction and declares, "
 							+ "[kate.speech(It's no fun if I don't get any cum!)]"
 						+ "</p>";
 			}

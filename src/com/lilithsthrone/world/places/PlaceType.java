@@ -1801,8 +1801,8 @@ public class PlaceType {
 
 	public static final AbstractPlaceType DOMINION_EXPRESS_FILLY_STATION = new AbstractPlaceType(
 			WorldRegion.DOMINION,
-			"Filly Rewards Station",
-			"Set into a small alcove on one side of the warehouse corridor, there's a curious-looking arcane vending machine, which is clearly marked as a 'Filly Rewards Station'.",
+			"[style.Mule] Rewards Station",
+			"Set into a small alcove on one side of the warehouse corridor, there's a curious-looking arcane vending machine, which is clearly marked as a '[style.Mule] Rewards Station'.",
 			"dominion/dominionExpress/fillyStation",
 			PresetColour.BASE_PINK_LIGHT,
 			DominionExpress.FILLY_STATION,

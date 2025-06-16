@@ -325,7 +325,7 @@
 	<p>
 		As Callie moves over to pull up the blinds and unlock the front door,
 		#IF(pc.getClothingInSlot(IS_NECK)!=null && pc.getClothingInSlot(IS_NECK).getClothingType().getId().equals('innoxia_neck_filly_choker'))
-			 you point to the choker around your neck, before telling Callie that you've been well trained as one of Natalya's fillies, and that performing anilingus on horse-asses is one of your favourite parts of the job.
+			 you point to the choker around your neck, before telling Callie that you've been well trained as one of Natalya's [style.mules], and that performing anilingus on horse-asses is one of your favourite parts of the job.
 		#ELSE
 			 you tell Callie that it was easy to satisfy her thanks to how delicious her perfect, puffy asshole is.
 		#ENDIF
@@ -424,7 +424,7 @@
 	<p>
 		As the horse-girl then walks over to return to her side of the counter,
 		#IF(pc.getClothingInSlot(IS_NECK)!=null && pc.getClothingInSlot(IS_NECK).getClothingType().getId().equals('innoxia_neck_filly_choker'))
-			 you point to the choker around your neck, before telling Callie that you've been well trained as one of Natalya's fillies, and that getting fucked by big horse-cocks is one of your favourite parts of the job.
+			 you point to the choker around your neck, before telling Callie that you've been well trained as one of Natalya's [style.mules], and that getting fucked by big horse-cocks is one of your favourite parts of the job.
 		#ELSE
 			 you tell Callie that it was easy to satisfy her thanks to how perfect her big, throbbing horse-cock is.
 		#ENDIF
@@ -488,7 +488,7 @@
 			[callie.speech(This is the [pc.race] who I was just telling you about,)] Callie says to your Mistress. Not knowing about the relationship between the two of you, she continues, [callie.speech([pc.Name] here really helped me to turn my business around. Without [pc.herHim], I may even have closed this place down by now!)]
 		</p>
 		<p>
-			[natalya.speech(Oh, I know this filly very well indeed,)] Mistress Natalya states, before smirking and teasing, [natalya.speech([pc.SheIs] normally eating a different type of doughnut to the ones you sell here. [pc.She] really is quite good with that [pc.tongue] of [pc.hers]...)]
+			[natalya.speech(Oh, I know this [style.mule] very well indeed,)] Mistress Natalya states, before smirking and teasing, [natalya.speech([pc.SheIs] normally eating a different type of doughnut to the ones you sell here. [pc.She] really is quite good with that [pc.tongue] of [pc.hers]...)]
 		</p>
 		<p>
 			[callie.speech(I've already experienced that first-hand!)] Callie laughs. Smiling at the centauress, she asks, [callie.speech(I guess I've got you to thank for training [pc.herHim] to be so good at eating ass? Hey! I've got an idea! Have you ever had your 'doughnut' iced before?)]
@@ -501,7 +501,7 @@
 		</p>
 	#ELSE
 		<p>
-			[natalya.speech(I was hoping to see you here again, filly,)] Mistress Natalya says to you, before turning back to Callie and asking, [natalya.speech(Is your offer of having my doughnut iced still on? I have an hour or so to kill...)]
+			[natalya.speech(I was hoping to see you here again, [style.mule],)] Mistress Natalya says to you, before turning back to Callie and asking, [natalya.speech(Is your offer of having my doughnut iced still on? I have an hour or so to kill...)]
 		</p>
 		<p>
 			[callie.speech(Well, it looks like I don't have any other customers, and I'm in the mood for some anal action, so let's do it!)] Callie eagerly replies, before looking over at you and saying, [callie.speech(Lock the front door, [pc.name]. It's your lucky day; you'll get two doughnuts to ice and eat!)]
@@ -529,7 +529,7 @@
 		[callie.speech(Take these, [pc.name],)] she says as you [pc.step] over to her. Taking the icing supplies from the smiling horse-girl, you listen as she instructs, [callie.speech(One bag's got white icing, the other's pink. There should be enough left in each of them to cover one doughnut. After that, choose some sprinkles to finish us off, then you can get to eating!)]
 	</p>
 	<p>
-		With that, she turns around and bends over to lean down against the counter-top. Stepping over to get closer to the horse-girl, Mistress Natalya positions her big ass so that it's next to Callie's. Looking back over her shoulder, she sharply commands, [natalya.speech(Lift my skirt, filly, and get Callie's trousers pulled down! You know the drill. Kiss our assholes to demonstrate your subservience, then you can get on with icing them.)]
+		With that, she turns around and bends over to lean down against the counter-top. Stepping over to get closer to the horse-girl, Mistress Natalya positions her big ass so that it's next to Callie's. Looking back over her shoulder, she sharply commands, [natalya.speech(Lift my skirt, [style.mule], and get Callie's trousers pulled down! You know the drill. Kiss our assholes to demonstrate your subservience, then you can get on with icing them.)]
 	</p>
 	<p>
 		Obediently carrying out your Mistress's instructions, you flip up her skirt to reveal her hindquarters. Her big, puffy, ebony asshole is nestled between her hindquarters, and beneath that her feral, equine cock and pair of huge, heavy balls sway slightly as she pushes her ass back out towards you. Doing what's expected of you, you drop down behind your Mistress and lean forwards to plant a big, wet kiss on her musky anus, before shuffling over to Callie.
@@ -544,16 +544,16 @@
 	
 	<htmlContent tag="NATALYA_AFTER_ANILINGUS"><![CDATA[
 	<p>
-		With both Callie and Mistress Natalya having cum hard just from the feeling of your [pc.tongue] in their ass, they let out satisfied sighs and exchange a nod with one another. Looking back over her shoulder, your Mistress commands, [natalya.speech(Give us each one more kiss, filly, then we're done here.)] 
+		With both Callie and Mistress Natalya having cum hard just from the feeling of your [pc.tongue] in their ass, they let out satisfied sighs and exchange a nod with one another. Looking back over her shoulder, your Mistress commands, [natalya.speech(Give us each one more kiss, [style.mule], then we're done here.)] 
 	</p>
 	<p>
 		Doing as you're told, you plant one last wet kiss on both of the puffy, ebony doughnuts before you, after which you stand up and pull Mistress Natalya's skirt back down to cover her rear end. As Callie pulls up her trousers, she smirks at you and asks, [callie.speech(Did you enjoy eating our iced doughnuts, [pc.name]?)]
 	</p>
 	<p>
-		You eagerly reply in the affirmative, after which Mistress Natalya lets out a short laugh and states, [natalya.speech(Of course [pc.she] enjoyed it. All of my fillies have been trained to love eating horse ass. Now, I'll take a dozen of your doughnuts, then I must be on my way.)]
+		You eagerly reply in the affirmative, after which Mistress Natalya lets out a short laugh and states, [natalya.speech(Of course [pc.she] enjoyed it. All of my [style.mules] have been trained to love eating horse ass. Now, I'll take a dozen of your doughnuts, then I must be on my way.)]
 	</p>
 	<p>
-		Callie quickly packs twelve doughnuts into a paper bag, before taking payment from your Mistress and wishing her a good evening. Turning to face you, the centauress smiles and says, [natalya.speech(That was a good performance, filly. I expect to see you at the warehouse again soon. There are plenty of centaur slaves who need servicing, after all.)]
+		Callie quickly packs twelve doughnuts into a paper bag, before taking payment from your Mistress and wishing her a good evening. Turning to face you, the centauress smiles and says, [natalya.speech(That was a good performance, [style.mule]. I expect to see you at the warehouse again soon. There are plenty of centaur slaves who need servicing, after all.)]
 	</p>
 	]]></htmlContent>
 	

@@ -23,6 +23,7 @@ import com.lilithsthrone.game.dialogue.DialogueFlagValue;
 import com.lilithsthrone.game.dialogue.DialogueManager;
 import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.dialogue.companions.OccupantDialogue;
+import com.lilithsthrone.game.dialogue.encounters.AbstractEncounter;
 import com.lilithsthrone.game.dialogue.npcDialogue.dominion.CultistDialogue;
 import com.lilithsthrone.game.dialogue.npcDialogue.dominion.ReindeerOverseerDialogue;
 import com.lilithsthrone.game.dialogue.npcDialogue.dominion.RentalMommyDialogue;
@@ -150,8 +151,8 @@ public class DominionPlaces {
 		AbstractClothing collar = Main.game.getPlayer().getClothingInSlot(InventorySlot.NECK);
 		if(collar!=null && collar.getClothingType().getId().equals("innoxia_neck_filly_choker")) {
 			mommySB.append("<p>");
-				mommySB.append("[style.boldPinkLight(Filly Choker:)]<br/>");
-				mommySB.append("By wearing your filly choker, you're signalling to any passing centaur slaves from Dominion Express that you're available to sexually service them.");
+				mommySB.append("[style.boldPinkLight([style.Mule] Choker:)]<br/>");
+				mommySB.append("By wearing your [style.mule] choker, you're signalling to any passing centaur slaves from Dominion Express that you're available to sexually service them.");
 				if(Main.game.getCurrentWeather()==Weather.MAGIC_STORM) {
 					mommySB.append(" As there's an ongoing arcane storm, however, there's [style.colourMinorBad(zero chance)] that you'll encounter any of them...");
 				} else if(!Main.game.isExtendedWorkTime()) {
@@ -192,9 +193,15 @@ public class DominionPlaces {
 					&& (!Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.nyanmumDateCompleted) || Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.nyanmumGirlfriend))) {
 				int dateCost = 4000;
 				if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.nyanWeekendDated)) {
-					mommyResponses.add(new Response("Double date ("+UtilText.formatAsMoneyUncoloured(dateCost, "span")+")",
-							"You've already taken Nyan and [nyanmum.name] out for a date this weekend. You'll have to wait until next weekend before taking them out again...",
-							null));
+					if(!Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.nyanmumDateCompleted)) {
+						mommyResponses.add(new Response("Double date ("+UtilText.formatAsMoneyUncoloured(dateCost, "span")+")",
+								"You've already taken Nyan out for a date this weekend. You'll have to wait until next weekend before taking her and [nyanmum.name] out for a double date...",
+								null));
+					} else {
+						mommyResponses.add(new Response("Double date ("+UtilText.formatAsMoneyUncoloured(dateCost, "span")+")",
+								"You've already taken Nyan and [nyanmum.name] out for a date this weekend. You'll have to wait until next weekend before taking them out again...",
+								null));
+					}
 					
 				} else if((Main.game.getDayOfWeek()==DayOfWeek.FRIDAY || Main.game.getDayOfWeek()==DayOfWeek.SATURDAY) && (Main.game.isHourBetween(20, 23))) {
 					if(Main.game.getNpc(Nyan.class).getWorldLocation()!=WorldType.NYANS_APARTMENT) {
@@ -572,22 +579,12 @@ public class DominionPlaces {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index == 1) {
-				return new ResponseEffectsOnly(
-						"Explore",
-						"Explore the alleyways. Although you don't think you're any more or less likely to find anything by doing this, at least you won't have to keep travelling back and forth..."){
-						@Override
-						public int getSecondsPassed() {
-							return 30*60;
-						}
-						@Override
-						public void effects() {
-							DialogueNode dn = Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation()).getDialogue(true, true);
-							Main.game.setContent(new Response("", "", dn));
-						}
-					};
-			} else {
-				return null;
+				return AbstractEncounter.exploreArea("the alleyways");
+			} else if(index == 2) {
+				return AbstractEncounter.useOffspringMap();
 			}
+			
+			return null;
 		}
 	};
 	
@@ -614,22 +611,11 @@ public class DominionPlaces {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index == 1) {
-				return new ResponseEffectsOnly(
-						"Explore",
-						"Explore the alleyways. Although you don't think you're any more or less likely to find anything by doing this, at least you won't have to keep travelling back and forth..."){
-						@Override
-						public int getSecondsPassed() {
-							return 30*60;
-						}
-						@Override
-						public void effects() {
-							DialogueNode dn = Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation()).getDialogue(true, true);
-							Main.game.setContent(new Response("", "", dn));
-						}
-					};
-			} else {
-				return null;
+				return AbstractEncounter.exploreArea("the alleyways");
+			} else if(index == 2) {
+				return AbstractEncounter.useOffspringMap();
 			}
+			return null;
 		}
 	};
 	
@@ -657,22 +643,11 @@ public class DominionPlaces {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index == 1) {
-				return new ResponseEffectsOnly(
-						"Explore",
-						"Explore this area. Although you don't think you're any more or less likely to find anything by doing this, at least you won't have to keep travelling back and forth..."){
-						@Override
-						public int getSecondsPassed() {
-							return 30*60;
-						}
-						@Override
-						public void effects() {
-							DialogueNode dn = Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation()).getDialogue(true, true);
-							Main.game.setContent(new Response("", "", dn));
-						}
-					};
-			} else {
-				return null;
+				return AbstractEncounter.exploreArea("the alleyways");
+			} else if(index == 2) {
+				return AbstractEncounter.useOffspringMap();
 			}
+			return null;
 		}
 	};
 	
@@ -923,19 +898,9 @@ public class DominionPlaces {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if(index == 1) {
-				return new ResponseEffectsOnly(
-						"Explore",
-						"Explore this area. Although you don't think you're any more or less likely to find anything by doing this, at least you won't have to keep travelling back and forth..."){
-						@Override
-						public int getSecondsPassed() {
-							return 30*60;
-						}
-						@Override
-						public void effects() {
-							DialogueNode dn = Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation()).getDialogue(true, true);
-							Main.game.setContent(new Response("", "", dn));
-						}
-					};
+				return AbstractEncounter.exploreArea("the canals");
+			} else if(index == 2) {
+				return AbstractEncounter.useOffspringMap();
 			}
 			return null;
 		}
@@ -966,22 +931,11 @@ public class DominionPlaces {
 		@Override
 		public Response getResponse(int responseTab, int index) {
 			if (index == 1) {
-				return new ResponseEffectsOnly(
-						"Explore",
-						"Explore this area. Although you don't think you're any more or less likely to find anything by doing this, at least you won't have to keep travelling back and forth..."){
-						@Override
-						public int getSecondsPassed() {
-							return 30*60;
-						}
-						@Override
-						public void effects() {
-							DialogueNode dn = Main.game.getActiveWorld().getCell(Main.game.getPlayer().getLocation()).getDialogue(true, true);
-							Main.game.setContent(new Response("", "", dn));
-						}
-					};
-			} else {
-				return null;
+				return AbstractEncounter.exploreArea("the canals");
+			} else if(index == 2) {
+				return AbstractEncounter.useOffspringMap();
 			}
+			return null;
 		}
 	};
 

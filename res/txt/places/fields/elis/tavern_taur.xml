@@ -1527,9 +1527,9 @@
 	#ELSEIF(game.isFeralContentEnabled())
 		<p>
 			#IF(flags.hasFlag(FLAG_innoxia_sterope_transformed_into_feral))
-				[sterope.speech(I'd like to transform into a mare again...)] she breathlessly moans as she throws the sheet off of a small boulder in one corner of the stable. As the beast stone is revealed, she reminds you, [sterope.speech(These used to be super popular years ago, but they fell out of favour and are now pretty taboo. For every ten minutes spent touching it, you get transformed into a feral form for four hours. Fifteen minutes should be enough for me to turn into a mare until morning... That is, if you're up for it?)]
+				[sterope.speech(I'd like to transform into a mare again...)] she breathlessly moans as she throws the sheet off of a small boulder in one corner of the stable. As the beast stone is revealed, she reminds you, [sterope.speech(These used to be super popular years ago, but they fell out of favour and are now pretty taboo. For every ten minutes spent touching it, you get transformed into a feral form for four hours. A few minutes should be enough for me to turn into a mare for an hour, and I can touch it again for a little longer if my time starts to run out... That is, if you're up for it?)]
 			#ELSE
-				[sterope.speech(Having spent time in my new form, I feel like I need to transform more...)] she breathlessly moans as she runs her hands over her anthropomorphic body. Excitedly biting her lip, she throws a sheet off of what turns out to be a small boulder in one corner of the stable, before revealing, [sterope.speech(A beast stone. They used to be super popular years ago, but they fell out of favour and are now pretty taboo. For every ten minutes spent touching it, you get transformed into a feral form for four hours. Fifteen minutes should be enough for me to turn into a mare until morning... That is, if you're up for it?)]
+				[sterope.speech(Having spent time in my new form, I feel like I need to transform more...)] she breathlessly moans as she runs her hands over her anthropomorphic body. Excitedly biting her lip, she throws a sheet off of what turns out to be a small boulder in one corner of the stable, before revealing, [sterope.speech(A beast stone. They used to be super popular years ago, but they fell out of favour and are now pretty taboo. For every ten minutes spent touching it, you get transformed into a feral form for four hours. A few minutes should be enough for me to turn into a mare for an hour, and I can touch it again for a little longer if my time starts to run out... That is, if you're up for it?)]
 			#ENDIF
 		</p>
 		#IF(pc.getTrueRace()!=RACE_HORSE_MORPH && !pc.isAbleToHaveRaceTransformed())
@@ -1605,10 +1605,10 @@
 	
 	<htmlContent tag="STEROPE_STABLES_TRANSFORM_FERAL"><![CDATA[
 	<p>
-		Liking the sound of getting to fuck Sterope in the form of a feral mare, you tell her to touch the beast stone. Letting out an excited whimper, she takes off her leather collar and obediently drops to her knees beside the small boulder, before placing one of her hands on it. A faint purple glow washes over the [sterope.race]'s body, and she excitedly moans, [sterope.speech(I'll be ready in fifteen minutes...)]
+		Liking the sound of getting to fuck Sterope in the form of a feral mare, you tell her to touch the beast stone. Letting out an excited whimper, she takes off her leather collar and obediently drops to her knees beside the small boulder, before placing one of her hands on it. A faint purple glow washes over the [sterope.race]'s body, and she excitedly moans, [sterope.speech(I'll be ready in a few minutes...)]
 	</p>
 	<p>
-		Eagerly anticipating what's to come, you pace around the stable as you wait for the fifteen minutes to pass. Finally, Sterope calls out, [sterope.speech(I'm ready now!)]
+		Eagerly anticipating what's to come, you pace around the stable until Sterope suddenly calls out, [sterope.speech(I'm ready now!)]
 	</p>
 	<p>
 		Returning to where she's kneeling down on the floor, you watch as the [sterope.race] lets go of the beast stone. The purple glow which was surrounding her suddenly shoots into her body, and she lets out a desperate, shuddering moan as she starts to transform.
@@ -1659,7 +1659,7 @@
 		Eagerly anticipating what's to come, Sterope takes off her leather collar and quickly drops to her knees beside the small boulder, before placing one of her hands on it. A faint purple glow washes over the [sterope.race]'s body, and she excitedly moans, [sterope.speech(Come on, [pc.name]. Join me...)]
 	</p>
 	<p>
-		Doing as she says, you join Sterope in touching the beast stone, and as you place your horse-like hand on its cool surface, you feel a surge of arcane energy wash over you. Along with Sterope, you maintain contact with the beast stone for fifteen minutes, before letting go of it at the same time. The purple glow which was surrounding both of you suddenly shoots into your bodies, and you each let out desperate, shuddering cries as you start to transform.
+		Doing as she says, you join Sterope in touching the beast stone, and as you place your horse-like hand on its cool surface, you feel a surge of arcane energy wash over you. Along with Sterope, you maintain contact with the beast stone for a few minutes, before letting go of it at the same time. The purple glow which was surrounding both of you suddenly shoots into your bodies, and you each let out desperate, shuddering cries as you start to transform.
 	</p>
 	<p>
 		Your transformation starts with a second pair of horse legs growing out of your lower stomach. Accompanying this alarming change, your ass begins to swell and grow in size. Within seconds, your lower body from the waist down has transformed into the form of a full-sized horse. You gasp as your arms then rapidly shrink into your torso, before your upper body shrinks down and transforms into a long, thick neck. Your horse-like face then increases in size, losing its anthropomorphic qualities as it transforms into that of a feral horse.
@@ -1862,7 +1862,7 @@
 	
 	<htmlContent tag="STEROPE_STABLES_CLOTHING_BLINDFOLD"><![CDATA[
 	<p>
-		Thinking that it would be good to deprive Sterope of her vision, you grab the bindfold from out of the chest. Dropping it down over her face, you tightly secure the straps at the back to hold it in place.
+		Thinking that it would be good to deprive Sterope of her vision, you grab the blindfold from out of the chest. Dropping it down over her face, you tightly secure the straps at the back to hold it in place.
 	</p>
 	<p>
 		[sterope.speech(~Aah!~ I'll be your good slut...)] the horny [sterope.race] moans as her world is plunged into darkness. Giving her [sterope.ass+] a hard slap, you tell her what a worthless cunt she is, which makes her let out another lewd squeal.
@@ -2111,7 +2111,7 @@
 		Despite her earlier amorous behaviour, now that she's got what she wanted out of this evening, Sterope assumes the cold, aloof attitude she has while at work. Ignoring or rejecting all of your attempts to start conversation or begin another session of lewd activities, the mare impatiently stomps her hoofs and trots back and forth as she waits for the feral transformation to end.
 	</p>
 	<p>
-		[sterope.speech(Kheiron wasn't happy when I first walked through the tavern in this form,)] she says after some time, [sterope.speech(Something about the customers feeling uncomfortable. So now I have to wait in here like this... Eugh... Getting fucked as a mare is the best, but this part of it sucks.)]
+		[sterope.speech(Kheiron wasn't happy when I first walked through the tavern in this form,)] she says after some time, [sterope.speech(Something about the customers feeling uncomfortable. So now I have to wait in here like this... Eugh... Getting fucked as a mare is the best, but this part of it sucks. I should have touched the beast stone for a little less time...)]
 	</p>
 	<p>
 		Thankfully, the two of you don't have to wait for much longer, for after a few more minutes you feel your transformation reversing. The process of turning from a quadrupedal animal back into a humanoid is a disorienting blur. A loss of coordination in your limbs is followed by an extreme bout of dizziness, and although you're vaguely aware of your body reshaping as your limbs return to their previous shape, you're mostly oblivious as to what's going on until it's all over.
@@ -2242,9 +2242,9 @@
 	#IF(flags.hasFlag(FLAG_innoxia_sterope_fully_furry) && game.isFeralContentEnabled() && (pc.getTrueRace()==RACE_HORSE_MORPH || pc.isAbleToHaveRaceTransformed()))
 		<p>
 			#IF(flags.hasFlag(FLAG_innoxia_sterope_transformed_into_feral))
-				[sterope.speech(Let's transform into mares so that we can get rutted like real animals...)] she breathlessly moans to you as she throws the sheet off of a small boulder in one corner of the stable. As the beast stone is revealed, she reveals to the [centaur.race], [sterope.speech(These used to be super popular years ago, but they fell out of favour and are now pretty taboo. For every ten minutes spent touching it, you get transformed into a feral form for four hours. Fifteen minutes should be enough for the two of us to turn into mares until morning...)]
+				[sterope.speech(Let's transform into mares so that we can get rutted like real animals...)] she breathlessly moans to you as she throws the sheet off of a small boulder in one corner of the stable. As the beast stone is revealed, she reveals to the [centaur.race], [sterope.speech(These used to be super popular years ago, but they fell out of favour and are now pretty taboo. For every ten minutes spent touching it, you get transformed into a feral form for four hours. A few minutes should be enough for the two of us to turn into mares for an hour, and we can touch it again for a little longer if our time starts to run out...)]
 			#ELSE
-				[sterope.speech(Having spent time in my new form, I feel like I need to transform more...)] she breathlessly moans as she runs her hands over her anthropomorphic body. Excitedly biting her lip, she throws a sheet off of what turns out to be a small boulder in one corner of the stable, before revealing, [sterope.speech(This is a beast stone. They used to be super popular years ago, but they fell out of favour and are now pretty taboo. For every ten minutes spent touching it, you get transformed into a feral form for four hours. Fifteen minutes should be enough for us to turn into mares until morning... That is, if you're up for it?)]
+				[sterope.speech(Having spent time in my new form, I feel like I need to transform more...)] she breathlessly moans as she runs her hands over her anthropomorphic body. Excitedly biting her lip, she throws a sheet off of what turns out to be a small boulder in one corner of the stable, before revealing, [sterope.speech(This is a beast stone. They used to be super popular years ago, but they fell out of favour and are now pretty taboo. For every ten minutes spent touching it, you get transformed into a feral form for four hours. A few minutes should be enough for the two of us to turn into mares for an hour, and we can touch it again for a little longer if our time starts to run out... That is, if you're up for it?)]
 			#ENDIF
 		</p>
 		<p>
@@ -2331,7 +2331,7 @@
 		<p>
 			As she finishes saying this, you feel your transformation begin. Horse-like hair quickly grows to cover your entire body, before your feet transform and shift into hoofs. A horse-like tail grows out from just above your ass, while your face pushes out into a long muzzle. Your ears drift up to sit on top of your head and grow up into horse ears, before your head finishes its transformation into becoming that of an anthropomorphised horse.
 			#IF(!pc.isFeminine())
-				 A high-pitched moan escapes from your lips as you feel your facial features and body shape morphing and becoming more feminine formin appearance.
+				 A high-pitched moan escapes from your lips as you feel your facial features and body shape morphing and becoming more feminine in appearance.
 			#ENDIF
 			#IF(!pc.hasBreasts())
 				 [centaur.Name] grunts in approval as a pair of breasts swell out from your chest, and before you can react, the [centaur.race] is roughly groping and squeezing them.
@@ -2356,7 +2356,7 @@
 		Eagerly anticipating what's to come, Sterope takes off her leather collar and quickly drops to her knees beside the beast stone, before placing one of her hands on it. A faint purple glow washes over the [sterope.race]'s body, and she excitedly moans, [sterope.speech(Come on, [pc.name]. Join me...)]
 	</p>
 	<p>
-		Doing as she says, you join Sterope in touching the beast stone, and as you place your [pc.hand+] on its cool surface, you feel a surge of arcane energy wash over you. Along with Sterope, you maintain contact with the beast stone for fifteen minutes, before letting go of it at the same time. The purple glow which was surrounding both of you suddenly shoots into your bodies, and you each let out desperate, shuddering cries as you start to transform.
+		Doing as she says, you join Sterope in touching the beast stone, and as you place your [pc.hand+] on its cool surface, you feel a surge of arcane energy wash over you. Along with Sterope, you maintain contact with the beast stone for a few minutes, before letting go of it at the same time. The purple glow which was surrounding both of you suddenly shoots into your bodies, and you each let out desperate, shuddering cries as you start to transform.
 	</p>
 	<p>
 		Your transformation starts with a second pair of horse legs growing out of your lower stomach. Accompanying this alarming change, your ass begins to swell and grow in size. Within seconds, your lower body from the waist down has transformed into the form of a full-sized horse. You gasp as your arms then rapidly shrink into your torso, before your upper body shrinks down and transforms into a long, thick neck. Your horse-like face then increases in size, losing its anthropomorphic qualities as it transforms into that of a feral mare. As a slight breeze passes over your fully-feral mare pussy, you find yourself letting out a primal, animalistic neigh, before finding your voice and telling [centaur.name] that you and Sterope are ready to be fucked hard.
@@ -2955,7 +2955,6 @@
 	</htmlContent>
 	
 	<htmlContent tag="STEROPE_CENTAUR_FERAL_AFTER_SEX_FINAL_LEAVE"><![CDATA[
-	
 	#IF(pc.isPregnant())
 		<p>
 			Thankfully, the two of you don't have to wait for long before your feral transformation reverts, for after just a couple of minutes you feel your body begin to tingle. Instead of transforming all the way back into a horse-morph, however, your feral head and neck morph into a humanoid upper body, leaving you as a centaur.

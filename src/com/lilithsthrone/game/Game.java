@@ -2136,6 +2136,12 @@ public class Game implements XMLSaving {
 				if(Main.isVersionOlderThan(loadingVersion, "0.4.10.8")) {
 					Main.game.getDialogueFlags().setFlag(DialogueFlagValue.dressingRoomAutoClean, true);
 				}
+				if(Main.isVersionOlderThan(loadingVersion, "0.4.10.10")) {
+					if(!Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_GROUND_FLOOR).getCells(PlaceUpgrade.LILAYA_DRESSING_ROOM_LYSSIETH_WARDROBE).isEmpty()
+							|| !Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_FIRST_FLOOR).getCells(PlaceUpgrade.LILAYA_DRESSING_ROOM_LYSSIETH_WARDROBE).isEmpty()) {
+						Main.game.getDialogueFlags().setFlag(DialogueFlagValue.dressingRoomLyssiethsWardrobeActivated, true);
+					}
+				}
 				
 				
 				if(debug) {
@@ -2269,6 +2275,8 @@ public class Game implements XMLSaving {
 	 */
 	private void handlePostGameInit() {
 		UtilText.initScriptEngine();
+		
+		Main.game.getDialogueFlags().resetTemporaryVariables();
 		
 		// Handle Subspecies detection after UtilText's parsing engine has been initialised (as modded races require parsing of a conditional to determine weighting).
 		for(NPC npc : this.getAllNPCs()) {
@@ -2767,8 +2775,14 @@ public class Game implements XMLSaving {
 	 */
 	public float endTurnTimeTakenAddition = 0;
 	
-	public void endTurn(int secondsPassedThisTurn, boolean advanceTime) {
-
+	
+	private void endTurn(int secondsPassedThisTurn, boolean advanceTime) {
+		
+		if(!advanceTime) {
+			System.err.println("WARNING: Game.endTurn() does not properly account for 'advanceTime' being false!!!");
+			new IllegalArgumentException().printStackTrace();
+		}
+		
 		boolean loopDebug = false;
 		long tStart = System.nanoTime();
 		long startHour = getHour();
@@ -2782,6 +2796,9 @@ public class Game implements XMLSaving {
 			}
 			
 			secondsPassed += secondsPassedThisTurn;
+			
+			handleAtmosphericConditions(secondsPassedThisTurn);
+			
 			updateResponses();
 		}
 		int hoursPassed = (int) (getHour() - startHour);
@@ -2929,8 +2946,6 @@ public class Game implements XMLSaving {
 		if(loopDebug) {
 			System.out.println("Daily location end");
 		}
-		
-		handleAtmosphericConditions(secondsPassedThisTurn);
 
 		
 		// Apply status effects and update all NPCs:
@@ -6274,7 +6289,7 @@ public class Game implements XMLSaving {
 	
 	public void generateAlleywayClothing() {
 		if(Math.random()<0.01f) {
-			randomItem = Main.game.getItemGen().generateClothing(ClothingType.MEGA_MILK);
+			randomItem = Main.game.getItemGen().generateClothing("innoxia_torso_tshirt_megamilk", false);
 			Main.game.getPlayerCell().getInventory().addClothing((AbstractClothing) randomItem);
 			
 		} else {
@@ -6284,9 +6299,18 @@ public class Game implements XMLSaving {
 						&& !clothing.getDefaultItemTags().contains(ItemTag.SOLD_BY_NYAN)
 						&& !clothing.getDefaultItemTags().contains(ItemTag.DOMINION_ALLEYWAY_SPAWN))
 					|| clothing.getDefaultItemTags().contains(ItemTag.NO_RANDOM_SPAWN)
-					|| clothing.getRarity()==Rarity.EPIC
 					|| clothing.getRarity()==Rarity.LEGENDARY);
-			randomItem = Main.game.getItemGen().generateClothing(randomClothingList.get(Util.random.nextInt(randomClothingList.size())));
+			
+			// As there are far, far more epic items than uncommon or rare, it's best to just lump all non-common items together and draw from them, otherwise players will constantly get the same uncommon or rare items
+			boolean commonClothing = Math.random()<0.8; // 80% chance of common clothing
+			Collections.shuffle(randomClothingList);
+			
+			AbstractClothingType typeSelected = randomClothingList.stream().filter(ct->commonClothing?ct.getRarity()==Rarity.COMMON:ct.getRarity()!=Rarity.COMMON).findFirst().get();
+			if(typeSelected==null) {
+				typeSelected = randomClothingList.get(Util.random.nextInt(randomClothingList.size()));
+			}
+			
+			randomItem = Main.game.getItemGen().generateClothing(typeSelected, true);
 		}
 	}
 	

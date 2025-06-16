@@ -31,7 +31,7 @@
 		<description>
 			<text><![CDATA[
 				#IF(npc==natalya)
-					[natalya.speech(That's it, filly, keep eating my ass!)] Mistress Natalya moans.
+					[natalya.speech(That's it, [style.mule], keep eating my ass!)] Mistress Natalya moans.
 				#ELSE
 					[callie.speech(Don't stop!)] Callie happily squeals as you continue eating her ass.
 				#ENDIF

@@ -95,6 +95,7 @@ import com.lilithsthrone.utils.Util.Value;
 import com.lilithsthrone.utils.colours.BaseColour;
 import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.utils.comparators.ClothingZLayerComparator;
+import com.lilithsthrone.utils.comparators.SexActionComparator;
 import com.lilithsthrone.world.Cell;
 
 /**
@@ -1797,7 +1798,12 @@ public class Sex {
 		
 		@Override
 		public String getLabel() {
-			return Main.sex.initialSexManager.getSexTitle();
+			// If the manager is using the default label, then update it to reflect the current position instead of the starting one:
+			String label = Main.sex.initialSexManager.getSexTitle();
+			if(label.equalsIgnoreCase(Main.sex.initialSexManager.getDefaultSexTitle())) {
+				label = Main.sex.sexManager.getSexTitle();
+			}
+			return label;
 		}
 
 		@Override
@@ -2257,28 +2263,7 @@ public class Sex {
 			availableSexActionsPlayer.addAll(normalActions);
 			playerUniqueActions = false;
 		}
-		availableSexActionsPlayer.sort((SexActionInterface s1, SexActionInterface s2) -> {
-				if(s1.getActionRenderingPriority()!=s2.getActionRenderingPriority()) {
-					return s1.getActionRenderingPriority()>s2.getActionRenderingPriority()?-1:1;
-				}
-				if(s1.getActionType()==s2.getActionType()) {
-					if(s1==GenericOrgasms.GENERIC_PREPARATION_DENIAL) {
-						return 1;
-					}
-					if(s2==GenericOrgasms.GENERIC_PREPARATION_DENIAL) {
-						return -1;
-					}
-					if(s1.getSexPace()==s2.getSexPace()) {
-						return 0;
-					}
-					return s1.getSexPace()==null
-							?-1
-							:s2.getSexPace()==null
-								?1
-								:s1.getSexPace().compareTo(s2.getSexPace());
-				}
-				return s1.getActionType().compareTo(s2.getActionType());
-			});
+		availableSexActionsPlayer.sort(new SexActionComparator());
 		if(partnerOrgasming && Main.game.getPlayer().hasTrait(Perk.ORGASMIC_LEVEL_DRAIN, true)) {
 			availableSexActionsPlayer.add(MiscActions.LEVEL_DRAIN_TOGGLE);
 		}

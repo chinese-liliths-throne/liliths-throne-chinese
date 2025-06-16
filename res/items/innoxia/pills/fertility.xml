@@ -20,7 +20,17 @@
 		<!-- The plural name of this item. If pluralByDefault's "false" is changed to "true", then the game will always the plural name when referring to this item. -->
 		<namePlural pluralByDefault="false"><![CDATA[breeder pills]]></namePlural>
 		
-		<!-- The description/lore of this item. -->
+		<!-- The description/lore of this item.
+			You can use 'npc' to access the character who's the owner of this item, but if you do you should do an npc null check first (as this item may be on the ground with no owner), like so:
+				<description><![CDATA[
+					#IF(npc!=null)
+						This is [npc.namePos] breeder pill!
+					#ELSE
+						This is a breeder pill!
+					#ENDIF
+					 It's worth [style.moneyFormat([#thisItem.getValue()], span)]!
+				]]></description> 
+		-->
 		<description><![CDATA[A small, light-purple pill, individually packaged in a foil and plastic wrapper. While the text printed on the foil identifies this pill as an 'Orally-Administered Reproduction Enhancer', it's colloquially known as a 'breeder pill', and temporarily boosts both fertility and virility when ingested.]]></description> 
 		
 		<!-- How the item is used. This should be a single verb, and is used as the title of the action when using it. -->

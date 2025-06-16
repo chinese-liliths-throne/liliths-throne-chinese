@@ -99,17 +99,17 @@ public class EnchantmentDialogue {
 		
 		ItemEffect effect = getCurrentEffect();
 		
-		int displaySlots = Math.max(32, 8*(int)Math.ceil(Math.max(ingredient.getEnchantmentEffect().getPrimaryModifiers().size(), ingredient.getEnchantmentEffect().getSecondaryModifiers(ingredient, primaryMod).size())/8f));
+		int displaySlots = Math.max(32, 8*(int)Math.ceil(Math.max(ingredient.getEnchantmentEffect().getPrimaryModifiers(ingredient).size(), ingredient.getEnchantmentEffect().getSecondaryModifiers(ingredient, primaryMod).size())/8f));
 		
 		// Primary mods:
 		inventorySB.append("<div class='container-half-width' style='padding-bottom:0;'>");
-		for (TFModifier tfMod : ingredient.getEnchantmentEffect().getPrimaryModifiers()) {
+		for (TFModifier tfMod : ingredient.getEnchantmentEffect().getPrimaryModifiers(ingredient)) {
 			inventorySB.append("<div class='modifier-icon' style='width:11.5%; background-color:"+tfMod.getRarity().getBackgroundColour().toWebHexString()+";'>"
 					+ "<div class='modifier-icon-content'>"+tfMod.getSVGString()+"</div>"
 					+ "<div class='overlay' id='MOD_PRIMARY_"+tfMod.hashCode()+"'></div>"
 					+ "</div>");
 		}
-		for (int i = displaySlots; i > ingredient.getEnchantmentEffect().getPrimaryModifiers().size(); i--) {
+		for (int i = displaySlots; i > ingredient.getEnchantmentEffect().getPrimaryModifiers(ingredient).size(); i--) {
 			inventorySB.append("<div class='modifier-icon empty' style='width:11.5%;'></div>");
 		}
 		
@@ -249,8 +249,8 @@ public class EnchantmentDialogue {
 								}
 								inventorySB.append("<br/>"
 										+ (cost>0
-												?"[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+" cost)]: [style.boldBad("+cost+")]"
-												:Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+" cost: [style.boldDisabled(0)]"));
+												?"[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "+UtilText.formatAsEnchantmentCapacity(cost, "b")
+												:Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+": [style.colourDisabled("+UtilText.formatAsEnchantmentCapacityUncoloured(cost, "b")+")]"));
 							}
 						}
 					}
@@ -384,8 +384,8 @@ public class EnchantmentDialogue {
 								|| (ingredient instanceof Tattoo)) {
 							inventorySB.append("<br/>"
 									+ (cost>0
-											?"[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+" cost)]: [style.boldBad("+cost+")]"
-											:Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+" cost: [style.boldDisabled(0)]"));
+											?"[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "+UtilText.formatAsEnchantmentCapacity(cost, "b")
+											:Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+": [style.colourDisabled("+UtilText.formatAsEnchantmentCapacityUncoloured(cost, "b")+")]"));
 						}
 					}
 				}
@@ -724,8 +724,8 @@ public class EnchantmentDialogue {
 			EnchantmentDialogue.effects = new ArrayList<>();
 		}
 		
-		if(!EnchantmentDialogue.ingredient.getEnchantmentEffect().getPrimaryModifiers().contains(EnchantmentDialogue.primaryMod)) {
-			EnchantmentDialogue.primaryMod = EnchantmentDialogue.ingredient.getEnchantmentEffect().getPrimaryModifiers().get(0);
+		if(!EnchantmentDialogue.ingredient.getEnchantmentEffect().getPrimaryModifiers(ingredient).contains(EnchantmentDialogue.primaryMod)) {
+			EnchantmentDialogue.primaryMod = EnchantmentDialogue.ingredient.getEnchantmentEffect().getPrimaryModifiers(ingredient).get(0);
 		}
 		if(!EnchantmentDialogue.ingredient.getEnchantmentEffect().getSecondaryModifiers(EnchantmentDialogue.ingredient, EnchantmentDialogue.primaryMod).contains(EnchantmentDialogue.secondaryMod)) {
 			EnchantmentDialogue.secondaryMod = EnchantmentDialogue.ingredient.getEnchantmentEffect().getSecondaryModifiers(EnchantmentDialogue.ingredient, EnchantmentDialogue.primaryMod).get(0);
@@ -1044,7 +1044,7 @@ public class EnchantmentDialogue {
 	}
 
 	public static LoadedEnchantment loadEnchant(String name) {
-		if (isLoadEnchantAvailable(name)) {
+		if (isLoadEnchantAvailable(name)) { // ????????????? you just repeat the check below immediately afterwards...
 			File file = new File("data/enchantments/"+name+".xml");
 
 			if (file.exists()) {

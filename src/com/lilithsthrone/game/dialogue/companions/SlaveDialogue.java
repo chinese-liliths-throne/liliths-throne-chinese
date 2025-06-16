@@ -1193,7 +1193,7 @@ public class SlaveDialogue {
 	
 									if(!isDoll()) {
 										if(getSlave().isAttractedTo(Main.game.getPlayer())
-												&& (getSlave().getFetishDesire(Fetish.FETISH_SUBMISSIVE).isPositive() || getSlave().getFetishDesire(Fetish.FETISH_NON_CON_SUB).isPositive())) {
+												&& (getSlave().hasFetish(Fetish.FETISH_SUBMISSIVE) || getSlave().hasFetish(Fetish.FETISH_NON_CON_SUB))) {
 											Main.game.getTextEndStringBuilder().append(getSlave().incrementAffection(Main.game.getPlayer(), 10));
 											
 										} else if(!getSlave().isAttractedTo(Main.game.getPlayer()) && !getSlave().hasFetish(Fetish.FETISH_SUBMISSIVE) && !getSlave().hasFetish(Fetish.FETISH_NON_CON_SUB)) {
@@ -2077,11 +2077,12 @@ public class SlaveDialogue {
 		if(isDoll()) {
 			return "";
 		}
-		return "<p><i>"
-				+ (getSlave().isAttractedTo(Main.game.getPlayer())
+		return UtilText.parse(getSlave(),
+				"<p><i>"
+					+ (getSlave().isAttractedTo(Main.game.getPlayer())
 						?"From the way [npc.she] keeps on glancing hungrily at your body, you can tell that [npc.sheIs] attracted to you..."
 						:"[npc.She] doesn't seem to be attracted to you...")
-					+ "</i></p>";
+				+ "</i></p>");
 	}
 	
 	public static final DialogueNode SLAVE_PROGRESSION = new DialogueNode("", "", true) {

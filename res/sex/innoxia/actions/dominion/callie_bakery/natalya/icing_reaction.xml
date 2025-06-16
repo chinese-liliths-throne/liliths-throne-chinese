@@ -25,13 +25,13 @@
 	<areasCummedOn/>
 	<title><![CDATA[Iced!]]></title>
 	<tooltip><![CDATA[
-		The filly slut has covered your asshole in icing!
+		The [style.mule] slut has covered your asshole in icing!
 	]]></tooltip>
 	<descriptions>
 		<description>
 			<text><![CDATA[
 				#IF(npc==natalya)
-					[natalya.speechNoEffects(You're doing well so far, filly,)] Mistress Natalya hums, [natalya.speechNoEffects(Now get those sprinkles on!)]
+					[natalya.speechNoEffects(You're doing well so far, [style.mule],)] Mistress Natalya hums, [natalya.speechNoEffects(Now get those sprinkles on!)]
 					
 				#ELSE
 					[callie.speechNoEffects(This is the best part,)] Callie excitedly says, before giggling and correcting herself, [callie.speechNoEffects(Actually, the best part's going to be eating them, isn't it?)]

@@ -623,11 +623,15 @@ public enum RenderingEngine {
 					//TODO Attempted to make tattoo background the same as skin colour, but skin colours are defined mainly for ease of reasing as text, and look bad as blocks of colour
 					// So if this was to be implemented, new colour values for all skin colours would be needed (to serve as block colours)
 					//String style = "style='background-image:-webkit-radial-gradient("+charactersInventoryToRender.getCovering(charactersInventoryToRender.getTorsoCovering()).getPrimaryColour().toWebHexString()+" 60%, #33333300 75%);'";
-					//String backgroundColour = "background-image:-webkit-radial-gradient("+charactersInventoryToRender.getCovering(charactersInventoryToRender.getTorsoCovering()).getPrimaryColour().toWebHexString()+" 75%, #33333300 85%);";
-					// background-color:"+charactersInventoryToRender.getCovering(charactersInventoryToRender.getTorsoCovering()).getPrimaryColour().toWebHexString()+"
-					//String style = "style='"+backgroundColour+" -webkit-box-shadow: inset 0 0 3px 2px #333333;'";
+//					String backgroundColour = "background-image:-webkit-radial-gradient("+charactersInventoryToRender.getCovering(charactersInventoryToRender.getTorsoCovering()).getPrimaryColour().toWebHexString()+" 75%, #33333300 85%);";
+//					 background-color:"+charactersInventoryToRender.getCovering(charactersInventoryToRender.getTorsoCovering()).getPrimaryColour().toWebHexString()+"
+//					String style = "style='"+backgroundColour+" -webkit-box-shadow: inset 0 0 3px 2px #333333;'";
 					
 					String style = "";
+//					Colour tattooBackgroundColour = invSlot.getAssociatedColourForTattoo(charactersInventoryToRender);
+//					if(tattooBackgroundColour!=null) {
+//						style = "style='background-color:"+tattooBackgroundColour.toWebHexString()+";'";
+//					}
 					
 					if(tattoo != null) {
 						equippedPanelSB.append("<div class='"+inventorySlotId + getClassRarityIdentifier(tattoo.getRarity()) +"' "+style+">");
@@ -1445,6 +1449,7 @@ public enum RenderingEngine {
 					"<div class='full-width-container' style='text-align:center;'>"
 						+ "<div class='overlay-alt' id='INVENTORY_ENCHANTMENT_LIMIT' style='cursor:default;'>"
 							+ "[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "
+							+ UtilText.getEnchantmentCapacitySymbol()
 							+ (enchantmentPointsUsed>Main.game.getPlayer().getAttributeValue(Attribute.ENCHANTMENT_LIMIT)
 									?"[style.colourBad("
 									:(enchantmentPointsUsed==Main.game.getPlayer().getAttributeValue(Attribute.ENCHANTMENT_LIMIT)
@@ -1682,6 +1687,7 @@ public enum RenderingEngine {
 						"<div class='full-width-container' style='text-align:center;'>"
 							+ "<div class='overlay-alt' id='INVENTORY_ENCHANTMENT_LIMIT_NPC' style='cursor:default;'>"
 								+ "[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "
+								+ UtilText.getEnchantmentCapacitySymbol()
 								+ (enchantmentPointsUsed>getCharacterToRender().getAttributeValue(Attribute.ENCHANTMENT_LIMIT)
 										?"[style.colourBad("
 										:(enchantmentPointsUsed==getCharacterToRender().getAttributeValue(Attribute.ENCHANTMENT_LIMIT)
@@ -1805,11 +1811,16 @@ public enum RenderingEngine {
 			
 			int count = 0;
 			if(Main.game.isInNewWorld()) {
+				String extraClasses = "";
+				if(Main.game.getCurrentDialogueNode().isInventoryDisabled()) {
+					extraClasses = " disabled";
+				}
+				
 				if(Main.game.getPlayerCell().getInventory().getMoney()>0) {
 					uiAttributeSB.append(
 							"<div class='event-log-entry' style='background:"+getEntryBackgroundColour(false)+";'>"
 									+ UtilText.formatAsMoney(Main.game.getPlayerCell().getInventory().getMoney(), "span")
-									+ "<div class='overlay-inventory' id='MONEY_ON_FLOOR'></div>"
+									+ "<div class='overlay-inventory"+extraClasses+"' id='MONEY_ON_FLOOR'></div>"
 							+"</div>");
 					count++;
 				}
@@ -1820,14 +1831,14 @@ public enum RenderingEngine {
 							if(count%2==0) {
 								uiAttributeSB.append(
 										"<div class='event-log-entry' style='background:"+getEntryBackgroundColour(false)+";'>"
-												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getName(false, true)))
-												+ "<div class='overlay-inventory' id='WEAPON_FLOOR_"+entry.getKey().hashCode()+"'></div>"
+												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getDisplayName(true)))
+												+ "<div class='overlay-inventory"+extraClasses+"' id='WEAPON_FLOOR_"+entry.getKey().hashCode()+"'></div>"
 										+"</div>");
 							} else {
 								uiAttributeSB.append(
 										"<div class='event-log-entry' style='background:"+getEntryBackgroundColour(true)+";'>"
-												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getName(false, true)))
-												+ "<div class='overlay-inventory' id='WEAPON_FLOOR_"+entry.getKey().hashCode()+"'></div>"
+												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getDisplayName(true)))
+												+ "<div class='overlay-inventory"+extraClasses+"' id='WEAPON_FLOOR_"+entry.getKey().hashCode()+"'></div>"
 										+"</div>");
 							}
 							count++;
@@ -1838,14 +1849,14 @@ public enum RenderingEngine {
 							if(count%2==0) {
 								uiAttributeSB.append(
 										"<div class='event-log-entry' style='background:"+getEntryBackgroundColour(false)+";'>"
-												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getName(false, true)))
-												+ "<div class='overlay-inventory' id='CLOTHING_FLOOR_"+entry.getKey().hashCode()+"'></div>"
+												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getDisplayName(true)))
+												+ "<div class='overlay-inventory"+extraClasses+"' id='CLOTHING_FLOOR_"+entry.getKey().hashCode()+"'></div>"
 										+"</div>");
 							} else {
 								uiAttributeSB.append(
 										"<div class='event-log-entry' style='background:"+getEntryBackgroundColour(true)+";'>"
-												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getName(false, true)))
-												+ "<div class='overlay-inventory' id='CLOTHING_FLOOR_"+entry.getKey().hashCode()+"'></div>"
+												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getDisplayName(true)))
+												+ "<div class='overlay-inventory"+extraClasses+"' id='CLOTHING_FLOOR_"+entry.getKey().hashCode()+"'></div>"
 										+"</div>");
 							}
 							count++;
@@ -1857,13 +1868,13 @@ public enum RenderingEngine {
 								uiAttributeSB.append(
 										"<div class='event-log-entry' style='background:"+getEntryBackgroundColour(false)+";'>"
 												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getName(false, true)))
-												+ "<div class='overlay-inventory' id='ITEM_FLOOR_"+entry.getKey().hashCode()+"'></div>"
+												+ "<div class='overlay-inventory"+extraClasses+"' id='ITEM_FLOOR_"+entry.getKey().hashCode()+"'></div>"
 										+"</div>");
 							} else {
 								uiAttributeSB.append(
 										"<div class='event-log-entry' style='background:"+getEntryBackgroundColour(true)+";'>"
 												+entry.getValue()+"x "+Util.capitaliseSentence(UtilText.parse(entry.getKey().getName(false, true)))
-												+ "<div class='overlay-inventory' id='ITEM_FLOOR_"+entry.getKey().hashCode()+"'></div>"
+												+ "<div class='overlay-inventory"+extraClasses+"' id='ITEM_FLOOR_"+entry.getKey().hashCode()+"'></div>"
 										+"</div>");
 							}
 							count++;
@@ -2570,7 +2581,7 @@ public enum RenderingEngine {
 				+ "<div class='quarterContainer' style='width:25%; float:right;'>"
 					+ "<div class='button" + (Main.isQuickSaveAvailable()?"":" disabled")+ "' id='quickSave'>"
 						+ (Main.isQuickSaveAvailable()
-								?SVGImages.SVG_IMAGE_PROVIDER.getDiskSave()
+								?SVGImages.SVG_IMAGE_PROVIDER.getDiskSaveQuick()
 								:SVGImages.SVG_IMAGE_PROVIDER.getDiskSaveDisabled())
 						+ (!Main.isQuickSaveAvailable() ? "<div class='disabledLayer'></div>" : "")
 					+ "</div>"
@@ -3232,7 +3243,9 @@ public enum RenderingEngine {
 	public static int getMaximumFloorPageIndex() {
 		int totalUniques = Main.game.getPlayerCell().getInventory().getUniqueItemCount() + Main.game.getPlayerCell().getInventory().getUniqueClothingCount() + Main.game.getPlayerCell().getInventory().getUniqueWeaponCount();
 		
-		return Math.max(0, totalUniques/ITEMS_PER_PAGE_FLOOR);
+//		System.out.println(totalUniques +" | "+totalUniques/ITEMS_PER_PAGE_FLOOR);
+		
+		return Math.max(0, (totalUniques-1)/ITEMS_PER_PAGE_FLOOR);
 	}
 	
 	public static void setPage(GameCharacter charactersInventoryToRender, AbstractCoreItem item) {

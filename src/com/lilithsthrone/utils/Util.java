@@ -393,6 +393,18 @@ public class Util {
 		list.removeIf(e -> e==null);
 		return list;
 	}
+
+	/**
+	 * @param values The values to add to the new list.
+	 * @return A list of provided values, with nulls retained.
+	 */
+	@SafeVarargs
+	public static <U> ArrayList<U> newArrayListOfValuesKeepNulls(U... values) {
+		ArrayList<U> list = new ArrayList<>(Arrays.asList(values));
+//		list.removeIf(e -> e==null);
+		return list;
+	}
+	
 	
 	@SafeVarargs
 	/**
@@ -681,7 +693,9 @@ public class Util {
 		}
 		
 		if(integer>=100) {
-			if(integer>=1000 && integer%1000 != 0) {
+			if(integer>=1000
+					&& integer%1000 != 0
+					&& ((integer/100)%10!=0)) {
 				intToString+=", ";
 			}
 			integer = integer % 1000;

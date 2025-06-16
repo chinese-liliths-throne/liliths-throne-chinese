@@ -393,7 +393,7 @@ public class GenericActions {
 			}
 			
 			for(GameCharacter dom : new ArrayList<>(domsNotSatisfied)) {
-				if(Main.sex.getNumberOfOrgasms(dom)>=dom.getOrgasmsBeforeSatisfied()) {
+				if(Main.sex.getNumberOfOrgasms(dom)>=dom.getOrgasmsBeforeSatisfied() || !dom.isAbleToOrgasm()) {
 					domsNotSatisfied.remove(dom);
 				}
 			}

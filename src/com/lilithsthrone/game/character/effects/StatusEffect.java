@@ -4109,7 +4109,7 @@ public class StatusEffect {
 					if(target.hasFetish(Fetish.FETISH_PREGNANCY)) {
 						sb.append("<p>"
 								+ "For the last few hours, your belly has been gradually swelling."
-								+ " The progress was so slow that you didn't even realise anything was happening, but as you glance down at your stomach, there's no mistaking it."
+								+ " The progress was so slow that you didn't realise anything was happening at first, but as you glance down at your stomach, there's no mistaking it."
 								+ " You're pregnant."
 								+ " You experimentally start stroking your abdomen, making soft little gasps as the realisation of what's happening starts to sink in."
 							+ "</p>"
@@ -4149,7 +4149,7 @@ public class StatusEffect {
 					} else {
 						sb.append("<p>"
 									+ "For the last few hours, your belly has been gradually swelling."
-									+ " The progress was so slow that you didn't even realise anything was happening, but as you glance down at your stomach, there's no mistaking it."
+									+ " The progress was so slow that you didn't realise anything was happening at first, but as you glance down at your stomach, there's no mistaking it."
 									+ " You're pregnant."
 									+ " You experimentally start stroking your abdomen, making soft little gasps as the realisation of what's happening starts to sink in."
 								+ "</p>"
@@ -4190,7 +4190,7 @@ public class StatusEffect {
 				} else {
 					sb.append("<p>"
 							+ "For the last couple of hours, your belly has been gradually swelling."
-							+ " The progress was so slow that you didn't even realise anything was happening, but as you glance down at your stomach, there's no mistaking it."
+							+ " The progress was so slow that you didn't realise anything was happening at first, but as you glance down at your stomach, there's no mistaking it."
 							+ " You're pregnant again."
 							+ " You start stroking your abdomen, making soft little gasps as the familiar feeling of being knocked up returns to you."
 							+ (target.getBodyMaterial()==BodyMaterial.SLIME
@@ -5291,13 +5291,32 @@ public class StatusEffect {
 			"promiscuityPill",
 			PresetColour.GENERIC_SEX,
 			true,
-			Util.newHashMapOfValues(new Value<>(Attribute.FERTILITY, -100f),
+			Util.newHashMapOfValues(
+					new Value<>(Attribute.FERTILITY, -100f),
 					new Value<>(Attribute.VIRILITY, -100f)),
 			null) {
 		@Override
 		public String getDescription(GameCharacter target) {
 			return UtilText.parse(target, "After consuming a '[#ITEM_innoxia_pills_sterility.getName(false)]', [npc.namePos] fertility and virility have been greatly reduced."
 							+ " This is a <b>preventative</b> measure, and will not alter the outcome of any unprotected sex [npc.she] had before taking the pill!");
+		}
+		@Override
+		public boolean isSexEffect() {
+			return true;
+		}
+	};
+
+	public static AbstractStatusEffect PROMISCUITY_PILL_PROLOGUE = new AbstractStatusEffect(80,
+			"On the pill",
+			"promiscuityPill",
+			PresetColour.GENERIC_SEX,
+			true,
+			Util.newHashMapOfValues(
+					new Value<>(Attribute.FERTILITY, -100f)),
+			null) {
+		@Override
+		public String getDescription(GameCharacter target) {
+			return UtilText.parse(target, "[npc.NameIsFull] under the effects of a combined oral contraceptive pill, and so is unable to get pregnant.");
 		}
 		@Override
 		public boolean isSexEffect() {
@@ -8203,7 +8222,7 @@ public class StatusEffect {
 		public String getDescription(GameCharacter target) {
 			return UtilText.parse(target,
 					"Losing [npc.her] precious virginity has hit [npc.name] hard, and [npc.she] now [npc.verb(see)] [npc.herself] as nothing but a dirty slut."
-						+ " [npc.She] now often fantasises about big, thick cocks slamming deep into [npc.her] worthless cunt, before defiling [npc.her] womb with their foul cum...");
+						+ " [npc.She] now often [npc.verb(fantasise)] about big, thick cocks slamming deep into [npc.her] worthless cunt, before defiling [npc.her] womb with their foul cum...");
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {

@@ -972,7 +972,7 @@ public class MiscController {
 						}, false);
 						// Warn player if this clothing is incompatible with any of the outfit's currently selected clothing
 						List<AbstractClothing> incompatibleClothing = new ArrayList<>();
-						for(InventorySlot slot : Main.game.getItemGen().generateClothing(clothingType).getIncompatibleSlots(LilayaDressingRoomDialogue.getDoll(), LilayaDressingRoomDialogue.getSelectedSlot())) {
+						for(InventorySlot slot : Main.game.getItemGen().generateClothing(clothingType, false).getIncompatibleSlots(LilayaDressingRoomDialogue.getDoll(), LilayaDressingRoomDialogue.getSelectedSlot())) {
 							if(LilayaDressingRoomDialogue.getDoll().getClothingInSlot(slot)!=null) {
 								incompatibleClothing.add(LilayaDressingRoomDialogue.getDoll().getClothingInSlot(slot));
 							}
@@ -1200,34 +1200,40 @@ public class MiscController {
 		if (currentLimit>0) {
 			id = "LIMIT_MINIMUM";
 			if (MainController.document.getElementById(id) != null) {
-				MainController.addEventListener(MainController.document, id, "click", new EnchantmentEventListener().setLimit(0), false);
+				MainController.addEventListener(MainController.document, id, "click",
+						new EnchantmentEventListener().setLimit(0), false);
 			}
 			
 			id = "LIMIT_DECREASE_LARGE";
 			if (MainController.document.getElementById(id) != null) {
-				MainController.addEventListener(MainController.document, id, "click", new EnchantmentEventListener().setLimit(Math.max(0, LilayaDressingRoomDialogue.getLimit()-effect.getLargeLimitChange())), false);
+				MainController.addEventListener(MainController.document, id, "click",
+						new EnchantmentEventListener().setLimit(Math.max(0, LilayaDressingRoomDialogue.getLimit()-effect.getLargeLimitChange(LilayaDressingRoomDialogue.getPrimaryMod(), LilayaDressingRoomDialogue.getSecondaryMod()))), false);
 			}
 			
 			id = "LIMIT_DECREASE";
 			if (MainController.document.getElementById(id) != null) {
-				MainController.addEventListener(MainController.document, id, "click", new EnchantmentEventListener().setLimit(LilayaDressingRoomDialogue.getLimit()-effect.getSmallLimitChange()), false);
+				MainController.addEventListener(MainController.document, id, "click",
+						new EnchantmentEventListener().setLimit(LilayaDressingRoomDialogue.getLimit()-effect.getSmallLimitChange(LilayaDressingRoomDialogue.getPrimaryMod(), LilayaDressingRoomDialogue.getSecondaryMod())), false);
 			}
 		}
 		
 		if (currentLimit<maxLimit) {
 			id = "LIMIT_INCREASE";
 			if (MainController.document.getElementById(id) != null) {
-				MainController.addEventListener(MainController.document, id, "click", new EnchantmentEventListener().setLimit(LilayaDressingRoomDialogue.getLimit()+effect.getSmallLimitChange()), false);
+				MainController.addEventListener(MainController.document, id, "click",
+						new EnchantmentEventListener().setLimit(LilayaDressingRoomDialogue.getLimit()+effect.getSmallLimitChange(LilayaDressingRoomDialogue.getPrimaryMod(), LilayaDressingRoomDialogue.getSecondaryMod())), false);
 			}
 			
 			id = "LIMIT_INCREASE_LARGE";
 			if (MainController.document.getElementById(id) != null) {
-				MainController.addEventListener(MainController.document, id, "click", new EnchantmentEventListener().setLimit(Math.min(maxLimit, LilayaDressingRoomDialogue.getLimit()+effect.getLargeLimitChange())), false);
+				MainController.addEventListener(MainController.document, id, "click",
+						new EnchantmentEventListener().setLimit(Math.min(maxLimit, LilayaDressingRoomDialogue.getLimit()+effect.getLargeLimitChange(LilayaDressingRoomDialogue.getPrimaryMod(), LilayaDressingRoomDialogue.getSecondaryMod()))), false);
 			}
 			
 			id = "LIMIT_MAXIMUM";
 			if (MainController.document.getElementById(id) != null) {
-				MainController.addEventListener(MainController.document, id, "click", new EnchantmentEventListener().setLimit(maxLimit), false);
+				MainController.addEventListener(MainController.document, id, "click",
+						new EnchantmentEventListener().setLimit(maxLimit), false);
 			}
 		}
 		
@@ -1285,7 +1291,7 @@ public class MiscController {
 		}
 		
 		// Choosing a primary modifier:
-		for (TFModifier tfMod : LilayaDressingRoomDialogue.getSelectedItem().getEnchantmentEffect().getPrimaryModifiers()) {
+		for (TFModifier tfMod : LilayaDressingRoomDialogue.getSelectedItem().getEnchantmentEffect().getPrimaryModifiers(LilayaDressingRoomDialogue.getSelectedItem())) {
 			id = "MOD_PRIMARY_"+tfMod.hashCode();
 			if (MainController.document.getElementById(id) != null) {
 				MainController.addTooltipListeners(id,

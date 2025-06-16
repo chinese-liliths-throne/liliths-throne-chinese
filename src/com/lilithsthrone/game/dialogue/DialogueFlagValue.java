@@ -36,6 +36,8 @@ public class DialogueFlagValue {
 	// Misc.:
 	public static AbstractDialogueFlagValue quickTrade = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue dressingRoomAutoClean = new AbstractDialogueFlagValue();
+	public static AbstractDialogueFlagValue dressingRoomLyssiethsWardrobeActivated = new AbstractDialogueFlagValue();
+	
 	/** This is reset to false every time a transaction occurs, and should only be set to true in an NPC's applyItemTransactionEffects() method to prevent their default getTraderDescription() text from being displayed. */
 	public static AbstractDialogueFlagValue removeTraderDescription = new AbstractDialogueFlagValue();
 	public static AbstractDialogueFlagValue stormTextUpdateRequired = new AbstractDialogueFlagValue();

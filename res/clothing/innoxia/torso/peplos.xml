@@ -112,10 +112,10 @@
 		  <![CDATA[[npc.Name] [npc.verb(pull)] the skirt of [npc.her] peplos back down into the proper position.]]>
 		</self>
 		<other>
-		  <![CDATA[[npc.Name] [npc.verb(pull)] the skirt [npc2.namePos] peplos back down into the proper position.]]>
+		  <![CDATA[[npc.Name] [npc.verb(pull)] the skirt of [npc2.namePos] peplos back down into the proper position.]]>
 		</other>
 		<otherRough>
-		  <![CDATA[[npc.Name] roughly [npc.verb(pull)] the skirt [npc2.namePos] peplos back down into the proper position.]]>
+		  <![CDATA[[npc.Name] roughly [npc.verb(pull)] the skirt of [npc2.namePos] peplos back down into the proper position.]]>
 	  </otherRough>
 	</replacementText>
 

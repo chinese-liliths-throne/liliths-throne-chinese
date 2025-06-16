@@ -293,7 +293,6 @@ import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.world.AbstractWorldType;
 import com.lilithsthrone.world.Cell;
 import com.lilithsthrone.world.World;
-import com.lilithsthrone.world.WorldRegion;
 import com.lilithsthrone.world.WorldType;
 import com.lilithsthrone.world.places.AbstractPlaceType;
 import com.lilithsthrone.world.places.GenericPlace;
@@ -4015,8 +4014,7 @@ public abstract class GameCharacter implements XMLSaving {
 			return getName(true);
 			
 		} else {
-			boolean showWinged = (hasWings() || isArmWings()) && !getFleshSubspecies().isWinged();
-			String nameText = (showWinged ? "winged " : "") + getName(true);
+			String nameText = (isPrependWingedToRaceName() ? "winged " : "") + getName(true);
 			if(this.isUnique()) {
 				determiner = "the";
 			}
@@ -6512,7 +6510,7 @@ public abstract class GameCharacter implements XMLSaving {
 	}
 	
 	public String incrementExperience(int increment, boolean withExtraModifiers) {
-		if (getLevel() == LEVEL_CAP) {
+		if (getLevel() >= LEVEL_CAP) {
 			experience = 0;
 			return "";
 		}
@@ -7947,7 +7945,7 @@ public abstract class GameCharacter implements XMLSaving {
 	
 	public String getAttackDescription(AbstractWeapon weapon, GameCharacter target, boolean isHit, boolean critical) {
 		if(weapon!=null) {
-			return weapon.getWeaponType().getAttackDescription(this, target, isHit, critical);
+			return weapon.getWeaponType().getAttackDescription(this, target, weapon, isHit, critical);
 		} else {
 			return AbstractWeaponType.genericMeleeAttackDescription(this, target, isHit);
 		}
@@ -10244,7 +10242,11 @@ public abstract class GameCharacter implements XMLSaving {
 //			addSexTypeWeighting(new SexType(SexParticipantType.NORMAL, SexAreaPenetration.TAIL, SexAreaOrifice.BREAST_CROTCH), target, request, mainSexTypes, 0.5f);
 			addSexTypeWeighting(new SexType(SexParticipantType.NORMAL, SexAreaPenetration.TAIL, SexAreaOrifice.NIPPLE_CROTCH), target, request, mainSexTypes, 0.5f);
 		}
-		
+
+		// Frotting:
+		addSexTypeWeighting(new SexType(SexParticipantType.NORMAL, SexAreaPenetration.PENIS, SexAreaPenetration.PENIS), target, request, foreplaySexTypes, 2);
+		addSexTypeWeighting(new SexType(SexParticipantType.NORMAL, SexAreaPenetration.PENIS, SexAreaPenetration.PENIS), target, request, mainSexTypes, 3);
+
 		// Anal:
 		addSexTypeWeighting(new SexType(SexParticipantType.NORMAL, SexAreaPenetration.FINGER, SexAreaOrifice.ANUS), target, request, foreplaySexTypes, 1);
 		addSexTypeWeighting(new SexType(SexParticipantType.NORMAL, SexAreaPenetration.TONGUE, SexAreaOrifice.ANUS), target, request, foreplaySexTypes, 1);
@@ -10881,7 +10883,8 @@ public abstract class GameCharacter implements XMLSaving {
 	
 	public String applyLevelDrain(GameCharacter target) {
 		if(target.getTrueLevel()>1) {
-			int exp = target.getExperienceNeededForNextLevel();
+//			int exp = target.getExperienceNeededForNextLevel();
+			int exp = target.getTrueLevel()*5; // A bit of a nerf to this in v0.4.10.10, as level drain was pretty absurdly overpowered with the above code (implemented from PR#1778)
 			return UtilText.parse(target, this,
 					"<p style='text-align:center; margin:0;'>"
 						+ this.getLevelDrainDescription(target)
@@ -16714,13 +16717,13 @@ public abstract class GameCharacter implements XMLSaving {
 							UtilText.returnStringAtRandom(
 							"[npc.NamePos] [npc.verb(remain)] asleep as [npc.her] [npc.lips+] press against [npc2.namePos] mouth.",
 							"[npc.NamePos] [npc.do]n't show any sign of waking up as [npc.her] mouth presses against [npc2.namePos] [npc2.lips+].",
-							"Remaining deeply asleep, [npc.name] [npc.verb(press)] [npc.her] [npc.lips+] against [npc2.namePos]."));
+							"Remaining deeply asleep, [npc.name] [npc.verb(press)] [npc.her] [npc.lips+] against [npc2.nameHers]."));
 				} else {
 					return UtilText.parse(characterPenetrating, characterPenetrated,
 							UtilText.returnStringAtRandom(
 							"[npc.NamePos] [npc.verb(remain)] completely immobile as [npc.her] [npc.lips+] press against [npc2.namePos] mouth.",
 							"[npc.NamePos] [npc.do]n't move at all as [npc.her] mouth presses against [npc2.namePos] [npc2.lips+].",
-							"Acting like an inanimate sex doll, [npc.name] [npc.verb(stay)] totally still and silent as [npc.she] [npc.verb(press)] [npc.her] [npc.lips+] against [npc2.namePos]."));
+							"Acting like an inanimate sex doll, [npc.name] [npc.verb(stay)] totally still and silent as [npc.she] [npc.verb(press)] [npc.her] [npc.lips+] against [npc2.nameHers]."));
 				}
 				
 			} else {
@@ -17112,6 +17115,11 @@ public abstract class GameCharacter implements XMLSaving {
 							penetrationDescription = UtilText.returnStringAtRandom(
 									"up and down around");
 						}
+						
+					} else if(penetrationType==SexAreaPenetration.PENIS) {
+						penetrationDescription = UtilText.returnStringAtRandom(
+								"up and down against",
+								"against");
 					}
 					break;
 				case FINGER:
@@ -17483,6 +17491,10 @@ public abstract class GameCharacter implements XMLSaving {
 		boolean sleepingPenetrating = characterPenetrating.isAsleep();
 		boolean immobilePenetrated = Main.sex.isCharacterImmobilised(characterPenetrated) && Main.sex.isCharacterInanimateFromImmobilisation(characterPenetrated);
 		boolean sleepingPenetrated = characterPenetrated.isAsleep();
+		
+		if(penetrationType == SexAreaPenetration.PENIS && orifice == SexAreaPenetration.PENIS) {
+			return generateGenericPenetrationDescription(characterPenetrating, penetrationType, characterPenetrated, orifice);
+		}
 		
 		if(penetrationType == SexAreaPenetration.FINGER && orifice == SexAreaPenetration.PENIS) {
 			if(initialPenetration) {
@@ -18706,10 +18718,15 @@ public abstract class GameCharacter implements XMLSaving {
 	}
 	
 	public String getStopPenetrationDescription(GameCharacter characterPerformer, SexAreaInterface performerArea, GameCharacter characterTarget, SexAreaInterface targetArea) {
+		boolean nipplePenetrationDescription = Main.game.isNipplePenEnabled()
+				&& (targetArea==SexAreaOrifice.NIPPLE
+					?characterTarget.isBreastFuckableNipplePenetration()
+					:characterTarget.isBreastCrotchFuckableNipplePenetration());
+		
 		if(characterPerformer.equals(characterTarget)) {
 			if(performerArea.isPenetration()) {
 				if(targetArea.isPenetration()
-                        || (!Main.game.isNipplePenEnabled() && (targetArea==SexAreaOrifice.NIPPLE || targetArea==SexAreaOrifice.NIPPLE_CROTCH))) {
+                        || (!nipplePenetrationDescription && (targetArea==SexAreaOrifice.NIPPLE || targetArea==SexAreaOrifice.NIPPLE_CROTCH))) {
 					return UtilText.parse(characterPerformer,
 							"[npc.Name] [npc.verb(take)] [npc.her] "+performerArea.getName(characterPerformer)+" away from [npc.her] "+targetArea.getName(characterPerformer)+".");
 				} else {
@@ -18729,7 +18746,7 @@ public abstract class GameCharacter implements XMLSaving {
 		} else {
 			if(performerArea.isPenetration()) {
 				if(targetArea.isPenetration()
-				    || (!Main.game.isNipplePenEnabled() && (targetArea==SexAreaOrifice.NIPPLE || targetArea==SexAreaOrifice.NIPPLE_CROTCH))){
+				    || (!nipplePenetrationDescription && (targetArea==SexAreaOrifice.NIPPLE || targetArea==SexAreaOrifice.NIPPLE_CROTCH))){
 					return UtilText.parse(characterPerformer, characterTarget,
 							"[npc.Name] [npc.verb(take)] [npc.her] "+performerArea.getName(characterPerformer)+" away from [npc2.namePos] "+targetArea.getName(characterTarget)+".");
 				} else {
@@ -20599,6 +20616,8 @@ public abstract class GameCharacter implements XMLSaving {
 		
 		restingLust += this.getAttributeValue(Attribute.RESTING_LUST);
 		
+		restingLust = Math.max(0, restingLust);
+		
 		for(AbstractClothing c : this.getClothingCurrentlyEquipped()) {
 			if(c.isVibrator()) {
 				switch(c.getVibratorIntensity()) {
@@ -20617,7 +20636,7 @@ public abstract class GameCharacter implements XMLSaving {
 			}
 		}
 		
-		return Math.max(0, Math.min(restingLust, Attribute.RESTING_LUST.getUpperLimit()));
+		return Math.min(restingLust, Attribute.RESTING_LUST.getUpperLimit());
 	}
 	
 	public String setLust(float lust) {
@@ -20831,6 +20850,14 @@ public abstract class GameCharacter implements XMLSaving {
 	public void guaranteePregnancyOnNextRoll() {
 		guaranteePregnancyOnNextRoll = true;
 	}
+
+	/**
+	 * @return true if this character should always fail to get pregnant, no matter their fertility. The player will receive normal pregnancy chance descriptions, but this character will always fail to get pregnant.
+	 * <br/>This will always return false by default.
+	 */
+	public boolean isSilentlyInfertile() {
+		return false;
+	}
 	
 	/**
 	 * @return false if this character is a doll or an elemental.
@@ -20996,7 +21023,11 @@ public abstract class GameCharacter implements XMLSaving {
 			if (!this.hasStatusEffect(StatusEffect.PREGNANT_0) && !this.isDoll()) {
 				this.addStatusEffect(StatusEffect.PREGNANT_0, (60 * 60) * (4 + Util.random.nextInt(5)));
 			}
-			if (pregnancyChance>0 && Math.random() <= pregnancyChance) {
+			double rollResult = Math.random();
+			if(isSilentlyInfertile()) {
+				rollResult = 100; // If silenty infertile, always fail to get pregnant
+			}
+			if (pregnancyChance>0 && rollResult<=pregnancyChance) {
 				AbstractRace litterSizeBasedOn = null;
 				
 				if (this.getBodyMaterial() == BodyMaterial.SLIME) {
@@ -21013,7 +21044,6 @@ public abstract class GameCharacter implements XMLSaving {
 				int minimumNumberOfChildren = litterSizeBasedOn.getNumberOfOffspringLow();
 				int maximumNumberOfChildren = litterSizeBasedOn.getNumberOfOffspringHigh();
 				
-
 				if(this.hasTraitActivated(Perk.FETISH_BROODMOTHER)) {
 					maximumNumberOfChildren *= 2;
 				}
@@ -22453,6 +22483,9 @@ public abstract class GameCharacter implements XMLSaving {
 	}
 
 	public void setLevel(int level) {
+		if(level > LEVEL_CAP) {
+			level = LEVEL_CAP;
+		}
 		this.level = level;
 	}
 
@@ -22820,10 +22853,12 @@ public abstract class GameCharacter implements XMLSaving {
 			
 			Map<InventorySlot, AbstractClothing> removed = this.unequipAllClothing(this, true, false, new ArrayList<>(outfit.getIgnoredSlots()));
 			for(Entry<InventorySlot, AbstractClothing> c : removed.entrySet()) {
-				if(oldClothingAndWeaponsSentTo==OutfitSource.CELL) {
-					this.getCell().getInventory().addClothing(c.getValue());
-				} else {
-					this.addClothing(c.getValue(), false);
+				if(!c.getValue().isDiscardedOnUnequip(c.getKey())) {
+					if(oldClothingAndWeaponsSentTo==OutfitSource.CELL) {
+						this.getCell().getInventory().addClothing(c.getValue());
+					} else {
+						this.addClothing(c.getValue(), false);
+					}
 				}
 			}
 		}
@@ -26291,79 +26326,6 @@ public abstract class GameCharacter implements XMLSaving {
 		return getUnableToTransformDescription().isEmpty();
 	}
 	
-
-	public List<AbstractRace> getSelfTransformationRaces() {
-		return getSelfTransformationRaces(true);
-	}
-	
-	public List<AbstractRace> getSelfTransformationRaces(boolean includeNoneRace) {
-		List<AbstractRace> races = new ArrayList<>();
-		
-		if(this instanceof Elemental) {
-			races.addAll(Race.allRaces);
-		}
-		if(this.getSubspeciesOverrideRace()==Race.DEMON) {
-			races.add(Race.NONE);
-			races.add(Race.DEMON);
-			
-			if(this.getSubspecies()==Subspecies.HALF_DEMON) {
-				races.add(this.getHalfDemonSubspecies().getRace());
-			}
-			
-			ArrayList<AbstractRace> unavailableRaces = Util.newArrayListOfValues(Race.ELEMENTAL, Race.SLIME); // Never have these TF options
-			
-			if(this.hasPerkAnywhereInTree(Perk.POWER_OF_LOVIENNE_2) || this.hasPerkAnywhereInTree(Perk.POWER_OF_LOVIENNE_2_DEMON)) { // I'm assuming you defeat Lovienne last
-				races.addAll(Race.allRaces);
-				races.removeAll(unavailableRaces);
-			} else if(this.hasPerkAnywhereInTree(Perk.POWER_OF_LYSSIETH_4) || this.hasPerkAnywhereInTree(Perk.POWER_OF_LYSSIETH_4_DEMON)) {
-				races.add(Race.HUMAN);
-			}
-			for (AbstractSubspecies subspecies : Subspecies.getAllSubspecies()) {
-				AbstractRace race = subspecies.getRace();
-				if(subspecies.isMainSubspecies() && !unavailableRaces.contains(race)) { // Only check the main subspecies
-					List<WorldRegion> mostCommonRegion = subspecies.getMostCommonWorldRegions();
-					if ((this.hasPerkAnywhereInTree(Perk.POWER_OF_LIRECEA_1) || this.hasPerkAnywhereInTree(Perk.POWER_OF_LIRECEA_1_DEMON))
-							&& (mostCommonRegion.contains(WorldRegion.SEA)
-							|| mostCommonRegion.contains(WorldRegion.SEA_CITY))) {
-						races.add(race);
-					} else if((this.hasPerkAnywhereInTree(Perk.POWER_OF_LASIELLE_3) || this.hasPerkAnywhereInTree(Perk.POWER_OF_LASIELLE_3_DEMON))
-							&& (mostCommonRegion.contains(WorldRegion.MOUNTAINS)
-							|| mostCommonRegion.contains(WorldRegion.YOUKO_FOREST)
-							|| mostCommonRegion.contains(WorldRegion.SNOW))) {
-						races.add(race);
-					} else if((this.hasPerkAnywhereInTree(Perk.POWER_OF_LUNETTE_5) || this.hasPerkAnywhereInTree(Perk.POWER_OF_LUNETTE_5_DEMON))
-							&& (mostCommonRegion.contains(WorldRegion.WOODLAND)
-							|| mostCommonRegion.contains(WorldRegion.FIELDS)
-							|| mostCommonRegion.contains(WorldRegion.FIELD_CITY)
-							|| mostCommonRegion.contains(WorldRegion.RIVER))) {
-						races.add(race);
-					} else if((this.hasPerkAnywhereInTree(Perk.POWER_OF_LYXIAS_6) || this.hasPerkAnywhereInTree(Perk.POWER_OF_LYXIAS_6_DEMON))
-							&& (mostCommonRegion.contains(WorldRegion.JUNGLE)
-							|| mostCommonRegion.contains(WorldRegion.JUNGLE_CITY))) {
-						races.add(race);
-					} else if((this.hasPerkAnywhereInTree(Perk.POWER_OF_LISOPHIA_7) || this.hasPerkAnywhereInTree(Perk.POWER_OF_LISOPHIA_7_DEMON))
-							&& (mostCommonRegion.contains(WorldRegion.SAVANNAH)
-							|| mostCommonRegion.contains(WorldRegion.DESERT)
-							|| mostCommonRegion.contains(WorldRegion.DESERT_CITY)
-							|| mostCommonRegion.contains(WorldRegion.VOLCANO))) {
-						races.add(race);
-					}
-				}
-			}
-		}
-		if(this.isYouko()) {
-			races.add(Race.NONE);
-			races.add(Race.HUMAN);
-			races.add(Race.FOX_MORPH);
-		}
-		
-		if(!includeNoneRace) {
-			races.remove(Race.NONE);
-		}
-		
-		return races;
-	}
-	
 	/**
 	 * @return A description of why this character cannot self-transform. Returns an empty String if they are able to self-transform.
 	 */
@@ -27916,12 +27878,13 @@ public abstract class GameCharacter implements XMLSaving {
 							+ " Similarly, you restore your senses of hearing, taste, touch, and smell to their original homes, leaving you as very much the person you were before this alarming transformation, albeit now being composed entirely of slime."
 						+ "</p>"
 						+ "<p>"
-							+ "Your entire being is now condensed into a [style.boldSlime(slime core)]!<br/><i>"
-							+ "- You have complete control over all of the slime which surrounds you, allowing you to morph your body parts at will!<br/>"
-							+ "- The wetness of your pussy and asshole can never be anything less than "+Wetness.SEVEN_DROOLING.getDescriptor()+"!<br/>"
-							+ "- You are unable to apply any makeup to your slimy body!<br/>"
-							+ "- You can now be impregnated through any orifice, even if you lack a vagina!<br/>"
-							+ "- Your orifices are able to accommodate significantly longer penetrations than before!"
+							+ "Your entire being is now condensed into a [style.boldSlime(slime core)]!<i>"
+							+ "<br/>- You have complete control over all of the slime which surrounds you, allowing you to morph your body parts at will!"
+								+ " [style.italicsMinorBad(You can only self-transform into races which you've previously encountered.)]" // Also referenced in BodyChanging
+							+ "<br/>- The wetness of your pussy and asshole can never be anything less than "+Wetness.SEVEN_DROOLING.getDescriptor()+"!"
+							+ "<br/>- You are unable to apply any makeup to your slimy body!"
+							+ "<br/>- You can now be impregnated through any orifice, even if you lack a vagina!"
+							+ "<br/>- Your orifices are able to accommodate significantly longer penetrations than before!"
 							+ "</i>"
 						+ "</p>";
 				
@@ -31656,6 +31619,11 @@ public abstract class GameCharacter implements XMLSaving {
 	
 	// ------------------------------ Wings: ------------------------------ //
 
+	
+	public boolean isPrependWingedToRaceName() {
+		AbstractSubspecies subspecies = getBodyMaterial() == BodyMaterial.FLESH ? getSubspecies() : getFleshSubspecies();
+		return (hasWings() || isArmWings()) && !subspecies.isWinged();
+	}
 	public boolean hasWings() {
 		return body.hasWings();
 	}

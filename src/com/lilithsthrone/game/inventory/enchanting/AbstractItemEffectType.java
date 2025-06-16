@@ -78,7 +78,6 @@ import com.lilithsthrone.game.character.race.AbstractRace;
 import com.lilithsthrone.game.character.race.AbstractSubspecies;
 import com.lilithsthrone.game.character.race.RacialBody;
 import com.lilithsthrone.game.dialogue.eventLog.EventLogEntryBookAddedToLibrary;
-import com.lilithsthrone.game.dialogue.utils.EnchantmentDialogue;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.AbstractCoreItem;
 import com.lilithsthrone.game.inventory.item.ItemType;
@@ -178,7 +177,7 @@ public abstract class AbstractItemEffectType {
 		return new HashMap<>();
 	}
 	
-	public List<TFModifier> getPrimaryModifiers() {
+	public List<TFModifier> getPrimaryModifiers(AbstractCoreItem targetItem) {
 		return new ArrayList<>();
 	}
 	
@@ -194,30 +193,30 @@ public abstract class AbstractItemEffectType {
 		return 0;
 	}
 
-	public int getSmallLimitChange() {
-		if (EnchantmentDialogue.getSecondaryMod() == TFModifier.TF_MOD_WETNESS
-				&& (EnchantmentDialogue.getPrimaryMod() == TFModifier.TF_BREASTS
-						|| EnchantmentDialogue.getPrimaryMod() == TFModifier.TF_BREASTS_CROTCH
-						|| EnchantmentDialogue.getPrimaryMod() == TFModifier.TF_PENIS)) {
+	public int getSmallLimitChange(TFModifier primaryModifier, TFModifier secondaryModifier) {
+		if (secondaryModifier == TFModifier.TF_MOD_WETNESS
+				&& (primaryModifier == TFModifier.TF_BREASTS
+						|| primaryModifier == TFModifier.TF_BREASTS_CROTCH
+						|| primaryModifier == TFModifier.TF_PENIS)) {
 			// Increase small change for fluids
 			return 10;
 		}
 		return 1;
 	}
 
-	public int getLargeLimitChange() {
-		if (EnchantmentDialogue.getSecondaryMod() == TFModifier.TF_MOD_WETNESS
-				&& (EnchantmentDialogue.getPrimaryMod() == TFModifier.TF_BREASTS
-						|| EnchantmentDialogue.getPrimaryMod() == TFModifier.TF_BREASTS_CROTCH
-						|| EnchantmentDialogue.getPrimaryMod() == TFModifier.TF_PENIS)) {
+	public int getLargeLimitChange(TFModifier primaryModifier, TFModifier secondaryModifier) {
+		if (secondaryModifier == TFModifier.TF_MOD_WETNESS
+				&& (primaryModifier == TFModifier.TF_BREASTS
+						|| primaryModifier == TFModifier.TF_BREASTS_CROTCH
+						|| primaryModifier == TFModifier.TF_PENIS)) {
 			// Decrease large change for fluids
 			return 500;
 		}
-		return Math.max(5, getMaximumLimit()/10);
+		return Math.max(5, getMaximumLimit(primaryModifier, secondaryModifier)/10);
 	}
 
-	public int getMaximumLimit() {
-		return getLimits(EnchantmentDialogue.getPrimaryMod(), EnchantmentDialogue.getSecondaryMod());
+	public int getMaximumLimit(TFModifier primaryModifier, TFModifier secondaryModifier) {
+		return getLimits(primaryModifier, secondaryModifier);
 	}
 	
 	public static String getBookEffect(GameCharacter reader, AbstractSubspecies mainSubspecies, List<AbstractSubspecies> additionalUnlockSubspecies, boolean withDescription) {
@@ -664,7 +663,8 @@ public abstract class AbstractItemEffectType {
 			case TF_BREASTS:
 				switch(secondaryModifier) {
 					case TF_MOD_SIZE:
-						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "cup size", CupSize.getCupSizeFromInt(limit).getCupSizeName()+"-cup"));
+						CupSize cupSize = CupSize.getCupSizeFromInt(limit);
+						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "cup size", cupSize.getCupSizeName()+(cupSize==CupSize.FLAT?"":"-cup")));
 						break;
 					case TF_MOD_SIZE_SECONDARY:
 						descriptions.add(getClothingTFChangeDescriptionEntry(potency, "nipple size", NippleSize.getNippleSizeFromInt(limit).getName()));

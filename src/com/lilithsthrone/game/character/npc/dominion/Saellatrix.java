@@ -1114,7 +1114,7 @@ public class Saellatrix extends NPC {
 		
 		Map<InventorySlot, AbstractClothing> clothingToEquip = new HashMap<>();
 		//TODO change
-		clothingToEquip.put(InventorySlot.TORSO_UNDER, Main.game.getItemGen().generateClothing(ClothingType.TORSO_FISHNET_TOP, fishnetColour, false));
+		clothingToEquip.put(InventorySlot.TORSO_UNDER, Main.game.getItemGen().generateClothing("innoxia_torso_fishnet_top", fishnetColour, false));
 		clothingToEquip.put(InventorySlot.SOCK, Main.game.getItemGen().generateClothing("innoxia_sock_fishnets", fishnetColour, false));
 		clothingToEquip.put(InventorySlot.HAND, Main.game.getItemGen().generateClothing("innoxia_hand_fishnet_gloves", fishnetColour, false));
 		
@@ -1572,7 +1572,7 @@ public class Saellatrix extends NPC {
 			owner.addPersonalityTrait(PersonalityTrait.CYNICAL);
 
 			owner.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_groin_thong", PresetColour.CLOTHING_BLACK, false), true, owner);
-			owner.equipClothingFromNowhere(Main.game.getItemGen().generateClothing(ClothingType.TORSO_CORSET_DRESS, PresetColour.CLOTHING_BLACK, false), true, owner);
+			owner.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_torso_corset_dress", PresetColour.CLOTHING_BLACK, false), true, owner);
 			owner.equipClothingFromNowhere(Main.game.getItemGen().generateClothing(ClothingType.HIPS_SUSPENDER_BELT, PresetColour.CLOTHING_BLACK, false), true, owner);
 			owner.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_sock_stockings", PresetColour.CLOTHING_BLACK, false), true, owner);
 			owner.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_foot_thigh_high_boots", PresetColour.CLOTHING_BLACK, false), true, owner);

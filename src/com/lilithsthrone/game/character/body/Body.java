@@ -3484,7 +3484,7 @@ public class Body implements XMLSaving {
 				Tattoo tattoo = tattoEntry.getValue();
 				if(tattoo.getBodyOverviewDescription().isEmpty()) { // Old version support
 					tattooSB.append("<span style='color:"+tattoo.getPrimaryColour().toWebHexString()+";'>"+Util.capitaliseSentence(tattooSlot.getTattooSlotName())+":</span> ");
-					tattooSB.append(tattoo.getDescription());
+					tattooSB.append(tattoo.getDescription(owner));
 					tattooSB.append(".");
 					
 				} else {
