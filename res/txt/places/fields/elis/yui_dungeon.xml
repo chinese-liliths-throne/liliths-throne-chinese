@@ -206,7 +206,7 @@
 		Tied up, blindfolded, and being teased by your dominant Mistress is more than your masochistic mind can handle. Getting madly turned on by the situation you find yourself in, you do as you're told and imagine that Mistress Yui is about to feed you some gross imp cum. Although your mouth is already forced open by your ring-gag, you can still show your enthusiasm, and lewdly stick out your tongue and let out a horny [pc.moan].
 	</p>
 	<p>
-		[yui.speech(Yes, that's it, toy! Drink it all down!)] Mistress Yui laughs in a mocking tone. Suddenly, the thin neck of a glass bottle is being pushed through your gag's ring, and you eagerly gulp down the liquid which starts to flood your mouth. You're almost disappointed as this fluid turns out not to be the cold, salty imp spunk that you expected, but is instead both sweet and delicious. After quickly finishing the contents of one bottle, you're forced to swallow a small, round lozenge, and then after that you're made to down the contents of a second bottle. As you gulp down the tasty liquid, Mistress Yui reveals, [yui.speech(You'll feel the effects any second now... You've just drunk two entire bottle of 'Succubus's Kiss' and swallowed a lube pill! When the sex starts, you'll be nicely lubricated for my clients, and you'll be so turned on that you'll be eager to do anything for them!)]
+		[yui.speech(Yes, that's it, toy! Drink it all down!)] Mistress Yui laughs in a mocking tone. Suddenly, the thin neck of a glass bottle is being pushed through your gag's ring, and you eagerly gulp down the liquid which starts to flood your mouth. You're almost disappointed as this fluid turns out not to be the cold, salty imp spunk that you expected, but is instead both sweet and delicious. After quickly finishing the contents of one bottle, you're forced to swallow a small, round lozenge, and then after that you're made to down the contents of a second bottle. As you gulp down the tasty liquid, Mistress Yui reveals, [yui.speech(You'll feel the effects any second now... You've just drunk two entire bottles of 'Succubus's Kiss' and swallowed a lube pill! When the sex starts, you'll be nicely lubricated for my clients, and you'll be so turned on that you'll be eager to do anything for them!)]
 	</p>
 	<p>
 		As the last drop of Succubus's Kiss slides down your throat, an incredible, desperate lust explodes within you. Uncontrollably moaning and pathetically squirming about on the bondage bench, you desperately plead for your Mistress to fuck you. 
@@ -242,7 +242,7 @@
 		</p>
 	#ENDIF
 	<p>
-		Having finished teasing and preparing you for the night ahead, you hear Mistress Yui strut over the flagstone floor towards the door. Before she leaves, she calls out, [yui.speech(I'll be back in the early hours of the morning to let you go. That gives you more than enough time to be fucked by my clients. The first one will be arriving soon, and I'm expecting at least five more afterwards. Have fun!)]
+		Having finished teasing and preparing you for the night ahead, you hear Mistress Yui strut over the flagstone floor towards the door. Before she leaves, she calls out, [yui.speech(I'll be back in the early hours of the morning to let you go. That gives you more than enough time to be fucked by my clients. The first one will be arriving soon, and I'm expecting many more afterwards. Have fun!)]
 	</p>
 	<p>
 		With that, you hear the door open and then slam shut. Left alone in Yui's dungeon, tied up and madly turned on from the effects of Succubus's Kiss, all you can do is hope that the first client will arrive soon to fuck you senseless...
@@ -252,7 +252,7 @@
 	
 	<htmlContent tag="SESSION_1_CLIENT"><![CDATA[
 	<p>
-		Although you're only left waiting for about five minutes, it feels like an eternity to your lust-addled mind, and so by the time you hear the door open, you instantly start [pc.moaning] and straining against your bonds as you plead for whoever's just entered the dungeon to come and fuck you.
+		Although you're only left waiting for about five minutes, it feels like an eternity to your lust-addled mind, and so by the time you hear the door open, you instantly start [pc.moaning] and straining against your bonds as you plead for whoever has just entered the dungeon to come and fuck you.
 	</p>
 	<p>
 		As this anonymous client closes the door behind them, you can tell from the sound of their movement that they have [client.a_legConfiguration] body. Another fact about them is quickly revealed as they betray their [client.feminine] voice by dominantly stating, [client.speech(You are to address me as '[client.name]'. Is that understood?)]
@@ -276,9 +276,19 @@
 		<p>
 			Although you're loving this abuse, your cunt is very sore by now, and so you reply to [client.namePos] question by desperately crying out that you can't take any more. Delivering one last brutal smack to your aching twat, [client.she] leans over the top of you and snarls into your [pc.ear(true)], [client.speech(I'm going to breed you, slut! Your pussy's going to milk my balls dry, and my seed's going claim your womb. You'll bear my bastards, and never know who their father is. Now, let's make sure that you're fertile and ready to receive my cum...)]
 		</p>
+	#ELSEIF(client.hasFetish(FETISH_VOYEURIST))
+		<p>
+			Slowly [client.walking] around you, [client.name] brushes [npc.her] [client.fingers] over your latex-encased body, using [client.her] touch to draw lewd [pc.moans] out of you. Playfully groping your [pc.ass+], [client.she] teases, [client.speech(You're going to be a good little slut for me, aren't you?)]
+		</p>
+		<p>
+			Letting out an eager moan, you submissively tell [client.name] that you'll obey any of [client.her] commands. [client.She] lets out an amused laugh as [client.she] hears this, before stating, [client.speech(My only order is for you to amuse me...)]
+		</p>
 	#ELSE
 		<p>
-			Moving around in front of you, [client.name] delivers a sharp slap to your face, before grabbing your choker and reading the tag. Letting out a mocking laugh, [client.she] cruelly sneers, [client.speech(I'd have chosen 'pathetic bitch' instead. You like being punished, you dumb slut?)] 
+			Moving around in front of you, [client.name] delivers a sharp slap to your face, before grabbing your choker and reading the tag. Letting out a mocking laugh, [client.she] cruelly sneers, [client.speech(I'd have chosen '
+			[style.random(pathetic|worthless|cheap|dumb)]
+			 [style.random(bitch|cunt|cock-sleeve|whore)]
+			' instead. You like being punished, you filthy slut?)] 
 		</p>
 		<p>
 			Letting out a masochistic moan as the abuse switches from physical to verbal, you eagerly tell [client.name] that you love being treated in this degrading manner. [client.She] lets out an evil-sounding laugh as [client.she] hears this, before growling, [client.speech(If that's the case, then I won't hold back!)]
@@ -316,6 +326,25 @@
 		<p>
 			After a few moments, [client.name] pulls back, and while you cough and splutter as you catch your breath, [client.she] declares, [client.speech(I've swallowed one of those pills too. Now let's make you the mother of my bastards...)]
 		</p>
+	#ELSEIF(client.hasFetish(FETISH_VOYEURIST))
+		<p>
+			You aren't quite sure what to expect from [client.name], and you're left wondering whether [client.sheIs] going to mercilessly punish you as [client.she] slowly [client.walks] over to the toy cabinets and retrieves several items. Returning to stand behind you, [client.she] laughs, [client.speech(Let's play a game! Each time you make a noise, you get punished!)]
+		</p>
+		<p>
+			With that, [client.name] begins teasing [client.her] [client.fingers] over your [pc.ass+]. Gently groping and squeezing your rear end, [client.she] quickly manages to coax a lewd moan out of you. You're immediately punished for making such a noise, and can't help but let out a shriek as [client.name] uses a riding crop to deliver a mercilessly-sharp blow to your butt. Your pained cry results in another harsh whipping, during which you manage to stop yourself from making any more noises. Amused by your ability to remain quiet, [client.name] switches back to playing with your body.
+			#IF(pc.hasVagina())
+				 Sliding [client.her] [client.fingers] up and down over your [pc.pussy+], [client.she] starts gently stroking and flicking your [pc.clit+].
+			#ELSE
+				 Sliding [client.her] [client.fingers] over your [pc.breasts+], [client.she] starts gently stroking and flicking your [pc.nipples+].
+			#ENDIF
+			 You can't endure this teasing for long, and soon let out a desperate, shuddering moan.
+		</p>
+		<p>
+			[client.speech(Oh, what fun!)] [client.name] happily declares, [client.speech(Now for your punishment!)]
+		</p>
+		<p>
+			For the next ten minutes or so, [client.name] alternates between lovingly stimulating your erogenous zones and administering brutal slapping, whipping, and spanking to your ass and face. Finally, having grown tired of this game of [client.hers], [client.she] gives your sore ass a good grope and eagerly growls, [client.speech(Now it's time to fuck you!)]
+		</p>
 	#ELSE
 		<p>
 			Encouraged to take things a step further by your masochistic response, [client.name] [client.walks] over to the toy cabinets and retrieves several items. Returning to stand behind you, [client.she] sneers, [client.speech(Let's hear how loud you can scream!)]
@@ -323,7 +352,7 @@
 		<p>
 			A flash of pain across your exposed ass accompanies the loud swatting sound of a riding crop connecting with your [pc.bodyMaterial]. A moment later and another blow lands on your rear end, and soon you're screaming in blissful agony as [client.name] whips you over and over again.
 		</p>
-		#IF(game.isAnalContentEnabled())
+		#IF(game.isAnalContentEnabled() && !yui.isAnalBeadsEquipped(pc))
 			<p>
 				[client.speech(That's enough punishment for now,)] [client.name] says after several painful minutes. [client.Stepping] up to your rear end, [client.she] takes hold of your buttplug and pulls it out of your [pc.asshole+], before teasing, [client.speech(It's time for some pleasure! Let's get these anal beads inside of you!)]
 			</p>
@@ -393,11 +422,20 @@
 			[client.speech(Now let's find out if I got you pregnant,)] [client.she] eagerly says as you pant and quietly moan on the bondage bench. A moment later and you feel an arcane pregnancy tester being swiped over your stomach, and then a moment later you hear a high-pitched beep. This is followed by
 			#IF(pc.isPregnant())
 				 the joyous exclamation of [client.name], 
-				#IF(pc.getPregnantLitter().getTotalLitterCount()>1)
-					[client.speech(Perfect! You're carrying [#SPECIAL_PARSE_0] of my bastards, you slut!)]
+				#IF(pc.getPregnantLitter().isFather(client))
+					#IF(pc.getPregnantLitter().getTotalLitterCount()>1)
+						 [client.speech(Perfect! You're carrying [#SPECIAL_PARSE_0] of my bastards, you slut!)]
+					#ELSE
+						 [client.speech(Yes! You're carrying my bastard, you slut!)]
+					#ENDIF
 				#ELSE
-					[client.speech(Yes! You're carrying my bastard, you slut!)]
-				#ENDIF 
+					 which turns into an angry growl as [client.she] reads the tester's display. Hurling the device to the floor, [client.she] snaps,
+					#IF(pc.getPregnantLitter().getTotalLitterCount()>1)
+						 [client.speech(You're pregnant, but the bastards aren't mine! Fuck!)]
+					#ELSE
+						 [client.speech(You're pregnant, but the bastard isn't mine! Fuck!)]
+					#ENDIF
+				#ENDIF
 			#ELSE
 				 the frustrated groan of [client.name], [client.speech(I don't believe it... I didn't get you pregnant...)]
 			#ENDIF
@@ -405,7 +443,11 @@
 		<p>
 			Leaving you on the bondage bench, [client.name] gathers [client.her] clothing, before retrieving [client.her] breeder collar and replacing it with your original one. Finally, [client.she] [client.walks] over to the door, and from there [client.she] calls out a brief farewell,
 			#IF(pc.isPregnant())
-				 [client.speech(When your belly grows big and round, think of me, bitch!)]
+				#IF(pc.getPregnantLitter().isFather(client))
+					 [client.speech(When your belly grows big and round, think of me, bitch!)]
+				#ELSE
+					 [client.speech(You were a good fuck, at least...)]
+				#ENDIF
 			#ELSE
 				 [client.speech(You were a good fuck for a barren bitch!)]
 			#ENDIF
@@ -428,25 +470,34 @@
 	</htmlContent>
 	
 	<htmlContent tag="SESSION_1_NIGHT_OF_SEX"><![CDATA[
-	<p>
-		It doesn't take long for the next client to arrive, and once again you're subjected to physical and verbal abuse before being roughly fucked on the bondage bench. Your masochism allows you to derive great pleasure from the whipping, spanking, and degrading taunts, and so even though your ass is sore from being beaten and your face tingles from being slapped, you find yourself in a state of pure ecstasy as you're roughly pounded by the second of Yui's anonymous clients.
-	</p>
-	<p>
-		Afterwards, another client uses you, and then another, and another, and together they turn your night into a blur of blissful pain and wild, rough sex. Loving every second of it, you eagerly submit to your
-		#IF(pc.getSexualOrientation().isAttractedToFeminine())
-			#IF(pc.getSexualOrientation().isAttractedToMasculine())
-				 Masters and Mistresses,
+	#IF(game.isHourBetween(5, 12))
+		<p>
+			Although you've lost track of time as you were fucked by one client after another, Mistress Yui certainly hasn't. A few minutes after your latest lover has exited the dungeon, you hear the door being opened for the last time.
+		</p>
+		<p>
+			[yui.speech(Hello, toy,)] the familiar voice of Yui calls out as she walks over to you, [yui.speech(All of my clients were very pleased with your performance tonight. I hope you had fun too. Now let's set you free.)]
+		</p>
+	#ELSE
+		<p>
+			It doesn't take long for the next client to arrive, and once again you're subjected to physical and verbal abuse before being roughly fucked on the bondage bench. Your masochism allows you to derive great pleasure from the whipping, spanking, and degrading taunts, and so even though your ass is sore from being beaten and your face tingles from being slapped, you find yourself in a state of pure ecstasy as you're roughly pounded by the second of Yui's anonymous clients.
+		</p>
+		<p>
+			Afterwards, another client uses you, and then another, and another, and together they turn your night into a blur of blissful pain and wild, rough sex. Loving every second of it, you eagerly submit to your
+			#IF(pc.getSexualOrientation().isAttractedToFeminine())
+				#IF(pc.getSexualOrientation().isAttractedToMasculine())
+					 Masters and Mistresses,
+				#ELSE
+					 Mistresses,
+				#ENDIF
 			#ELSE
-				 Mistresses,
+				 Masters,
 			#ENDIF
-		#ELSE
-			 Masters,
-		#ENDIF
-		 and thanks to the constant abuse and stimulation you're subjected to at their hands, the hours fly by.
-	</p>
-	<p>
-		Finally, after having lost count of how many clients you've serviced, the last one leaves. A few minutes later and you hear the door being opened for the last time, as instead of a stranger you hear the familiar voice of Yui, [yui.speech(Hello, toy. All of my clients were very pleased with your performance tonight. I hope you had fun too. Now let's set you free.)]
-	</p>
+			 and thanks to the constant abuse and stimulation you're subjected to at their hands, the hours fly by.
+		</p>
+		<p>
+			Finally, after having lost count of how many clients you've serviced, the last one leaves. A few minutes later and you hear the door being opened for the last time, as instead of a stranger you hear the familiar voice of Yui, [yui.speech(Hello, toy. All of my clients were very pleased with your performance tonight. I hope you had fun too. Now let's set you free.)]
+		</p>
+	#ENDIF
 	]]>
 	</htmlContent>
 	

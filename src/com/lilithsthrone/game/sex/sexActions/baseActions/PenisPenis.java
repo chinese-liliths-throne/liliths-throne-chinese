@@ -248,7 +248,7 @@ public class PenisPenis {
 			sb.append(UtilText.returnStringAtRandom(
 					"Letting out [npc.a_moan+] with each eager thrust of [npc.her] [npc.hips], [npc.name] passionately [npc.verb(rub)] [npc.her] [npc.cock+] up and down over [npc2.namePos] [npc2.cock+].",
 					"[npc.Name] [npc.verb(let)] out a series of lewd [npc.moans] as [npc.she] desperately [npc.verb(grind)] [npc.her] [npc.cock+] up and down over [npc2.namePos] [npc2.cock+].",
-					"Eagerly grinding [npc.her] [npc.clit+] over [npc2.namePos] [npc2.cock+], [npc.name] [npc.verb(let)] out [npc.a_moan+] with each frantic pump of [npc.her] [npc.hips]."));
+					"Eagerly grinding [npc.her] [npc.cock+] over [npc2.namePos] [npc2.cock+], [npc.name] [npc.verb(let)] out [npc.a_moan+] with each frantic pump of [npc.her] [npc.hips]."));
 
 			sb.append(getTargetedCharacterResponse(this));
 			
@@ -378,7 +378,7 @@ public class PenisPenis {
 							"With [npc.a_sob+], [npc.name] [npc.verb(try)] to pull away from [npc2.name],"
 									+ " but [npc2.she] quickly [npc2.verb(buck)] [npc2.her] [npc2.hips] forwards, before continuing to gently rub [npc2.her] [npc2.cock+] against [npc.her] [npc.cock+].",
 							"Tears start to well up in [npc.namePos] [npc.eyes], and with [npc.a_sob+], [npc.she] [npc.verb(try)] to pull [npc.her] [npc.cock] away from [npc2.nameHers],"
-									+ " but [npc2.she] quickly [npc2.verb(shift)] position, ignoring [npc.her] protests as [npc2.she] gently [npc2.verb(rub)] [npc2.her] [npc2.cock+] up against "+getHersWithDildoHandling("npc2")+"."));
+									+ " but [npc2.she] quickly [npc2.verb(shift)] position, ignoring [npc.her] protests as [npc2.she] gently [npc2.verb(rub)] [npc2.her] [npc2.cock+] up against "+getHersWithDildoHandling("npc")+"."));
 					break;
 				case DOM_ROUGH:
 					sb.append(UtilText.returnStringAtRandom(
@@ -387,7 +387,7 @@ public class PenisPenis {
 							"With [npc.a_sob+], [npc.name] [npc.verb(try)] to pull away from [npc2.name],"
 									+ " but [npc2.she] quickly [npc2.verb(buck)] [npc2.her] [npc2.hips] forwards, before continuing to roughly grind [npc2.her] [npc2.cock+] against [npc.her] [npc.cock+].",
 							"Tears start to well up in [npc.namePos] [npc.eyes], and with [npc.a_sob+], [npc.she] [npc.verb(try)] to pull [npc.her] [npc.cock] away from [npc2.nameHers],"
-									+ " but [npc2.she] quickly [npc2.verb(shift)] position, ignoring [npc.her] protests as [npc2.she] forcefully [npc2.verb(grind)] [npc2.her] [npc2.cock+] up against "+getHersWithDildoHandling("npc2")+"."));
+									+ " but [npc2.she] quickly [npc2.verb(shift)] position, ignoring [npc.her] protests as [npc2.she] forcefully [npc2.verb(grind)] [npc2.her] [npc2.cock+] up against "+getHersWithDildoHandling("npc")+"."));
 					break;
 				default: // DOM_NORMAL and in case anything goes wrong:
 					sb.append(UtilText.returnStringAtRandom(
@@ -396,7 +396,7 @@ public class PenisPenis {
 							"With [npc.a_sob+], [npc.name] [npc.verb(try)] to pull away from [npc2.name],"
 									+ " but [npc2.she] quickly [npc2.verb(buck)] [npc2.her] [npc2.hips] forwards, before continuing to eagerly rub [npc2.her] [npc2.cock+] against [npc.her] [npc.cock+].",
 							"Tears start to well up in [npc.namePos] [npc.eyes], and with [npc.a_sob+], [npc.she] [npc.verb(try)] to pull [npc.her] [npc.cock] away from [npc2.nameHers],"
-									+ " but [npc2.she] quickly [npc2.verb(shift)] position, ignoring [npc.her] protests as [npc2.she] enthusiastically [npc2.verb(rub)] [npc2.her] [npc2.cock+] up against "+getHersWithDildoHandling("npc2")+"."));
+									+ " but [npc2.she] quickly [npc2.verb(shift)] position, ignoring [npc.her] protests as [npc2.she] enthusiastically [npc2.verb(rub)] [npc2.her] [npc2.cock+] up against "+getHersWithDildoHandling("npc")+"."));
 					break;
 			}
 			

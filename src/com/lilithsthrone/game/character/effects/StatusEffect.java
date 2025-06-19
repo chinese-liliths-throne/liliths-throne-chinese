@@ -1946,11 +1946,12 @@ public class StatusEffect {
 			if(target.getSubspeciesOverride()!=null && target.getSubspeciesOverride()!=target.getSubspecies()) {
 				String subspeciesName = target.getSubspecies().getName(target.getBody());
 				additionalDescriptions.add(
-						new Value<>(2,
+						new Value<>(1,
 								UtilText.parse(target,
-						"<i style='color:"+target.getSubspecies().getColour(target).toWebHexString()+";'>"
-							+ "[npc.Name] [npc.verb(appear)] to be "+UtilText.generateSingularDeterminer(subspeciesName) + " " +subspeciesName+", and will be treated by people [npc.she] [npc.verb(meet)] as being one!"
-						+ "</i>")));
+										"[npc.NameIsFull] "
+										+"<span style='color:"+target.getSubspeciesOverride().getColour(target).toWebHexString()+";'>"+UtilText.addDeterminer(target.getSubspeciesOverride().getName(target.getBody()))+"</span>"
+										+ " but [npc.she] [npc.verb(appear)] to be "
+										+"<span style='color:"+target.getSubspecies().getColour(target).toWebHexString()+";'>"+UtilText.addDeterminer(subspeciesName)+"</span>!")));
 			}
 
 			// Add body material modifiers:
@@ -2214,10 +2215,12 @@ public class StatusEffect {
 			PresetColour.MASCULINE,
 			true,
 			null,
-			Util.newArrayListOfValues("<b>-50%</b> <b style='color:"+ PresetColour.DAMAGE_TYPE_LUST.toWebHexString()+ ";'>Lust damage</b> both to and from <b style='color:"+ PresetColour.FEMININE.toWebHexString()+ ";'>feminine opponents</b>")) {
+			Util.newArrayListOfValues(
+					"[style.colourGood(-50%)] [style.colourDmgLust(Lust damage)] taken from [style.colourFeminine(feminine opponents)]",
+					"[style.colourBad(-50%)] [style.colourDmgLust(Lust damage)] dealt to [style.colourFeminine(feminine opponents)]")) {
 		@Override
 		public String getDescription(GameCharacter target) {
-			return UtilText.parse(target, "[npc.NameIsFull] sexually attracted to masculine individuals, and finds feminine people to be a huge turn-off.");
+			return UtilText.parse(target, "[npc.NameIsFull] sexually attracted to masculine individuals, and [npc.verb(find)] feminine people to be a huge turn-off.");
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
@@ -2235,10 +2238,12 @@ public class StatusEffect {
 			PresetColour.FEMININE,
 			true,
 			null,
-			Util.newArrayListOfValues("<b>-50%</b> <b style='color:"+ PresetColour.DAMAGE_TYPE_LUST.toWebHexString()+ ";'>Lust damage</b> both to and from <b style='color:"+ PresetColour.MASCULINE.toWebHexString()+ ";'>masculine opponents</b>")) {
+			Util.newArrayListOfValues(
+					"[style.colourGood(-50%)] [style.colourDmgLust(Lust damage)] taken from [style.colourMasculine(masculine opponents)]",
+					"[style.colourBad(-50%)] [style.colourDmgLust(Lust damage)] dealt to [style.colourMasculine(masculine opponents)]")) {
 		@Override
 		public String getDescription(GameCharacter target) {
-			return UtilText.parse(target, "[npc.NameIsFull] sexually attracted to feminine individuals, and finds masculine people to be a huge turn-off.");
+			return UtilText.parse(target, "[npc.NameIsFull] sexually attracted to feminine individuals, and [npc.verb(find)] masculine people to be a huge turn-off.");
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
@@ -2258,7 +2263,7 @@ public class StatusEffect {
 			null) {
 		@Override
 		public String getDescription(GameCharacter target) {
-			return UtilText.parse(target, "[npc.NameIsFull] sexually attracted to both masculine and feminine individuals, and doesn't find any level of femininity to be a turn-off.");
+			return UtilText.parse(target, "[npc.NameIsFull] sexually attracted to both masculine and feminine individuals, and [npc.do]n't find any level of femininity to be a turn-off.");
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
@@ -2565,13 +2570,13 @@ public class StatusEffect {
 						"[npc.NameHasFull] been marked by a heady musk, and [npc.verb(find)] [npc.herself] getting turned on by the distinctive scent [npc.she] now [npc.verb(carry)].");
 			} else {
 				return UtilText.parse(target,
-						"[npc.NameHasFull] been marked by the musk of "+Util.charactersToStringListOfNames(target.getMuskMarkerCharacters())
+						"[npc.NameHasFull] been marked by the musk of "+Util.charactersToStringListOfNames(target.getMuskMarkerCharacters(), true)
 							+", and [npc.verb(find)] [npc.herself] getting turned on by the distinctive scent [npc.she] now [npc.verb(carry)].");
 			}
 		}
 		@Override
 		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			return new Value<>(2, "[style.italicsAqua(Only a bath, a spa soak, or arcane wet wipes will remove this odour.)]");
+			return new Value<>(1, "[style.italicsAqua(Only a bath, a spa soak, or arcane wet wipes will remove this odour.)]");
 		}
 		@Override
 		public boolean isSexEffect() {
@@ -5489,7 +5494,7 @@ public class StatusEffect {
 		@Override
 		public String getDescription(GameCharacter target) {
 			float milkRegenRate = target.getLactationRegenerationPerSecond(false) * 60;
-		
+			//milkRegenRate+" |"+
 			return UtilText.parse(target,
 					"[npc.NamePos] [npc.breasts] are filled with "+Units.fluid(target.getBreastRawMilkStorageValue())+" of [npc.milk].<br/>"
 						+ "They produce more [npc.milk] at an individual rate of "+Units.fluid(milkRegenRate)+"/minute,"
@@ -6004,7 +6009,6 @@ public class StatusEffect {
 			}
 			if (target.getFaceRawCapacityValue()!=target.getFaceStretchedCapacity()){
 				orificesRecovering.add("[style.boldMouth(throat)]");
-				plural = true;
 			}
 			if (target.getNippleRawCapacityValue()!=target.getNippleStretchedCapacity()){
 				orificesRecovering.add("[style.boldNipple(nipples)]");
@@ -9193,10 +9197,10 @@ public class StatusEffect {
 			PresetColour.ATTRIBUTE_LUST,
 			false,
 			null,
-			Util.newArrayListOfValues("Incoming <b style='color:"+PresetColour.ATTRIBUTE_LUST.toWebHexString()+";'>Lust damage</b> dealt as"
-							+ " <b style='color:"+PresetColour.ATTRIBUTE_HEALTH.toWebHexString()+";'>2*Energy damage</b>"
-							+ " and <b style='color:"+PresetColour.ATTRIBUTE_MANA.toWebHexString()+";'>1*Aura damage</b>",
-					"<b style='color: " + PresetColour.GENERIC_TERRIBLE.toWebHexString() + "'>Incoming damage ignores all shielding</b>")) {
+			Util.newArrayListOfValues(
+					"[style.colourTerrible(Incoming damage ignores all shielding)]",
+					"Incoming [style.colourLust(Lust damage)] converted to:",
+					"[style.colourHealth(2*"+Attribute.HEALTH_MAXIMUM.getName()+" damage)] and [style.colourMana(1*"+Attribute.MANA_MAXIMUM.getName()+" damage)]")) {
 		@Override
 		public String getDescription(GameCharacter target) {
 			if(target.isPlayer()) {
@@ -12061,29 +12065,29 @@ public class StatusEffect {
 			if(target.isPlayer()) {
 				return "Your fetishes and desires affect how much arousal you gain from performing related sex actions. Selecting an action with an associated fetish that you own will also not increase your corruption.";
 				
-			} else if(Main.game.isInSex()) {
-				GameCharacter targetedCharacter = Main.sex.getTargetedPartner(target);
-				SexType foreplayPreference = Main.sex.getForeplayPreference((NPC) target, targetedCharacter);
-				SexType mainPreference = Main.sex.getMainSexPreference((NPC) target, targetedCharacter);
-				
-				return UtilText.parse(target, targetedCharacter,
-						(Main.game.isInNewWorld()
-								?"The power of your arcane aura allows you to sense [npc.namePos] sexual preferences:"
-								:"Somehow, you're able to instinctively sense what [npc.namePos] sexual preferences are:")
-						+ "<br/>[style.italics"+(Main.sex.isInForeplay(target)?"PinkLight(<b>Foreplay</b>: ":"Disabled(Foreplay: ")
-							+ (foreplayPreference!=null
-									?"[npc.Her] "+foreplayPreference.getPerformingSexArea().getName(target, true)+" and [npc2.namePos] "+foreplayPreference.getTargetedSexArea().getName(targetedCharacter, true)+"."
-									:"[npc.She] [npc.has] no preference...")
-							+ ")]"
-						+ "<br/>[style.italics"+(!Main.sex.isInForeplay(target)?"Pink(<b>Sex</b>: ":"Disabled(Sex: ")
-						+ (mainPreference!=null
-								?"[npc.Her] "+mainPreference.getPerformingSexArea().getName(target, true)+" and [npc2.namePos] "+mainPreference.getTargetedSexArea().getName(targetedCharacter, true)+"."
-								:"[npc.She] [npc.has] no preference...")
-						+ ")]")
-						+ (Main.sex.isCharacterObeyingTarget(target, Main.game.getPlayer())
-							?"<br/>[style.italicsMinorGood([npc.She] will listen to your requests.)]"
-							:"<br/>[style.italicsMinorBad([npc.She] will ignore all of your requests.)]");
-				
+//			} else if(Main.game.isInSex()) {
+//				GameCharacter targetedCharacter = Main.sex.getTargetedPartner(target);
+//				SexType foreplayPreference = Main.sex.getForeplayPreference((NPC) target, targetedCharacter);
+//				SexType mainPreference = Main.sex.getMainSexPreference((NPC) target, targetedCharacter);
+//				
+//				return UtilText.parse(target, targetedCharacter,
+//						(Main.game.isInNewWorld()
+//								?"The power of your arcane aura allows you to sense [npc.namePos] sexual preferences:"
+//								:"Somehow, you're able to instinctively sense what [npc.namePos] sexual preferences are:")
+//						+ "<br/>[style.italics"+(Main.sex.isInForeplay(target)?"PinkLight(<b>Foreplay</b>: ":"Disabled(Foreplay: ")
+//							+ (foreplayPreference!=null
+//									?"[npc.Her] "+foreplayPreference.getPerformingSexArea().getName(target, true)+" and [npc2.namePos] "+foreplayPreference.getTargetedSexArea().getName(targetedCharacter, true)+"."
+//									:"[npc.She] [npc.has] no preference...")
+//							+ ")]"
+//						+ "<br/>[style.italics"+(!Main.sex.isInForeplay(target)?"Pink(<b>Sex</b>: ":"Disabled(Sex: ")
+//						+ (mainPreference!=null
+//								?"[npc.Her] "+mainPreference.getPerformingSexArea().getName(target, true)+" and [npc2.namePos] "+mainPreference.getTargetedSexArea().getName(targetedCharacter, true)+"."
+//								:"[npc.She] [npc.has] no preference...")
+//						+ ")]")
+//						+ (Main.sex.isCharacterObeyingTarget(target, Main.game.getPlayer())
+//							?"<br/>[style.italicsMinorGood([npc.She] will listen to your requests.)]"
+//							:"<br/>[style.italicsMinorBad([npc.She] will ignore all of your requests.)]");
+//				
 			} else {
 				return UtilText.parse(target,
 						(Main.game.isInNewWorld()
@@ -12096,6 +12100,37 @@ public class StatusEffect {
 		@Override
 		public List<String> getModifiersAsStringList(GameCharacter target) {
 			List<String> modList = new ArrayList<>();
+			
+			if(Main.game.isInSex()) {
+				GameCharacter targetedCharacter = Main.sex.getTargetedPartner(target);
+				SexType foreplayPreference = Main.sex.getForeplayPreference(target, targetedCharacter);
+				SexType mainPreference = Main.sex.getMainSexPreference(target, targetedCharacter);
+				
+//				modList.add(UtilText.parse(target, "<b>[npc.NamePos] Preferences:</b>"));
+				
+				modList.add(UtilText.parse(target, targetedCharacter,
+										"[style.italics"+(Main.sex.isInForeplay(target)?"PinkLight(<b>Foreplay</b>: ":"Disabled(Foreplay: ")
+											+ (foreplayPreference!=null
+													?"[npc.Her] "+foreplayPreference.getPerformingSexArea().getName(target, true)+" and [npc2.namePos] "+foreplayPreference.getTargetedSexArea().getName(targetedCharacter, true)+"."
+													:"[npc.She] [npc.has] no preference...")
+											+ ")]"));
+				modList.add(UtilText.parse(target, targetedCharacter,
+										"[style.italics"+(!Main.sex.isInForeplay(target)?"Pink(<b>Sex</b>: ":"Disabled(Sex: ")
+											+ (mainPreference!=null
+													?"[npc.Her] "+mainPreference.getPerformingSexArea().getName(target, true)+" and [npc2.namePos] "+mainPreference.getTargetedSexArea().getName(targetedCharacter, true)+"."
+													:"[npc.She] [npc.has] no preference...")
+											+ ")]"));
+				modList.add(UtilText.parse(target, targetedCharacter,
+										Main.sex.isCharacterObeyingTarget(target, Main.game.getPlayer())
+										?"[style.italicsMinorGood([npc.She] will listen to your requests.)]"
+										:"[style.italicsMinorBad([npc.She] will ignore all of your requests.)]"));
+			}
+			
+			return modList;
+		}
+		@Override
+		public List<Value<Integer, String>> getAdditionalDescriptions(GameCharacter target) {
+			List<Value<Integer, String>> additionalDescriptions = new ArrayList<>();
 			List<AbstractFetish> orderedFetishList = new ArrayList<>();
 			
 			for(AbstractFetish f : Fetish.getAllFetishes()) {
@@ -12108,15 +12143,11 @@ public class StatusEffect {
 
 			for(AbstractFetish f : orderedFetishList) {
 				FetishDesire desire = target.getFetishDesire(f);
-				modList.add("<b style='color:"+desire.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(desire.getNameAsVerb())+"</b>: "+Util.capitaliseSentence(f.getShortDescriptor(target)));
+				additionalDescriptions.add(new Value<>(1, "<b style='color:"+desire.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(desire.getNameAsVerb())+"</b>: "+Util.capitaliseSentence(f.getShortDescriptor(target))));
 			}
 			
-			return modList;
+			return additionalDescriptions;
 		}
-//		@Override
-//		public List<Value<Integer, String>> getAdditionalDescriptions(GameCharacter target) {
-//			return Util.newArrayListOfValues(new Value<>(1, ""));
-//		}
 		@Override
 		public String extraRemovalEffects(GameCharacter target) {
 			return "";
@@ -12158,9 +12189,13 @@ public class StatusEffect {
 			List<Value<Integer, String>> additionalDescriptions = new ArrayList<>();
 			
 			if(Main.sex.getNumberOfOrgasms(target)>=target.getOrgasmsBeforeSatisfied()) {
-				additionalDescriptions.add(new Value<>(2, UtilText.parse(target, "[npc.NameIsFull] [style.colourExcellent(satisfied)] and will be happy if the sex is brought to an end.")));
+				additionalDescriptions.add(new Value<>(1, UtilText.parse(target, "[npc.NameIsFull] [style.colourExcellent(satisfied)].")));
 			} else {
-				additionalDescriptions.add(new Value<>(2, UtilText.parse(target, "[npc.NameIsFull] [style.colourTerrible(not satisfied yet)] and [npc.do]n't want the sex to come to an end.")));
+				additionalDescriptions.add(new Value<>(1, UtilText.parse(target, "[npc.NameIsFull] [style.colourTerrible(not satisfied yet)]!")));
+			}
+			
+			if(!target.isAbleToOrgasm()) {
+				additionalDescriptions.add(new Value<>(1, UtilText.parse(target, "[npc.NameIsFull] [style.colourTerrible(not able to orgasm)]!")));
 			}
 			
 			int bonus = Main.sex.getNumberOfAdditionalOrgasms(target);
@@ -12276,7 +12311,7 @@ public class StatusEffect {
 		public float getArousalPerTurnPartner(GameCharacter self, GameCharacter target) {
 			return 0;
 		}
-				@Override
+		@Override
 		public List<String> getModifiersAsStringList(GameCharacter target) {
 			return getPenetrationModifiersAsStringList(target, SexAreaPenetration.PENIS);
 		}
@@ -12346,7 +12381,7 @@ public class StatusEffect {
 			}
 			
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No ongoing action.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendPenetrationAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.NamePos] [npc.penis]"), descriptionSB);
@@ -12355,22 +12390,22 @@ public class StatusEffect {
 			
 			return descriptionSB.toString();
 		}
-		@Override
-		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			if(Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.PENIS).isEmpty()) {
-				return null;
-			}
-			
-			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.PENIS).get(0);
-			
-			return new Value<>(3,
-					Main.sex.formatPenetration(
-					target.getPenetrationDescription(false,
-							target,
-							SexAreaPenetration.PENIS,
-							partner,
-							Main.sex.getOngoingActionsMap(target).get(SexAreaPenetration.PENIS).get(partner).iterator().next())));
-		}
+//		@Override
+//		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
+//			if(Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.PENIS).isEmpty()) {
+//				return null;
+//			}
+//			
+//			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.PENIS).get(0);
+//			
+//			return new Value<>(3,
+//					Main.sex.formatPenetration(
+//					target.getPenetrationDescription(false,
+//							target,
+//							SexAreaPenetration.PENIS,
+//							partner,
+//							Main.sex.getOngoingActionsMap(target).get(SexAreaPenetration.PENIS).get(partner).iterator().next())));
+//		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.isInSex()
@@ -12477,7 +12512,7 @@ public class StatusEffect {
 			}
 			
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No ongoing action.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendPenetrationAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.NamePos] [npc.clit]"), descriptionSB);
@@ -12486,22 +12521,22 @@ public class StatusEffect {
 			
 			return descriptionSB.toString();
 		}
-		@Override
-		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			if(Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.CLIT).isEmpty()) {
-				return null;
-			}
-			
-			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.CLIT).get(0);
-			
-			return new Value<>(3,
-					Main.sex.formatPenetration(
-					target.getPenetrationDescription(false,
-							target,
-							SexAreaPenetration.CLIT,
-							partner,
-							Main.sex.getOngoingActionsMap(target).get(SexAreaPenetration.CLIT).get(partner).iterator().next())));
-		}
+//		@Override
+//		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
+//			if(Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.CLIT).isEmpty()) {
+//				return null;
+//			}
+//			
+//			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.CLIT).get(0);
+//			
+//			return new Value<>(3,
+//					Main.sex.formatPenetration(
+//					target.getPenetrationDescription(false,
+//							target,
+//							SexAreaPenetration.CLIT,
+//							partner,
+//							Main.sex.getOngoingActionsMap(target).get(SexAreaPenetration.CLIT).get(partner).iterator().next())));
+//		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.isInSex()
@@ -12681,7 +12716,7 @@ public class StatusEffect {
 			}
 			
 			if(!descriptionAdded) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] [npc.asshole]"), descriptionSB);
@@ -12828,7 +12863,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] [npc.ass]"), descriptionSB);
@@ -12838,23 +12873,23 @@ public class StatusEffect {
 			
 			return descriptionSB.toString();
 		}
-		@Override
-		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			SexAreaOrifice orifice = SexAreaOrifice.ASS;
-			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
-				return null;
-			}
-			
-			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
-			
-			return new Value<>(3,
-					Main.sex.formatPenetration(
-					target.getPenetrationDescription(false,
-							partner,
-							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
-							target,
-							orifice)));
-		}
+//		@Override
+//		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
+//			SexAreaOrifice orifice = SexAreaOrifice.ASS;
+//			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
+//				return null;
+//			}
+//			
+//			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
+//			
+//			return new Value<>(3,
+//					Main.sex.formatPenetration(
+//					target.getPenetrationDescription(false,
+//							partner,
+//							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
+//							target,
+//							orifice)));
+//		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.isInSex()
@@ -12885,7 +12920,7 @@ public class StatusEffect {
 		public float getArousalPerTurnPartner(GameCharacter self, GameCharacter target) {
 			return getOrificeArousalPerTurnPartner(self, target, SexAreaOrifice.MOUTH);
 		}
-				@Override
+		@Override
 		public List<String> getModifiersAsStringList(GameCharacter target) {
 			return getOrificeModifiersAsStringList(target, SexAreaOrifice.MOUTH);
 		}
@@ -13049,7 +13084,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] mouth"), descriptionSB);
@@ -13203,7 +13238,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 			
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] [npc.breasts]"), descriptionSB);
@@ -13212,23 +13247,23 @@ public class StatusEffect {
 			
 			return descriptionSB.toString();
 		}
-		@Override
-		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			SexAreaOrifice orifice = SexAreaOrifice.BREAST;
-			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
-				return null;
-			}
-			
-			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
-			
-			return new Value<>(3,
-					Main.sex.formatPenetration(
-					target.getPenetrationDescription(false,
-							partner,
-							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
-							target,
-							orifice)));
-		}
+//		@Override
+//		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
+//			SexAreaOrifice orifice = SexAreaOrifice.BREAST;
+//			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
+//				return null;
+//			}
+//			
+//			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
+//			
+//			return new Value<>(3,
+//					Main.sex.formatPenetration(
+//					target.getPenetrationDescription(false,
+//							partner,
+//							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
+//							target,
+//							orifice)));
+//		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.isInSex()
@@ -13363,7 +13398,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] [npc.nipples]"), descriptionSB);
@@ -13521,7 +13556,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 			
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] [npc.crotchBoobs]"), descriptionSB);
@@ -13530,23 +13565,23 @@ public class StatusEffect {
 			
 			return descriptionSB.toString();
 		}
-		@Override
-		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			SexAreaOrifice orifice = SexAreaOrifice.BREAST_CROTCH;
-			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
-				return null;
-			}
-			
-			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
-			
-			return new Value<>(3,
-					Main.sex.formatPenetration(
-					target.getPenetrationDescription(false,
-							partner,
-							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
-							target,
-							orifice)));
-		}
+//		@Override
+//		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
+//			SexAreaOrifice orifice = SexAreaOrifice.BREAST_CROTCH;
+//			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
+//				return null;
+//			}
+//			
+//			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
+//			
+//			return new Value<>(3,
+//					Main.sex.formatPenetration(
+//					target.getPenetrationDescription(false,
+//							partner,
+//							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
+//							target,
+//							orifice)));
+//		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.isInSex()
@@ -13692,7 +13727,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] [npc.crotchNipples]"), descriptionSB);
@@ -13842,7 +13877,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 			
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] [npc.urethraPenis]"), descriptionSB);
@@ -13991,7 +14026,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 			
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] [npc.urethraVagina]"), descriptionSB);
@@ -14546,7 +14581,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] thighs"), descriptionSB);
@@ -14555,23 +14590,23 @@ public class StatusEffect {
 			
 			return descriptionSB.toString();
 		}
-		@Override
-		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			SexAreaOrifice orifice = SexAreaOrifice.THIGHS;
-			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
-				return null;
-			}
-			
-			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
-			
-			return new Value<>(3,
-					Main.sex.formatPenetration(
-					target.getPenetrationDescription(false,
-							partner,
-							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
-							target,
-							orifice)));
-		}
+//		@Override
+//		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
+//			SexAreaOrifice orifice = SexAreaOrifice.THIGHS;
+//			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
+//				return null;
+//			}
+//			
+//			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
+//			
+//			return new Value<>(3,
+//					Main.sex.formatPenetration(
+//					target.getPenetrationDescription(false,
+//							partner,
+//							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
+//							target,
+//							orifice)));
+//		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.isInSex()
@@ -14703,7 +14738,7 @@ public class StatusEffect {
 				}
 			}
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No penetration.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendOrificeAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.Her] armpits"), descriptionSB);
@@ -14712,23 +14747,23 @@ public class StatusEffect {
 			
 			return descriptionSB.toString();
 		}
-		@Override
-		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			SexAreaOrifice orifice = SexAreaOrifice.ARMPITS;
-			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
-				return null;
-			}
-			
-			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
-			
-			return new Value<>(3,
-					Main.sex.formatPenetration(
-					target.getPenetrationDescription(false,
-							partner,
-							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
-							target,
-							orifice)));
-		}
+//		@Override
+//		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
+//			SexAreaOrifice orifice = SexAreaOrifice.ARMPITS;
+//			if(Main.sex.getCharactersHavingOngoingActionWith(target, orifice).isEmpty()) {
+//				return null;
+//			}
+//			
+//			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, orifice).get(0);
+//			
+//			return new Value<>(3,
+//					Main.sex.formatPenetration(
+//					target.getPenetrationDescription(false,
+//							partner,
+//							(SexAreaPenetration)Main.sex.getOngoingActionsMap(target).get(orifice).get(partner).iterator().next(),
+//							target,
+//							orifice)));
+//		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.isInSex()
@@ -14801,7 +14836,7 @@ public class StatusEffect {
 			}
 			
 			if(Main.sex.getOngoingSexAreas(target, type).isEmpty()) {
-				descriptionSB.append("<b style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>No ongoing action.</b>");
+				descriptionSB.append("[style.colourDisabled(No ongoing action...)]");
 			}
 
 			appendPenetrationAdditionGenericDescriptions(target, type, UtilText.parse(target, "[npc.NamePos] [npc.hands]"), descriptionSB);
@@ -14810,22 +14845,22 @@ public class StatusEffect {
 			
 			return descriptionSB.toString();
 		}
-		@Override
-		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
-			if(Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.FINGER).isEmpty()) {
-				return null;
-			}
-			
-			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.FINGER).get(0);
-			
-			return new Value<>(3,
-					Main.sex.formatPenetration(
-					target.getPenetrationDescription(false,
-							target,
-							SexAreaPenetration.FINGER,
-							partner,
-							Main.sex.getOngoingActionsMap(target).get(SexAreaPenetration.FINGER).get(partner).iterator().next())));
-		}
+//		@Override
+//		protected Value<Integer, String> getAdditionalDescription(GameCharacter target) {
+//			if(Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.FINGER).isEmpty()) {
+//				return null;
+//			}
+//			
+//			GameCharacter partner = Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.FINGER).get(0);
+//			
+//			return new Value<>(3,
+//					Main.sex.formatPenetration(
+//					target.getPenetrationDescription(false,
+//							target,
+//							SexAreaPenetration.FINGER,
+//							partner,
+//							Main.sex.getOngoingActionsMap(target).get(SexAreaPenetration.FINGER).get(partner).iterator().next())));
+//		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
 			if(!Main.game.isInSex() || !Main.sex.getAllParticipants(true).contains(target) || Main.sex.getCharactersHavingOngoingActionWith(target, SexAreaPenetration.FINGER).isEmpty()) {

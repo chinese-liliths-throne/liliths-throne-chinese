@@ -1821,6 +1821,61 @@
 					</ongoingActionsAtStart>
 				</sexVariablesWithManager>
 			</response>
+			<!-- 8: Anal fucking -->
+			<response>
+				<availabilityConditional><![CDATA[[#game.isAnalContentEnabled() && ((!flags.hasFlag(FLAG_innoxia_vronti_blowjob_given) && !flags.hasFlag(FLAG_innoxia_vronti_anilingus_given)) || !pc.isAbleToAccessCoverableArea(CA_PENIS, true) || !pc.hasPenis())]]]></availabilityConditional>
+				<responseTabIndex><![CDATA[0]]></responseTabIndex>
+				<index><![CDATA[8]]></index>
+				<responseTitle><![CDATA[Fuck his ass]]></responseTitle>
+				<responseTooltip><![CDATA[
+					#IF(!flags.hasFlag(FLAG_innoxia_vronti_blowjob_given) && !flags.hasFlag(FLAG_innoxia_vronti_anilingus_given))
+						You can tell that Vronti wouldn't agree to anything more than receiving a blowjob or having his ass serviced. After doing either of these two things, you're sure that he'll be more receptive to other forms of stimulation...
+					#ELSEIF(!pc.hasPenis())
+						You don't have a penis, so you can't fuck Vronti in the ass...
+					#ELSEIF(!pc.isAbleToAccessCoverableArea(CA_PENIS, true))
+						You cannot gain access to your penis, so you cannot fuck Vronti in the ass...
+					#ENDIF
+				]]></responseTooltip>
+				<nextDialogue>null</nextDialogue>
+			</response>
+			<response>
+				<availabilityConditional><![CDATA[[#game.isAnalContentEnabled() && (flags.hasFlag(FLAG_innoxia_vronti_blowjob_given) || flags.hasFlag(FLAG_innoxia_vronti_anilingus_given)) && pc.isAbleToAccessCoverableArea(CA_PENIS, true) && pc.hasPenis()]]]></availabilityConditional>
+				<responseTabIndex><![CDATA[0]]></responseTabIndex>
+				<index><![CDATA[8]]></index>
+				<responseTitle><![CDATA[Fuck his ass]]></responseTitle>
+				<responseTooltip><![CDATA[Having successfully given him an erection, you think that you'll be able to convince Vronti to let you fuck his ass.]]></responseTooltip>
+				<nextDialogue/>
+				<effects><![CDATA[
+					[#flags.setFlag(FLAG_innoxia_vronti_ass_fucked, true)]
+				]]></effects>
+				<sexVariablesWithManager enabled="true">
+					<id><![CDATA[innoxia_fields_vronti_ass_fucking]]></id>
+					<startingPosition><![CDATA[ALL_FOURS]]></startingPosition>
+					<dominants>
+						<character>
+							<id>pc</id>
+							<slot><![CDATA[ALL_FOURS_BEHIND]]></slot>
+						</character>
+					</dominants>
+					<submissives>
+						<character>
+							<id>vronti</id>
+							<slot><![CDATA[ALL_FOURS_ALL_FOURS]]></slot>
+						</character>
+					</submissives>
+					<postSexDialogue><![CDATA[innoxia_places_fields_centaur_transport_vronti_post_sex]]></postSexDialogue>
+					<sexStartContent folderPath="txt/places/fields/centaur_transport">SEX_VRONTI_ASS_FUCKING_START</sexStartContent>
+					<ongoingActionsAtStart>
+						<action>
+							<id><![CDATA[PenisAnus_PENIS_FUCKING_START]]></id>
+							<performer><![CDATA[pc]]></performer>
+							<target><![CDATA[vronti]]></target>
+							<showDescription><![CDATA[false]]></showDescription>
+							<showEffects><![CDATA[true]]></showEffects>
+						</action>
+					</ongoingActionsAtStart>
+				</sexVariablesWithManager>
+			</response>
 		</responses>
 	</scene>
 	

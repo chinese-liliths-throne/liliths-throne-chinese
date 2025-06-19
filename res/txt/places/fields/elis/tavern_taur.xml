@@ -767,7 +767,7 @@
 			Recognising the two foxtauresses over on the far side of the seating area as none other than Fae and Silvia, you [pc.walk] over to them and say hello. The moment they see you, each of the sisters flash you a sly grin, before shuffling along on the low sofa and patting the empty space between them. Winking at you, Fae says, [fae.speech(Come and sit down, [pc.name]. Let's get you nice and comfortable...)]
 		</p>
 	#ENDIF
-	#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().getFather().equals(fae))
+	#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().isFather(fae))
 		<p>
 			#IF(!pc.isCharacterReactedToPregnancy(fae))
 				At that moment, the two sisters suddenly notice that you're sporting a swollen, pregnant belly. Telling Fae that she's the one who knocked you up, you smile as the foxtauress teases, [fae.speech(It's not my fault; your pussy was just so good, I didn't want to pull out! Now come over here and take a rest...)]
@@ -775,7 +775,7 @@
 				At that moment, the two sisters look down at your swollen, pregnant belly. Knowing that she's the one who knocked you up, Fae smirks and teases, [fae.speech(Still carrying our kids around, huh? Come over here and take a rest...)]
 			#ENDIF
 		</p>
-	#ELSEIF(pc.isVisiblyPregnant() && pc.getPregnantLitter().getFather().equals(silvia))
+	#ELSEIF(pc.isVisiblyPregnant() && pc.getPregnantLitter().isFather(silvia))
 		<p>
 			#IF(!pc.isCharacterReactedToPregnancy(silvia))
 				At that moment, the two sisters suddenly notice that you're sporting a swollen, pregnant belly. Telling Silvia that she's the one who knocked you up, you smile as the foxtauress teases, [silvia.speech(It's not my fault; your pussy was just so good, I didn't want to pull out!)]

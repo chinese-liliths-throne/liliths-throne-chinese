@@ -8814,7 +8814,9 @@ public class InventoryDialogue {
 					// Have to remove and then re-add the clothing as setting the sealed status affects the clothing's hashCode
 					List<DisplacementType> clothingDisplacementTypes = new ArrayList<>();
 					if(Main.game.isInSex() && Main.sex.getAllParticipants().contains(owner)) {
-						clothingDisplacementTypes.addAll(Main.sex.getClothingPreSexMap().get(owner).get(clothing.getSlotEquippedTo()).get(clothing));
+						if(Main.sex.getClothingPreSexMap().get(owner).get(clothing.getSlotEquippedTo()).get(clothing)!=null) {
+							clothingDisplacementTypes.addAll(Main.sex.getClothingPreSexMap().get(owner).get(clothing.getSlotEquippedTo()).get(clothing));
+						}
 						Main.sex.getClothingPreSexMap().get(owner).get(clothing.getSlotEquippedTo()).remove(clothing);
 					}
 					clothing.setSealed(false);

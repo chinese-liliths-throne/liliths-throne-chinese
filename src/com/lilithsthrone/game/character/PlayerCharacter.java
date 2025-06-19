@@ -1281,6 +1281,24 @@ public class PlayerCharacter extends GameCharacter implements XMLSaving {
 	
 	// Discoveries:
 	
+	public void applyDiscoveriesToProperties() {
+		for(AbstractItemType itemType : itemsDiscovered) {
+			Main.getProperties().addItemDiscovered(itemType);
+		}
+		for(AbstractWeaponType weaponType : weaponsDiscovered) {
+			Main.getProperties().addWeaponDiscovered(weaponType);
+		}
+		for(AbstractClothingType clothingType : clothingDiscovered) {
+			Main.getProperties().addClothingDiscovered(clothingType);
+		}
+		for(AbstractSubspecies subspecies : subspeciesDiscovered) {
+			Main.getProperties().addRaceDiscovered(subspecies, false);
+		}
+		for(AbstractSubspecies subspecies : subspeciesAdvancedKnowledge) {
+			Main.getProperties().addAdvancedRaceKnowledge(subspecies, false);
+		}
+	}
+	
 	public boolean addRaceDiscoveredFromBook(AbstractSubspecies subspecies) {
 		return racesDiscoveredFromBook.add(subspecies);
 	}
@@ -1334,6 +1352,10 @@ public class PlayerCharacter extends GameCharacter implements XMLSaving {
 		return weaponsDiscovered.contains(weaponType);
 	}
 
+	public Set<AbstractSubspecies> getSubspeciesDiscovered() {
+		return new HashSet<>(subspeciesDiscovered);
+	}
+	
 	/** <b>You should be using the Properties class to access this!</b> */
 	public int getSubspeciesDiscoveredCount() {
 		return subspeciesDiscovered.size();
@@ -1349,6 +1371,10 @@ public class PlayerCharacter extends GameCharacter implements XMLSaving {
 		return subspeciesDiscovered.contains(subspecies);
 	}
 
+	public Set<AbstractSubspecies> getSubspeciesAdvancedDiscovered() {
+		return new HashSet<>(subspeciesAdvancedKnowledge);
+	}
+	
 	/** <b>You should be using the Properties class to access this!</b> */
 	public int getSubspeciesAdvancedDiscoveredCount() {
 		return subspeciesAdvancedKnowledge.size();

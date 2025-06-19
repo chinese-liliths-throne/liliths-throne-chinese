@@ -656,7 +656,7 @@ public class MiscController {
 						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 					}
 				}, false);
-				MainController.addTooltipListeners(id, new TooltipInformationEventListener().setFetish(f, targetedCharacter));
+				MainController.addTooltipListeners(id, new TooltipInformationEventListener().setFetish(f, targetedCharacter, true));
 			}
 			
 			id = Fetish.getIdFromFetish(f)+"_EXPERIENCE";

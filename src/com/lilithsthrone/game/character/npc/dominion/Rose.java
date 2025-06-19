@@ -91,9 +91,6 @@ public class Rose extends NPC {
 		}
 		this.setHomeLocation(WorldType.LILAYAS_HOUSE_GROUND_FLOOR, PlaceType.LILAYA_HOME_LAB);
 		this.returnToHome();
-		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.3.6")) {
-			this.setStartingBody(false);
-		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.6")) {
 			this.resetPerksMap(true);
 		}
@@ -104,6 +101,9 @@ public class Rose extends NPC {
 		}
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.9")) {
 			this.setHomeLocation(WorldType.LILAYAS_HOUSE_FIRST_FLOOR, PlaceType.LILAYA_HOME_ROOM_ROSE);
+		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.11.1")) {
+			this.setStartingBody(false);
 		}
 	}
 
@@ -149,7 +149,7 @@ public class Rose extends NPC {
 
 		// Coverings:
 		this.setEyeCovering(new Covering(BodyCoveringType.EYE_FELINE, PresetColour.EYE_GREEN));
-		this.setSkinCovering(new Covering(BodyCoveringType.FELINE_FUR, PresetColour.COVERING_BLACK), true);
+		this.setSkinCovering(new Covering(BodyCoveringType.FELINE_FUR, PresetColour.COVERING_RED_LIGHT), true);
 		this.setSkinCovering(new Covering(BodyCoveringType.HUMAN, PresetColour.SKIN_LIGHT), true);
 
 		this.setHairCovering(new Covering(BodyCoveringType.HAIR_FELINE_FUR, PresetColour.COVERING_RED), true);

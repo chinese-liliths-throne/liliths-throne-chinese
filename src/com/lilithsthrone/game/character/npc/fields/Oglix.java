@@ -301,9 +301,6 @@ public class Oglix extends NPC {
 
 	@Override
 	public String getArtworkFolderName() {
-		if(this.isVisiblyPregnant()) {
-			return "OglixPregnant";
-		}
 		return "Oglix";
 	}
 	

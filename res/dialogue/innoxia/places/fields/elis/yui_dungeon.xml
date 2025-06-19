@@ -209,13 +209,13 @@
 				[#game.appendToTextEndStringBuilder(itemGen.generateItem('innoxia_pills_fertility').applyEffect(client, pc))]
 				[#game.appendToTextEndStringBuilder(itemGen.generateItem('innoxia_pills_fertility').applyEffect(client, client))]
 			#ELSE
-				#IF(game.isAnalContentEnabled())
+				#IF(game.isAnalContentEnabled() && !client.hasFetish(FETISH_VOYEURIST))
 					[#yui.applyAnalBeads(pc, client)]
 				#ENDIF
 			#ENDIF
 		]]></preParsingEffects>
 		<content folderPath="txt/places/fields/elis/yui_dungeon">SESSION_1_CLIENT_START</content>
-		<secondsPassed minutes="true"><![CDATA[15]]></secondsPassed>
+		<secondsPassed minutes="true"><![CDATA[20]]></secondsPassed>
 		<continuesDialogue>true</continuesDialogue>
 		<travelDisabled>true</travelDisabled>
 		<responses>
@@ -302,15 +302,41 @@
         <title><![CDATA[Finished]]></title>
         <tooltip><![CDATA[Your [client.name] has had enough...]]></tooltip>
 		<content/>
-		<secondsPassed minutes="true"><![CDATA[5]]></secondsPassed>
+		<secondsPassed minutes="true"><![CDATA[10]]></secondsPassed>
 		<continuesDialogue>false</continuesDialogue>
 		<travelDisabled>true</travelDisabled>
 		<responses>
+			<!-- Night ended: -->
 			<response>
+				<availabilityConditional><![CDATA[[#game.isHourBetween(5, 12)]]]></availabilityConditional>
 				<responseTabIndex><![CDATA[0]]></responseTabIndex>
 				<index><![CDATA[1]]></index>
+				<responseTitle><![CDATA[Yui arrives]]></responseTitle>
+				<responseTooltip><![CDATA[You've serviced all of Yui's clients, and so the [yui.race] arrives to release you...]]></responseTooltip>
+				<nextDialogue><![CDATA[innoxia_places_fields_elis_yui_dungeon_session_1_night_of_sex]]></nextDialogue>
+			</response>
+			<!-- More sex scenes: -->
+			<response>
+				<availabilityConditional><![CDATA[[#game.isHourBetween(12, 5)]]]></availabilityConditional>
+				<responseTabIndex><![CDATA[0]]></responseTabIndex>
+				<index><![CDATA[1]]></index>
+				<responseTitle><![CDATA[Recover]]></responseTitle>
+				<responseTooltip><![CDATA[
+					You have a few moments in which to recover before another client arrives...
+					<br/>[style.italicsSex(Keep on experiencing sex scenes as you're repeatedly fucked by Yui's clients.)]
+				]]></responseTooltip>
+				<nextDialogue><![CDATA[innoxia_places_fields_elis_yui_dungeon_session_1_client]]></nextDialogue>
+			</response>
+			<!-- Skip scenes: -->
+			<response>
+				<availabilityConditional><![CDATA[[#game.isHourBetween(12, 5)]]]></availabilityConditional>
+				<responseTabIndex><![CDATA[0]]></responseTabIndex>
+				<index><![CDATA[2]]></index>
 				<responseTitle><![CDATA[Night of sex]]></responseTitle>
-				<responseTooltip><![CDATA[You've got no other option but to submit to several more clients throughout the rest of the night...]]></responseTooltip>
+				<responseTooltip><![CDATA[
+					You've got no other option but to spend the rest of the night in Yui's dungeon...
+					<br/>[style.italicsMinorBad(This will skip through the rest of the night until Yui arrives to release you.)]
+				]]></responseTooltip>
 				<nextDialogue><![CDATA[innoxia_places_fields_elis_yui_dungeon_session_1_night_of_sex]]></nextDialogue>
 			</response>
 		</responses>
@@ -318,7 +344,9 @@
 	
 	<scene id="session_1_night_of_sex">
 		<preParsingEffects><![CDATA[
-			[#game.endTurn(~~game.getMinutesUntilTimeInMinutes(5 * 60) * 60)]
+			#IF(game.isHourBetween(12, 5))
+				[#game.endTurn(~~game.getMinutesUntilTimeInMinutes(5 * 60) * 60)]
+			#ENDIF
 			[#yui.applyNightOfSex(pc, 1)]
 			[#yui.setLocation(pc)]
 		]]></preParsingEffects>

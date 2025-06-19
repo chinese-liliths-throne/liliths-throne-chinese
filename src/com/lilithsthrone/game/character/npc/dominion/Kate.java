@@ -404,7 +404,7 @@ public class Kate extends NPC {
 	
 	@Override
 	public Value<Boolean, String> getItemUseEffects(AbstractItem item,  GameCharacter itemOwner, GameCharacter user, GameCharacter target) {
-		if(user.isPlayer() && !target.isPlayer()) {
+		if(user.isPlayer() && !target.isPlayer() && !target.isAsleep()) {
 			if(item.isTypeOneOf("innoxia_pills_fertility", "innoxia_pills_broodmother")) {
 				String useDesc = itemOwner.useItem(item, target, false, true);
 				return new Value<>(true,
@@ -442,7 +442,8 @@ public class Kate extends NPC {
 							+"<p>"
 								+ (this.hasStatusEffect(StatusEffect.PREGNANT_0)
 									?"[kate.speechNoEffects(~Aww!~ I'm not pregnant!)] Kate whines, before rubbing her belly and pouting at you. [kate.speech(Come on, [pc.name], there's plenty of time for you to change that!)]"
-									:"[kate.speechNoEffects(What were you expecting? Of course I'm not going to be pregnant!)] Kate laughs, before rubbing her belly and biting her lip. [kate.speech(Although there's plenty of time for you to change that...)]")
+									:"[kate.speechNoEffects(What were you expecting? Of course I'm not going to be pregnant!)] Kate laughs, before rubbing her belly and biting her lip."
+											+ " [kate.speech(Although there's plenty of time for you to change that...)]")
 							+ "</p>");
 				}
 				
@@ -469,7 +470,7 @@ public class Kate extends NPC {
 							+ " [kate.speech(Do I really have to? It feels so much better without one...)]"
 						+ "</p>";
 			}
-			if(target.equals(equipper) && target.isPlayer()) {
+			if(target.equals(equipper) && target.isPlayer() && !this.isAsleep()) {
 				AbstractClothing clothing = target.getClothingInSlot(InventorySlot.PENIS);
 				if(clothing!=null && clothing.isCondom()) {
 					target.unequipClothingIntoVoid(clothing, true, equipper);

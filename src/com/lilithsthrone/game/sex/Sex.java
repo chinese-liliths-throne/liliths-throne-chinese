@@ -2263,7 +2263,12 @@ public class Sex {
 			availableSexActionsPlayer.addAll(normalActions);
 			playerUniqueActions = false;
 		}
+		try {
 		availableSexActionsPlayer.sort(new SexActionComparator());
+		} catch(Exception ex) {
+			System.err.println("ERROR: The terribly-written SexActionComparator() is not working!");
+			ex.printStackTrace();
+		}
 		if(partnerOrgasming && Main.game.getPlayer().hasTrait(Perk.ORGASMIC_LEVEL_DRAIN, true)) {
 			availableSexActionsPlayer.add(MiscActions.LEVEL_DRAIN_TOGGLE);
 		}
@@ -2355,10 +2360,10 @@ public class Sex {
 		}
 		
 		miscActionsPlayer.addAll(characterSwitchActionsPlayer);
-		if(miscActionsPlayer.contains(GenericActions.PLAYER_SKIP_SEX)) { // Put this action at the very end:
-			miscActionsPlayer.remove(GenericActions.PLAYER_SKIP_SEX);
-			miscActionsPlayer.add(GenericActions.PLAYER_SKIP_SEX);
-		}
+//		if(miscActionsPlayer.contains(GenericActions.PLAYER_SKIP_SEX)) { // Put this action at the very end:
+//			miscActionsPlayer.remove(GenericActions.PLAYER_SKIP_SEX);
+//			miscActionsPlayer.add(GenericActions.PLAYER_SKIP_SEX);
+//		}
 		
 //		for(SexActionInterface sa : miscActionsPlayer) {
 //			System.out.println(sa.getActionTitle());

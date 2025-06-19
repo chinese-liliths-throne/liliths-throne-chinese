@@ -587,15 +587,27 @@ public class SlaveDialogue {
 						switch(ObedienceLevelBasic.getObedienceLevelFromValue(getSlave().getObedienceValue())) {
 							case DISOBEDIENT:
 								sb.append(" sighing,"
-										+ " [npc.speech(Hi, [npc.pcName]. "+(father==null?"I ended up getting pregnant":father.getName("A")+" got me pregnant")+", so I'm going to take it easy for a while. Get one of the other slaves to cover for me, ok?)]");
+										+ " [npc.speech(Hi, [npc.pcName]. "
+											+(father==null || father.equals(getSlave())
+												?"I ended up getting pregnant"
+												:father.getName("A")+" got me pregnant")
+											+", so I'm going to take it easy for a while. Get one of the other slaves to cover for me, ok?)]");
 								break;
 							case NEUTRAL:
 								sb.append(" sighing,"
-										+ " [npc.speech(Hi, [npc.pcName]. "+(father==null?"I ended up getting pregnant":father.getName("A")+" got me pregnant")+", so I'm going to need to take it easy for a while, ok?)]");
+										+ " [npc.speech(Hi, [npc.pcName]. "
+											+(father==null || father.equals(getSlave())
+												?"I ended up getting pregnant"
+												:father.getName("A")+" got me pregnant")
+											+", so I'm going to need to take it easy for a while, ok?)]");
 								break;
 							case OBEDIENT:
 								sb.append(" obediently informing you of what happened,"
-										+ " [npc.speech(Hello, [npc.pcName]. "+(father==null?"I ended up getting pregnant":father.getName("A")+" got me pregnant")+", but I won't let it get in the way of my duties!)]");
+										+ " [npc.speech(Hello, [npc.pcName]. "
+											+(father==null || father.equals(getSlave())
+												?"I ended up getting pregnant"
+												:father.getName("A")+" got me pregnant")
+											+", but I won't let it get in the way of my duties!)]");
 								break;
 						}
 						sb.append("</p>");

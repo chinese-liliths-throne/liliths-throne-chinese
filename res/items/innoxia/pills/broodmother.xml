@@ -39,14 +39,14 @@
 			<p>
 				#IF(npc.hasVagina())
 					[npc.Name] [npc.verb(feel)] [npc.her] ovaries kick into overdrive as eggs begin to cascade towards [npc.her] womb. As the discomfort fades, [npc.she] [npc.verb(realise)] that [npc.sheIs] now able to be impregnated with far more children than [npc.she] would normally be able to
-					#IF(pc.hasFetish(FETISH_PREGNANCY))
+					#IF(npc.hasFetish(FETISH_PREGNANCY))
 						 carry, and the thought that [npc.she] could get so heavily pregnant with so little work makes a happy smile settle on [npc.her] face.
 					#ELSE
 						 carry.
 					#ENDIF
 					#IF(npc.hasPenisIgnoreDildo())
 						 The feeling doesn't stop there, however, as the cramp quickly moves down into [npc.her] groin. [npc.She] [npc.verb(feel)] [npc.her] testes churning as they produce sperm at a supernatural rate. The discomfort eventually fades, and [npc.she] [npc.verb(realise)] that any womb that [npc.her] semen finds its way into will be able to carry far more children than it normally
-						#IF(pc.hasFetish(FETISH_PREGNANCY))
+						#IF(npc.hasFetish(FETISH_PREGNANCY))
 							 would, and [npc.she] can't help but grin at the thought of someone's belly being swollen to bursting point with [npc.her] numerous offspring.
 						#ELSE
 							 would.
@@ -54,7 +54,7 @@
 					#ENDIF
 				#ELSEIF(npc.hasPenisIgnoreDildo())
 					The feeling doesn't stop there, however, as the cramp quickly moves down into [npc.her] groin. [npc.She] [npc.verb(feel)] [npc.her] testes churning as they produce sperm at a supernatural rate. The discomfort eventually fades, and [npc.she] [npc.verb(realise)] that any womb that [npc.her] semen finds its way into will be able to carry far more children than it normally
-					#IF(pc.hasFetish(FETISH_PREGNANCY))
+					#IF(npc.hasFetish(FETISH_PREGNANCY))
 						 would, and [npc.she] can't help but grin at the thought of someone's belly being swollen to bursting point with [npc.her] numerous offspring.
 					#ELSE
 						 would.

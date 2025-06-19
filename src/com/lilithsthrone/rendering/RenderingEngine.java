@@ -1448,7 +1448,7 @@ public enum RenderingEngine {
 			uiAttributeSB.append(UtilText.parse(
 					"<div class='full-width-container' style='text-align:center;'>"
 						+ "<div class='overlay-alt' id='INVENTORY_ENCHANTMENT_LIMIT' style='cursor:default;'>"
-							+ "[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "
+//							+ "[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "
 							+ UtilText.getEnchantmentCapacitySymbol()
 							+ (enchantmentPointsUsed>Main.game.getPlayer().getAttributeValue(Attribute.ENCHANTMENT_LIMIT)
 									?"[style.colourBad("
@@ -1686,7 +1686,7 @@ public enum RenderingEngine {
 				uiAttributeSB.append(UtilText.parse(
 						"<div class='full-width-container' style='text-align:center;'>"
 							+ "<div class='overlay-alt' id='INVENTORY_ENCHANTMENT_LIMIT_NPC' style='cursor:default;'>"
-								+ "[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "
+//								+ "[style.colourEnchantment("+Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName())+")]: "
 								+ UtilText.getEnchantmentCapacitySymbol()
 								+ (enchantmentPointsUsed>getCharacterToRender().getAttributeValue(Attribute.ENCHANTMENT_LIMIT)
 										?"[style.colourBad("
@@ -1812,7 +1812,7 @@ public enum RenderingEngine {
 			int count = 0;
 			if(Main.game.isInNewWorld()) {
 				String extraClasses = "";
-				if(Main.game.getCurrentDialogueNode().isInventoryDisabled()) {
+				if(Main.game.getCurrentDialogueNode().isInventoryDisabled() && Main.game.getCurrentDialogueNode().getDialogueNodeType()!=DialogueNodeType.INVENTORY) {
 					extraClasses = " disabled";
 				}
 				

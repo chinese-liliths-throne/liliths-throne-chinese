@@ -42,7 +42,9 @@ public class CMSpecialAttack {
             DamageType.UNARMED,
             DamageVariance.NONE,
             "moves/hoof_kick",
-            Util.newArrayListOfValues(PresetColour.RACE_HORSE_MORPH),
+            Util.newArrayListOfValues(
+            		PresetColour.DAMAGE_TYPE_PHYSICAL,
+            		PresetColour.BASE_RED),
             false,
             true,
             false,

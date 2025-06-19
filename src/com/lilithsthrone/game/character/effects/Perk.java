@@ -1444,7 +1444,7 @@ public class Perk {
 
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return "You have a natural amount of physical fitness.";
+			return UtilText.parse(owner, "[npc.Name] [npc.has] a natural amount of physical fitness.");
 		}
 	};
 
@@ -3270,7 +3270,9 @@ public class Perk {
 		}
 		@Override
 		public String getDescription(GameCharacter owner) {
-			return UtilText.parse(owner, "<i>The skies, the fountains, every region near seem'd all one mutual cry: I never heard so musical a discord, such sweet thunder.</i>");
+			return "<i>The skies, the fountains, every region near"
+					+ "<br/>Seem'd all one mutual cry: I never heard"
+					+ "<br/>So musical a discord, such sweet thunder.</i>";
 		}
 		@Override
 		public boolean isHiddenPerk() {

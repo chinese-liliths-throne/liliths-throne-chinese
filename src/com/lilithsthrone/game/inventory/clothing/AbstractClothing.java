@@ -2234,7 +2234,9 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 	 */
 	public void setSealed(boolean sealed) {
 		if(sealed) {
-			this.addEffect(new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_SPECIAL, TFModifier.CLOTHING_SEALING, TFPotency.MINOR_BOOST, 0));
+			if(!this.isSealed()) { // If this item is already sealed, don't add another effect...
+				this.addEffect(new ItemEffect(ItemEffectType.CLOTHING, TFModifier.CLOTHING_SPECIAL, TFModifier.CLOTHING_SEALING, TFPotency.MINOR_BOOST, 0));
+			}
 		} else {
 			setUnlocked(true);
 //			this.getEffects().removeIf(e -> e.getSecondaryModifier() == TFModifier.CLOTHING_SEALING);

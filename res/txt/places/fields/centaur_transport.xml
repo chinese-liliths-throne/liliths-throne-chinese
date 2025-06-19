@@ -1077,7 +1077,7 @@
 		#ENDIF
 		|
 		#IF(flags.hasFlag(FLAG_innoxia_vronti_sex_given))
-			Taking advantage of the fact that you've been in this situation before, you remind Vronti how good it must have felt for him when you presented your [pc.pussy+] to his fat horse-cock and let him rut you. Graphically describing how you loved the sensation of his huge, hot horse-cock thrusting into your cunt, you tell him that you want to once again empty his heavy balls, and then move on to tease him about how strongly he spurts out his musky cum when he orgasms.
+			Taking advantage of the fact that you've been in this situation before, you remind Vronti how good it must have felt for him when you presented your [pc.pussy+] to his fat horse-cock and let him rut you. Graphically describing how you loved the sensation of his huge, hot equine-dick thrusting into your cunt, you tell him that you want to once again empty his heavy balls, and then move on to tease him about how strongly he spurts out his musky cum when he orgasms.
 		#ENDIF
 		|
 		#IF(flags.hasFlag(FLAG_innoxia_vronti_anilingus_given))
@@ -1085,7 +1085,11 @@
 		#ENDIF
 		|
 		#IF(flags.hasFlag(FLAG_innoxia_vronti_anal_sex_given))
-			Taking advantage of the fact that you've been in this situation before, you remind Vronti how good it must have felt for him when you presented your [pc.asshole+] to his fat horse-cock and let him rut you. Graphically describing how you loved the sensation of his huge, hot horse-cock fucking your ass, you tell him that you want to once again empty his heavy balls, and then move on to tease him about how strongly he spurts out his musky cum when he orgasms.
+			Taking advantage of the fact that you've been in this situation before, you remind Vronti how good it must have felt for him when you presented your [pc.asshole+] to his fat horse-cock and let him rut you. Graphically describing how you loved the sensation of his huge, hot equine-dick fucking your ass, you tell him that you want to once again empty his heavy balls, and then move on to tease him about how strongly he spurts out his musky cum when he orgasms.
+		#ENDIF
+		|
+		#IF(flags.hasFlag(FLAG_innoxia_vronti_ass_fucked) && pc.hasPenis())
+			Taking advantage of the fact that you've been in this situation before, you remind Vronti how good it must have felt for him when you first pushed your [pc.cock+] into his puffy equine asshole. Graphically describing how you loved hearing his deep grunts as you pounded his ass, you tell him that you want to once again help him to empty his heavy balls, and then move on to tease him about how strongly he spurts out his musky cum when he orgasms.
 		#ENDIF
 		|
 		Taking advantage of the fact that the centaur's heavy balls are visible from where you're sitting in the carriage, you tell Vronti that you can see how his huge, heavy balls look like they're desperate for release. After spending some time continuing to graphically describe how you want to pleasure his huge, hot horse-cock, you then move on to tease him by wondering how much musky cum he spurts out when he orgasms.
@@ -1190,6 +1194,64 @@
 	<p>
 		[vronti.speech(Fuck...)] he grunts, and after you've let out [pc.a_moan+] and told him to rut you like an animal, he does as you say and begins to desperately pound your hot ass...
 	</p>
+	]]>
+	</htmlContent>
+	
+	<htmlContent tag="SEX_VRONTI_ASS_FUCKING_START"><![CDATA[
+	<p>
+		Moving up so that you're right next to the muscular centaur, you tell him that it'll be quicker to get rid of his erection by working out his sexual tension than waiting for him to calm down. Thanks to your efforts, Vronti is unable to keep his arousal under control, and as he hears you say this he reluctantly responds, [vronti.speech(Fine... It worked before, so just do it quickly...)]
+	</p>
+	#IF(vronti.isAnalVirgin())
+		<p>
+			You aren't quite sure how Vronti would respond to being asked if he wants his ass fucked, so instead of risking a firm rejection of your proposition, you decide to make sure that his mind is fogged by lust before asking to fuck him. Coyly moving around behind him and reaching down to cup and stroke his big, heavy balls, you get the muscular centaur so aroused that he starts letting out involuntary grunts and begins pawing at the ground with one of his huge, powerful hoofs. Only once you're sure that he's madly turned on do you move on to your real target, and can't help but grin as you trace your [pc.fingers+] up from his huge ballsack to run around the rim of his big, puffy equine asshole.
+		</p>
+		<p>
+			[vronti.speech(Fuck...)] he grunts as you use your thumbs to spread his big, [vronti.assholeColour] asshole. As you play with his ass, he bucks his hips back a little, letting you know that he's enjoying the anal stimulation. Seizing this opportunity, you tell Vronti that you can make his asshole feel even better, and as you continue to play with his butt, you tell him that you want to fuck his ass.
+		</p>
+		<p>
+			[vronti.speech(My ass?!)] he snorts. The tone of his voice makes it sound like he's about to reject you, but as you once again spread his puffy doughnut, he suddenly lets out a deep, rumbling groan. Flexing his huge, rippling muscles, he glances back over his shoulder at you and relents, [vronti.speech(Fine... Just... This is my first time... And don't tell Astrapi... Please...)]
+		</p>
+		<p>
+			Smiling at the stoic centaur, you promise him that you'll make it a memorable experience as you eagerly pull out your [pc.cock+].
+			#IF(pc.isTaur())
+				 Rearing up onto your hind legs, you step forwards and mount Vronti, and can't help but let out [pc.a_moan+] as you feel the [pc.cockHead+] of your throbbing dick pressing impatiently against the centaur's virgin hole.
+			#ELSE
+				 Moving up close behind Vronti, you can't help but let out [pc.a_moan+] as you impatiently press the [pc.cockHead+] of your throbbing dick against the centaur's virgin hole.
+			#ENDIF
+			 Disappointingly, Vronti tenses up and clenches his ass as he feels that you're about to penetrate him. Wanting your lover to relax and enjoy this so that he'll be willing to do this with you again, you don't immediately thrust forwards. Instead, with gentle movements of your [pc.hips+], you use your [pc.cock+] to playfully tease his hot, puffy asshole.
+		</p>
+		<p>
+			[vronti.speech(Yes...)] Vronti groans. He visibly relaxes as you continue to stimulate his equine hole, and after letting out a deep, horny sigh, he begs for you to take his virginity in his typically terse manner, [vronti.speech(Put it in already... Fuck me...)]
+		</p>
+		<p>
+			Having been given the signal you were waiting for, you push forwards and press the [pc.cockHead+] of your [pc.cock+] into Vronti's hungry asshole. His hot, puffy doughnut stretches to accommodate your entry, and once you feel that you're inside of him, you rock your hips forwards and drive your [pc.cock+] into the centaur's tight, virgin asshole.
+		</p>
+		<p>
+			[vronti.speech(Fuck! ~Aah!~)] Vronti cries out. In a rare display of emotion, he makes a horny, moan-like noise as you enter him, and as you sink your cock into his ass and claim his anal virginity, you find yourself feeling rather proud that you were able to coax such a lewd noise out of this stoic centaur. Encouraged by his response, you start eagerly fucking Vronti's horny asshole as he grunts and groans beneath you...
+		</p>
+	#ELSE
+		<p>
+			Wanting to fuck Vronti's ass again, you coyly move around behind the muscular centaur and start teasing your [pc.fingers+] over his big, puffy doughnut. Quickly getting aroused, he starts letting out involuntary grunts and begins pawing at the ground with one of his huge, powerful hoofs. Using your thumbs to spread his big, [vronti.assholeColour] asshole, you tell him that you want to fuck his ass again.
+		</p>
+		<p>
+			[vronti.speech(Fine...)] he snorts. Flexing his huge, rippling muscles, he glances back over his shoulder at you and grunts, [vronti.speech(Just... Don't tell Astrapi about this...)]
+		</p>
+		<p>
+			Smiling at the stoic centaur, you promise him that you won't tell his sister anything about this as you eagerly pull out your [pc.cock+].
+			#IF(pc.isTaur())
+				 Rearing up onto your hind legs, you step forwards and mount Vronti, and can't help but let out [pc.a_moan+] as you feel the [pc.cockHead+] of your throbbing dick pressing impatiently against the centaur's puffy hole.
+			#ELSE
+				 Moving up close behind Vronti, you can't help but let out [pc.a_moan+] as you impatiently press the [pc.cockHead+] of your throbbing dick against the centaur's puffy hole.
+			#ENDIF
+			 Having experienced this before, and so knowing what's to come, Vronti relaxes his asshole as you continue to stimulate it, and after letting out a deep, horny sigh, he grunts, [vronti.speech(Put it in already... Fuck me...)]
+		</p>
+		<p>
+			Having been given the signal you were waiting for, you push forwards and press the [pc.cockHead+] of your [pc.cock+] into Vronti's hungry asshole. His hot, puffy doughnut stretches to accommodate your entry, and once you feel that you're inside of him, you rock your hips forwards and drive your [pc.cock+] into the centaur's equine hole.
+		</p>
+		<p>
+			[vronti.speech(Fuck! ~Aah!~)] Vronti cries out. In a rare display of emotion, he makes a horny, moan-like noise as you enter him, and as you sink your cock into his ass, you find yourself feeling rather proud that you were able to coax such a lewd noise out of this stoic centaur. Encouraged by his response, you start eagerly fucking Vronti's horny asshole as he grunts and groans beneath you...
+		</p>
+	#ENDIF
 	]]>
 	</htmlContent>
 	

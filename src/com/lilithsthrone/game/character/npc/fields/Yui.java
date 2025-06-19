@@ -499,7 +499,14 @@ public class Yui extends NPC {
 		}
 	}
 	
+	public boolean isAnalBeadsEquipped(GameCharacter target) {
+		return target.getClothingInSlot(InventorySlot.ANUS)!=null && target.getClothingInSlot(InventorySlot.ANUS).getClothingType()==ClothingType.getClothingTypeFromId("norin_anal_beads_anal_beads");
+	}
+	
 	public void applyAnalBeads(GameCharacter target, GameCharacter equipper) {
+		if(isAnalBeadsEquipped(target)) {
+			return;
+		}
 		if(target.getClothingInSlot(InventorySlot.ANUS)!=null) {
 			target.unequipClothingIntoVoid(InventorySlot.ANUS, true, equipper);
 		}
@@ -543,8 +550,11 @@ public class Yui extends NPC {
 		client.setDescription("This is one of Yui's clients, who's paid her to visit her basement and roughly fuck the pathetic sub who's tied up down there. Tonight, that pathetic sub is you.");
 		
 		// Determines how the client treats the player (by default they punish player):
-		if(Util.random.nextInt(100)<33 && Main.game.getPlayer().hasVagina()) {
-			// Breeder:
+		if(Util.random.nextInt(100)<33
+				&& Main.game.getPlayer().hasVagina()
+				&& !Main.game.getPlayer().isVisiblyPregnant()
+				&& (!Main.game.getPlayer().hasStatusEffect(StatusEffect.PREGNANT_0)
+						|| Main.game.getPlayer().getStatusEffectDuration(StatusEffect.PREGNANT_0)<60*30)) { // ONly spawn a breeder NPC if the player is not pregnant and the 'risk of pregnancy' has over 30mins before resolution
 			client.addFetish(Fetish.FETISH_IMPREGNATION);
 			if(client.getPenisRawCumStorageValue()<250) {
 				client.setPenisCumStorage(250);
@@ -552,6 +562,13 @@ public class Yui extends NPC {
 				client.setPenisCumProductionRegeneration(FluidRegeneration.THREE_RAPID.getMedianRegenerationValuePerDay());
 			}
 		}
+		
+		if(!client.hasFetish(Fetish.FETISH_IMPREGNATION)) {
+			if(Util.random.nextInt(100)<50) { // For an alternate intro:
+				client.addFetish(Fetish.FETISH_VOYEURIST);
+			}
+		}
+		
 		
 		client.addFetish(Fetish.FETISH_DOMINANT);
 		client.addFetish(Fetish.FETISH_SADIST);
@@ -588,6 +605,13 @@ public class Yui extends NPC {
 	}
 	
 	public void applyClientIntro(GameCharacter client) {
+		if(Main.game.getPlayer().hasFetish(Fetish.FETISH_INCEST) && Math.random()<0.33f) {
+			if(client.isFeminine()) {
+				client.setGenericName("Mommy");
+			} else {
+				client.setGenericName("Daddy");
+			}
+		}
 		if(client.isFeminine()) {
 			client.setGenericName("Mistress");
 		} else {
@@ -603,6 +627,9 @@ public class Yui extends NPC {
 	
 	public void applyNightOfSex(GameCharacter target, int stage) {
 		int numberOfClients = 5 + Util.random.nextInt(4); // 5-8 more clients
+		if(Main.game.isHourBetween(3, 12)) {
+			numberOfClients = 1 + Util.random.nextInt(3); // If after 03:00, just 1-3 more clients
+		}
 		
 		// For each client, get fucked in mouth, pussy, and ass:
 		for(int i=0; i<numberOfClients; i++) {

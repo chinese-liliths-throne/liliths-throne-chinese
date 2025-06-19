@@ -68,7 +68,7 @@ import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.1.69
- * @version 0.3.7
+ * @version 0.4.11.1
  * @author Innoxia
  */
 public class GenericOrgasms {
@@ -112,13 +112,17 @@ public class GenericOrgasms {
 
 	public static boolean isCumTargetRequirementsMet(SexActionInterface sexAction, OrgasmCumTarget cumTarget) {
 		OrgasmCumTarget preferredPulloutTarget = Main.sex.getInitialSexManager().getCharacterPullOutOrgasmCumTarget(Main.sex.getCharacterPerformingAction(), Main.sex.getTargetedPartner(Main.sex.getCharacterPerformingAction()));
+		SexAreaOrifice penisPenetratingArea = Main.sex.getFirstOngoingSexAreaOrifice(Main.sex.getCharacterPerformingAction(), SexAreaPenetration.PENIS);
+		boolean isPenetratingInternalOrifice = penisPenetratingArea!=null && penisPenetratingArea.isInternalOrifice();
 		
 		if(!Main.sex.getAvailableCumTargets(Main.sex.getCharacterPerformingAction()).contains(cumTarget)
 				|| (Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotGeneric.MISC_WATCHING && cumTarget.isRequiresPartner())
 				|| !Main.sex.getCharacterPerformingAction().hasPenisIgnoreDildo()
 				|| !Main.sex.getCharacterPerformingAction().isCoverableAreaExposed(CoverableArea.PENIS)
+				// If the character is wearing a condom, then they will always creampie if penetrating an orifice, otherwise allow them to choose an area to cum onto if their condom breaks:
 				|| (Main.sex.getCharacterPerformingAction().isWearingCondom()
-						&& sexAction.getCondomFailure(Main.sex.getCharacterPerformingAction(), Main.sex.getTargetedPartner(Main.sex.getCharacterPerformingAction()))==CondomFailure.NONE)
+						&& (sexAction.getCondomFailure(Main.sex.getCharacterPerformingAction(), Main.sex.getTargetedPartner(Main.sex.getCharacterPerformingAction()))==CondomFailure.NONE
+							|| isPenetratingInternalOrifice))
 				|| (!Main.sex.getCharacterPerformingAction().isPlayer() && Main.sex.getRequestedPulloutWeighting(Main.sex.getCharacterPerformingAction())<0)
 				|| (preferredPulloutTarget!=null && preferredPulloutTarget!=cumTarget)) {
 			return false;

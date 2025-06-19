@@ -2138,18 +2138,6 @@ public class MainController implements Initializable {
 					+" Your limit is calculated from: <i>10 + (level) + (perk gains)</i>");
 			addEventListener(documentAttributes, id, "mouseenter", el2, false);
 		}
-		
-		id = "INVENTORY_ENCHANTMENT_LIMIT_NPC";
-		if (((EventTarget) documentAttributes.getElementById(id)) != null) {
-			addEventListener(documentAttributes, id, "mousemove", moveTooltipListener, false);
-			addEventListener(documentAttributes, id, "mouseleave", hideTooltipListener, false);
-			TooltipInformationEventListener el2 = new TooltipInformationEventListener().setInformation(
-					Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName()),
-					UtilText.parse(RenderingEngine.getCharacterToRender(),
-							"The total amount of weapon, clothing, and tattoo attribute enchantments you're able to handle without incurring massive penalties."
-								+" [npc.Her] maximum is calculated from: <i>10 + (level) + (perk gains)</i>"));
-			addEventListener(documentAttributes, id, "mouseenter", el2, false);
-		}
 
 		boolean dateKnown = Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.knowsDate) || !Main.game.isInNewWorld();
 		
@@ -2443,7 +2431,7 @@ public class MainController implements Initializable {
 					addEventListener(documentAttributes, "FETISH_"+idModifier + Fetish.getIdFromFetish(f), "mousemove", moveTooltipListener, false);
 					addEventListener(documentAttributes, "FETISH_"+idModifier + Fetish.getIdFromFetish(f), "mouseleave", hideTooltipListener, false);
 
-					TooltipInformationEventListener el = new TooltipInformationEventListener().setFetish(f, character);
+					TooltipInformationEventListener el = new TooltipInformationEventListener().setFetish(f, character, false);
 					addEventListener(documentAttributes, "FETISH_"+idModifier + Fetish.getIdFromFetish(f), "mouseenter", el, false);
 				}
 			}
@@ -2552,6 +2540,18 @@ public class MainController implements Initializable {
 						?"Switch to tattoos"
 						:"Switch to clothing",
 					"");
+			addEventListener(documentRight, id, "mouseenter", el2, false);
+		}
+		
+		id = "INVENTORY_ENCHANTMENT_LIMIT_NPC";
+		if (((EventTarget) documentRight.getElementById(id)) != null) {
+			addEventListener(documentRight, id, "mousemove", moveTooltipListener, false);
+			addEventListener(documentRight, id, "mouseleave", hideTooltipListener, false);
+			TooltipInformationEventListener el2 = new TooltipInformationEventListener().setInformation(
+					Util.capitaliseSentence(Attribute.ENCHANTMENT_LIMIT.getName()),
+					UtilText.parse(RenderingEngine.getCharacterToRender(),
+							"The total amount of weapon, clothing, and tattoo attribute enchantments [npc.nameIsFull] able to handle without incurring massive penalties."
+								+" [npc.Her] maximum is calculated from: <i>10 + (level) + (perk gains)</i>"));
 			addEventListener(documentRight, id, "mouseenter", el2, false);
 		}
 		
@@ -2806,7 +2806,7 @@ public class MainController implements Initializable {
 						addEventListener(documentRight, "FETISH_NPC_"+idModifier + Fetish.getIdFromFetish(f), "mousemove", moveTooltipListener, false);
 						addEventListener(documentRight, "FETISH_NPC_"+idModifier + Fetish.getIdFromFetish(f), "mouseleave", hideTooltipListener, false);
 	
-						TooltipInformationEventListener el = new TooltipInformationEventListener().setFetish(f, character);
+						TooltipInformationEventListener el = new TooltipInformationEventListener().setFetish(f, character, false);
 						addEventListener(documentRight, "FETISH_NPC_"+idModifier + Fetish.getIdFromFetish(f), "mouseenter", el, false);
 					}
 				}

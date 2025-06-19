@@ -519,7 +519,7 @@
 			<p>
 				Doing as the waiter asks, you follow him as he leads you over to an empty table next to one of the windows. Handing you a menu, he states, [npc.speech(All food and drink must be paid for at the moment of order. Please call me over once you've made your selection.)]
 			</p>
-			#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().getFather().equals(npc))
+			#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().isFather(npc))
 				<p>
 					Looking down at your pregnant belly, [npc.name] grins and asks,
 					#IF(!pc.isCharacterReactedToPregnancy(npc))
@@ -594,7 +594,7 @@
 			<p>
 				Doing as the waitress asks, you follow her as she leads you over to an empty table next to one of the windows. Handing you a menu, she states, [npc.speech(All food and drink must be paid for at the moment of order. Please call me over once you've made your selection.)]
 			</p>
-			#IF(npc.isVisiblyPregnant() && npc.getPregnantLitter().getFather().equals(pc))
+			#IF(npc.isVisiblyPregnant() && npc.getPregnantLitter().isFather(pc))
 				<p>
 					Rubbing her [npc.hands] over her [style.colourSex(pregnant belly)], [npc.name] grins
 					#IF(!npc.isCharacterReactedToPregnancy(pc))

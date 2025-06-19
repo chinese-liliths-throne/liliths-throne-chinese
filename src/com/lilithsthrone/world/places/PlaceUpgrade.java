@@ -1419,7 +1419,8 @@ public class PlaceUpgrade {
 			"Bar",
 			"Have a bar constructed within the pool area of the spa, which will be kept stocked full of both hard and soft drinks."
 					+ " Refrigeration and restocking costs mean that it won't be cheap to maintain, however...",
-			"",
+			"You've had a bar constructed within the pool area of the spa, which will be kept stocked full of both hard and soft drinks."
+					+ " Refrigeration and restocking costs mean that it isn't cheap to maintain, however...",
 			"",
 			15_000,
 			5_000,

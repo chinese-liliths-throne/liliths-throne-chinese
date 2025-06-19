@@ -111,6 +111,10 @@ public class Ralph extends NPC {
 					PersonalityTrait.SELFISH,
 					PersonalityTrait.LEWD);
 		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.11.1")) { // For some reason my test save didn't have Ralph as having these fetishes, so I made sure to re-add them in
+			this.addFetish(Fetish.FETISH_ORAL_RECEIVING);
+			this.addFetish(Fetish.FETISH_IMPREGNATION);
+		}
 	}
 
 	@Override

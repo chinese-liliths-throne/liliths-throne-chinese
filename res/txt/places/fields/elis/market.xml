@@ -408,7 +408,7 @@
 		<p>
 			Standing beside this machine is the stall's masculine operator, Moreno. Wearing a tank top and a pair of sporty shorts, this black-haired horse-boy stands at a towering [moreno.heightValue], and you can't help but notice how his massive muscles bulge out with each of his movements. As you approach him, Moreno's [moreno.eyeColour] eyes flick over towards you, and after flashing you a smile, he greets you in a deep, booming voice, [moreno.speech(Hello again, [pc.name]! Are you here to try and beat my supreme strength tester?)]
 		</p>
-		#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().getFather().equals(moreno))
+		#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().isFather(moreno))
 			#IF(!pc.isCharacterReactedToPregnancy(moreno))
 				<p>
 					As you rub your [pc.hands] over your swollen belly and [pc.step] up to Moreno, he suddenly notices the fact that you're pregnant, and, realising that he must be the father, he exclaims, [moreno.speech(I got you pregnant?! Hey, is there anything I can do to help? I'm not one for shirking responsibility; just tell me if there's anything I can do.)]
@@ -689,7 +689,7 @@
 						You once again find yourself approaching the clothing stall, 'Rainbow's End'. The foxtauress sisters, Fae and Silvia, are standing behind the counter, and as they see you approach Fae waves you over and calls out, [fae.speech([pc.Name]! Are you here to buy something?)]
 					</p>
 				#ENDIF
-				#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().getFather().equals(fae))
+				#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().isFather(fae))
 					<p>
 						#IF(!pc.isCharacterReactedToPregnancy(fae))
 							At that moment, the two sisters suddenly notice that you're sporting a swollen, pregnant belly. Telling Fae that she's the one who knocked you up, you smile as the foxtauress teases, [fae.speech(It's not my fault; your pussy was just so good, I didn't want to pull out! Hey, are you wanting to buy some clothing for our kids?)]
@@ -697,7 +697,7 @@
 							At that moment, the two sisters look down at your swollen, pregnant belly. Knowing that she's the one who knocked you up, Fae smirks and teases, [fae.speech(Still carrying our kids around, huh? Hey, are you wanting to buy some clothing for them?)]
 						#ENDIF
 					</p>
-				#ELSEIF(pc.isVisiblyPregnant() && pc.getPregnantLitter().getFather().equals(silvia))
+				#ELSEIF(pc.isVisiblyPregnant() && pc.getPregnantLitter().isFather(silvia))
 					<p>
 						#IF(!pc.isCharacterReactedToPregnancy(silvia))
 							At that moment, the two sisters suddenly notice that you're sporting a swollen, pregnant belly. Telling Silvia that she's the one who knocked you up, you smile as the foxtauress teases, [silvia.speech(It's not my fault; your pussy was just so good, I didn't want to pull out!)]
@@ -2804,7 +2804,7 @@
 			#ELSE
 				<p>
 					You once again find yourself approaching the jewellery stall, 'Golden Treasures', and you see that the handsome ferret-boy, Kazik, is once again standing behind the counter with his arms crossed.
-				#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().getFather().equals(kazik))
+				#IF(pc.isVisiblyPregnant() && pc.getPregnantLitter().isFather(kazik))
 						#IF(!pc.isCharacterReactedToPregnancy(kazik))
 							 As he sees you approaching, he immediately notices your swollen belly, and after taking a drag on the cigarette which he must have lit just before you arrived, he asks, [kazik.speech(You got knocked up after I finished inside of you? Come here, let me have a feel.)]
 						#ELSE
