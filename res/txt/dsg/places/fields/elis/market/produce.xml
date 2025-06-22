@@ -72,11 +72,13 @@
 			</p>
 		#ENDIF
 	#ELSEIF(eisek.getLocationPlaceType() != PLACE_TYPE_dsg_fields_elis_market_produce)
-		There is a conspicuously empty spot in this part of the market that another stall could probably fit in.
-		#IF(pc.hasTraitActivated(PERK_OBSERVANT))
-			 In fact, judging by the faint imprint in the grass, there probably was one here at some point.
-		#ENDIF
-		 When you ask a passer-by, they explain that there's a produce stand that opens in this spot around the beginning of the month.
+		<p>
+			There is a conspicuously empty spot in this part of the market that another stall could probably fit in.
+			#IF(pc.hasTraitActivated(PERK_OBSERVANT))
+				In fact, judging by the faint imprint in the grass, there probably was one here at some point.
+			#ENDIF
+			 When you ask a passer-by, they explain that there's a produce stand that opens in this spot around the beginning of the month.
+		</p>
 	#ENDIF
 	]]>
 	</htmlContent>
