@@ -1121,7 +1121,7 @@ public class GenericOrgasms {
 								switch(mod) {
 									case BARBED:
 										if(!immobile && characterOrgasming.hasPenisModifier(mod)) {
-											modifiers.add(" [npc.Name] continues to make small, thrusting movements, raking [npc.her] barbs back against the lining of [npc2.namePos] throat"
+											modifiers.add(" [npc.Name] [npc.verb(continue)] to make small, thrusting movements, raking [npc.her] barbs back against the lining of [npc2.namePos] throat"
 													+ (immobileTarget?".":" and causing [npc2.herHim] to let out a choking [npc2.moan]."));
 										}
 										break;
@@ -1808,7 +1808,6 @@ public class GenericOrgasms {
 			case GROIN:
 			case INSIDE:
 			case INSIDE_SWITCH_DOUBLE:
-				target = Main.sex.getTargetedPartner(characterOrgasming);
 				// Use this GROIN section only if the INSIDE or INSIDE_SWITCH_DOUBLE is a frotting event
 				boolean isFrotting = false;
 				if(targetArea==OrgasmCumTarget.INSIDE || targetArea==OrgasmCumTarget.INSIDE_SWITCH_DOUBLE) {
@@ -1816,6 +1815,9 @@ public class GenericOrgasms {
 						break;
 					}
 					isFrotting = true;
+				}
+				if(!isFrotting) { // If it's not frotting, set the target to the GROIN target, otherwise, keep it as-is as it will already be accounting for ongoing PENIS actions to make sure the target is the one being cummed inside of
+					target = Main.sex.getTargetedPartner(characterOrgasming);
 				}
 				if (!targetAreaClothingCummedOn.isEmpty()) {
 					return getClothingCummedOnText(characterOrgasming, target, areasCummedOn, targetAreaClothingCummedOn);

@@ -86,7 +86,7 @@ public class OptionsDialogue {
 				sb.append("<p class='special-text' style='text-align:center; margin:0 0; padding:0 0;'><i>Or, I can't believe I fell into a magic mirror and entered a world in which my aunt is a demon?!</i></p>");
 			}
 			
-			sb.append("<h5 class='special-text' style='text-align:center;'>Created by "+Main.AUTHOR+"</h5><br/>");
+			sb.append("<h5 class='special-text' style='text-align:center;'>Created by "+Main.AUTHOR+"</h5>");
 			
 			if (Main.CheckNotUnpacked()) {
 				sb.append("<h3 class='special-text' style='text-align:center;'>[style.italicsBad("+Main.GAME_NAME+" is currently running from a temporary directory!");

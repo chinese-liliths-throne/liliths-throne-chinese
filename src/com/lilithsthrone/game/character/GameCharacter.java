@@ -173,6 +173,7 @@ import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.npc.dominion.Cultist;
 import com.lilithsthrone.game.character.npc.dominion.DominionAlleywayAttacker;
 import com.lilithsthrone.game.character.npc.dominion.DominionSuccubusAttacker;
+import com.lilithsthrone.game.character.npc.dominion.Finch;
 import com.lilithsthrone.game.character.npc.dominion.HarpyBimbo;
 import com.lilithsthrone.game.character.npc.dominion.HarpyBimboCompanion;
 import com.lilithsthrone.game.character.npc.dominion.HarpyDominant;
@@ -1959,6 +1960,13 @@ public abstract class GameCharacter implements XMLSaving {
 				Element e = ((Element)areaEntries.item(i));
 				try {
 					SexAreaOrifice orifice = SexAreaOrifice.valueOf(e.getTextContent());
+					// Fix for previous versions (prior to 0.4.11.3) using incorrect areas:
+					if(orifice==SexAreaOrifice.BREAST) {
+						orifice=SexAreaOrifice.NIPPLE;
+					}
+					if(orifice==SexAreaOrifice.BREAST_CROTCH) {
+						orifice=SexAreaOrifice.NIPPLE_CROTCH;
+					}
 					character.addCreampieRetentionArea(orifice);
 				}catch(Exception ex){
 				}
@@ -3867,12 +3875,15 @@ public abstract class GameCharacter implements XMLSaving {
 			if(this.isSlave()) {
 				infoScreenSB.append(
 							"<br/>"
-							+ UtilText.parse(this, "[npc.She] [npc.is] a [style.colourArcane(slave)], owned by "+(UtilText.parse(getOwner(), "[npc.name].")))
+							+ UtilText.parse(this, "[npc.She] [npc.is] a [style.colourArcane(slave)]")
+							+(getOwner() instanceof Finch
+								?"."
+								:", owned by "+(UtilText.parse(getOwner(), "[npc.name].")))
 							+ " "
 							+ ObedienceLevel.getDescription(this, ObedienceLevel.getObedienceLevelFromValue(this.getObedienceValue()), true, true));
 			}
 			if(!this.isPlayer()) {
-				if(!this.getSlavesOwned().isEmpty()) {
+				if(!this.getSlavesOwned().isEmpty() && !(this instanceof Finch)) {
 					infoScreenSB.append("<br/>"
 							+ UtilText.parse(this, "[npc.She] owns "+Util.intToString(this.getSlavesOwned().size())+" "+(this.getSlavesOwned().size()==1?"slave":"slaves")+": "));
 					List<String> slaveNames = new ArrayList<>();
@@ -5077,6 +5088,10 @@ public abstract class GameCharacter implements XMLSaving {
 	
 	public boolean hasSlaveJobAssigned(SlaveJob job) {
 		return Arrays.asList(workHours).contains(job);
+	}
+	
+	public boolean hasAnySlaveJobAssigned() {
+		return Arrays.asList(workHours).stream().anyMatch(j->j!=SlaveJob.IDLE);
 	}
 	
 	public SlaveJob getSlaveJob(int hour) {
@@ -9905,13 +9920,11 @@ public abstract class GameCharacter implements XMLSaving {
 								switch(cumProduction) {
 									case FOUR_LARGE:
 									case FIVE_HUGE:
-										ingestFluidSB.append(" splattered all over by it!");
-										break;
 									case SIX_EXTREME:
-										ingestFluidSB.append(" almost completely coated by it!");
+										ingestFluidSB.append(UtilText.parse(partner, " covered in [npc.her] [npc.cum+]!"));
 										break;
 									case SEVEN_MONSTROUS:
-										ingestFluidSB.append(" absolutely drenched in it!");
+										ingestFluidSB.append(UtilText.parse(partner, " absolutely drenched in [npc.her] [npc.cum+]!"));
 										break;
 									case THREE_AVERAGE:
 									case TWO_SMALL_AMOUNT:
@@ -9974,13 +9987,11 @@ public abstract class GameCharacter implements XMLSaving {
 								switch(cumProduction) {
 									case FOUR_LARGE:
 									case FIVE_HUGE:
-										ingestFluidSB.append(" splattered all over by it!");
-										break;
 									case SIX_EXTREME:
-										ingestFluidSB.append(" almost completely coated by it!");
+										ingestFluidSB.append(UtilText.parse(this, " covered in [npc.her] [npc.cum+]!"));
 										break;
 									case SEVEN_MONSTROUS:
-										ingestFluidSB.append(" absolutely drenched in it!");
+										ingestFluidSB.append(UtilText.parse(this, " absolutely drenched in [npc.her] [npc.cum+]!"));
 										break;
 									case THREE_AVERAGE:
 									case TWO_SMALL_AMOUNT:
@@ -20480,7 +20491,11 @@ public abstract class GameCharacter implements XMLSaving {
 	}
 
 	public float getHealthPercentage() {
-		return health / getAttributeValue(Attribute.HEALTH_MAXIMUM);
+		float maxHealth = getAttributeValue(Attribute.HEALTH_MAXIMUM);
+		if(maxHealth==0) {
+			return 1;
+		}
+		return health / maxHealth;
 	}
 
 	public String incrementHealth(float increment) {
@@ -20557,7 +20572,7 @@ public abstract class GameCharacter implements XMLSaving {
 
 
 	public void setHealth(float health) {
-		if (health < 0) {
+		if (Float.isNaN(health) || health < 0) {
 			this.health = 0;
 		} else if (health > getAttributeValue(Attribute.HEALTH_MAXIMUM)) {
 			this.health = getAttributeValue(Attribute.HEALTH_MAXIMUM);
@@ -20581,12 +20596,16 @@ public abstract class GameCharacter implements XMLSaving {
 
 
 	public float getManaPercentage() {
-		return mana / getAttributeValue(Attribute.MANA_MAXIMUM);
+		float maxMana = getAttributeValue(Attribute.MANA_MAXIMUM);
+		if(maxMana==0) {
+			return 1;
+		}
+		return mana / maxMana;
 	}
 
 
 	public void setMana(float mana) {
-		if (mana < 0) {
+		if(Float.isNaN(mana) || mana < 0) {
 			this.mana = 0;
 		} else if (mana > getAttributeValue(Attribute.MANA_MAXIMUM)) {
 			this.mana = getAttributeValue(Attribute.MANA_MAXIMUM);
@@ -22745,16 +22764,16 @@ public abstract class GameCharacter implements XMLSaving {
 		return getEnchantmentPointsUsedFromWeapons() + getEnchantmentPointsUsedFromClothing() + getEnchantmentPointsUsedFromTattoos();
 	}
 	
-	public int getMoney() {
+	public long getMoney() {
 		return inventory.getMoney();
 	}
 
-	public void setMoney(int money) {
+	public void setMoney(long money) {
 		inventory.setMoney(money);
 	}
 	
-	public String incrementMoney(int money) {
-		int moneyLoss = Math.min(-money, this.getMoney());
+	public String incrementMoney(long money) {
+		long moneyLoss = Math.min(-money, this.getMoney());
 		
 		inventory.incrementMoney(money);
 		
@@ -24122,6 +24141,32 @@ public abstract class GameCharacter implements XMLSaving {
 		}
 		return false;
 	}
+
+	/**
+	 * @param tag The ItemTag which must be present on a weapon.
+	 * @param includeEquipped true if you want to check equipped weapons.
+	 * @param includeInInventory true if you want to check weapons in the character's inventory.
+	 * @return true if this character has a weapon with the tag specified.
+	 */
+	public boolean hasClothingWithTag(ItemTag tag, boolean includeEquipped, boolean includeInInventory) {
+		if(includeInInventory) {
+			for(AbstractClothing clothing : inventory.getAllClothingInInventory().keySet()) {
+				if(clothing.getItemTags().contains(tag)) {
+					return true;
+				}
+			}
+		}
+		
+		if(includeEquipped) {
+			for(AbstractClothing clothing : inventory.getClothingCurrentlyEquipped()) {
+				if(clothing!=null && clothing.getItemTags().contains(tag)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 	
 	public List<AbstractClothing> getClothingCurrentlyEquipped() {
 		return inventory.getClothingCurrentlyEquipped();
@@ -24333,6 +24378,7 @@ public abstract class GameCharacter implements XMLSaving {
 						clothingFetishDesireModifiersMap.put(associatedFetish, clothingFetishDesireModifiersMap.get(associatedFetish) + 2);
 						break;
 					case MAJOR_BOOST:
+					case SPECIAL:
 						fetishesFromClothing.add(associatedFetish);
 						if(!this.isDoll()) {
 							applyFetishGainEffects(associatedFetish);
@@ -24372,10 +24418,10 @@ public abstract class GameCharacter implements XMLSaving {
 						addCreampieRetentionArea(SexAreaOrifice.URETHRA_PENIS);
 						break;
 					case TF_BREASTS:
-						addCreampieRetentionArea(SexAreaOrifice.BREAST);
+						addCreampieRetentionArea(SexAreaOrifice.NIPPLE);
 						break;
 					case TF_BREASTS_CROTCH:
-						addCreampieRetentionArea(SexAreaOrifice.BREAST_CROTCH);
+						addCreampieRetentionArea(SexAreaOrifice.NIPPLE_CROTCH);
 						break;
 					case TF_SPINNERET:
 						addCreampieRetentionArea(SexAreaOrifice.SPINNERET);
@@ -24434,6 +24480,7 @@ public abstract class GameCharacter implements XMLSaving {
 						clothingFetishDesireModifiersMap.put(associatedFetish, clothingFetishDesireModifiersMap.get(associatedFetish) - 2);
 						break;
 					case MAJOR_BOOST:
+					case SPECIAL:
 						fetishesFromClothing.remove(associatedFetish);
 						if(!this.isDoll()) {
 							applyFetishLossEffects(associatedFetish);
@@ -26824,6 +26871,7 @@ public abstract class GameCharacter implements XMLSaving {
 						clothingFetishDesireModifiersMap.put(associatedFetish, clothingFetishDesireModifiersMap.get(associatedFetish) + 2);
 						break;
 					case MAJOR_BOOST:
+					case SPECIAL:
 						fetishesFromClothing.add(associatedFetish);
 						if(!this.isDoll()) {
 							applyFetishGainEffects(associatedFetish);
@@ -26862,10 +26910,10 @@ public abstract class GameCharacter implements XMLSaving {
 						addCreampieRetentionArea(SexAreaOrifice.URETHRA_PENIS);
 						break;
 					case TF_BREASTS:
-						addCreampieRetentionArea(SexAreaOrifice.BREAST);
+						addCreampieRetentionArea(SexAreaOrifice.NIPPLE);
 						break;
 					case TF_BREASTS_CROTCH:
-						addCreampieRetentionArea(SexAreaOrifice.BREAST_CROTCH);
+						addCreampieRetentionArea(SexAreaOrifice.NIPPLE_CROTCH);
 						break;
 					case TF_SPINNERET:
 						addCreampieRetentionArea(SexAreaOrifice.SPINNERET);
@@ -26893,6 +26941,7 @@ public abstract class GameCharacter implements XMLSaving {
 						clothingFetishDesireModifiersMap.put(associatedFetish, clothingFetishDesireModifiersMap.get(associatedFetish) - 2);
 						break;
 					case MAJOR_BOOST:
+					case SPECIAL:
 						fetishesFromClothing.remove(associatedFetish);
 						if(this.isDoll()) {
 							applyFetishLossEffects(associatedFetish);
@@ -29252,6 +29301,13 @@ public abstract class GameCharacter implements XMLSaving {
 
 	// ------------------------------ Eyes: ------------------------------ //
 	
+	public boolean isPerfectVision() {
+		// Sometimes PerkManager.initialiseSpecialPerksUponCreation() can be called before the body is initialised, so if that's the case, just treat this character as having perfect vision
+		if(body==null) {
+			return true;
+		}
+		return this.getEyeType().getTags().contains(BodyPartTag.EYE_PERFECT_VISION);
+	}
 	// Type:
 	public AbstractEyeType getEyeType() {
 		return body.getEye().getType();

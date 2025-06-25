@@ -94,6 +94,8 @@
 		<stickers/>
 		
 		<!-- The default effects that this clothing spawns in with. To know what to put in here, it would probably be easiest to enchant clothing in your game, save the game, then copy over that clothing's 'effects' in your save file.
+			Please note that there is a 'SPECIAL' potency value, which can apply special effects not seen on normal items.
+				For comments on the SPECIAL potency and what effects it alters (namely the CLOTHING_SEALING effect), see this file: https://github.com/Innoxia/liliths-throne-public/blob/dev/src/com/lilithsthrone/game/inventory/enchanting/TFPotency.java
 			- Example: The first defined effect will give +3 to physical damage, while the second will give the wearer the masturbation fetish while worn. -->
 		<effects> 
 				<effect itemEffectType="CLOTHING" limit="0" potency="MAJOR_BOOST" primaryModifier="CLOTHING_ATTRIBUTE" secondaryModifier="DAMAGE_PHYSICAL" timer="0"/>

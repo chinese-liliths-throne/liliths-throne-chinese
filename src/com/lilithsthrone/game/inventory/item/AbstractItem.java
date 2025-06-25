@@ -3,8 +3,8 @@ package com.lilithsthrone.game.inventory.item;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.w3c.dom.Document;
@@ -16,6 +16,8 @@ import com.lilithsthrone.game.character.GameCharacter;
 import com.lilithsthrone.game.character.effects.AbstractStatusEffect;
 import com.lilithsthrone.game.character.effects.EffectBenefit;
 import com.lilithsthrone.game.character.race.Race;
+import com.lilithsthrone.game.dialogue.DialogueNodeType;
+import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.AbstractCoreItem;
 import com.lilithsthrone.game.inventory.AbstractCoreType;
@@ -23,6 +25,7 @@ import com.lilithsthrone.game.inventory.ItemTag;
 import com.lilithsthrone.game.inventory.enchanting.AbstractItemEffectType;
 import com.lilithsthrone.game.inventory.enchanting.EnchantingUtils;
 import com.lilithsthrone.game.inventory.enchanting.ItemEffect;
+import com.lilithsthrone.game.sex.sexActions.SexActionUtility;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
@@ -136,6 +139,9 @@ public abstract class AbstractItem extends AbstractCoreItem implements XMLSaving
 	}
 
 	public boolean isBreakOutOfInventory() {
+		if(this.getItemType().isBreakOutOfInventory()) {
+			return true;
+		}
 		for(ItemEffect effect : this.getEffects()) {
 			if(effect.getItemEffectType().isBreakOutOfInventory()) {
 				return true;
@@ -155,6 +161,8 @@ public abstract class AbstractItem extends AbstractCoreItem implements XMLSaving
 
 	public String applyEffect(GameCharacter user, GameCharacter target) {
 		StringBuilder sb = new StringBuilder();
+		
+		String targetNameBeforeEffects = UtilText.parse(target, "[npc.Name]");
 		
 		for(ItemEffect ie : getEffects()) {
 			sb.append(UtilText.parse(target, ie.applyEffect(user, target, 1)));
@@ -236,6 +244,40 @@ public abstract class AbstractItem extends AbstractCoreItem implements XMLSaving
 						+ "</p>"));
 				sb.append(target.incrementAlcoholLevel(intoxicationLevel/100f));
 				break;
+			}
+		}
+		
+		if(this.getItemType().isBreakOutOfInventory()
+				&& Main.game.getCurrentDialogueNode().getDialogueNodeType()==DialogueNodeType.INVENTORY // Added so that manually using this item in a block of code won't break out of the scene
+				&& !Main.game.isInCombat()) { // Items which break out of inventory should be unavailable in combat, but just in case add a check here
+			if(Main.game.isInSex()) {
+				Main.game.setContent(new Response(
+						Util.capitaliseSentence(this.getItemType().getUseName()) +(user.equals(target)?" (Self)":" ("+targetNameBeforeEffects+")"),
+						"",
+						Main.sex.SEX_DIALOGUE) {
+					@Override
+					public void effects() {
+						Main.mainController.openInventory();
+						Main.sex.setUsingItemText(sb.toString());
+						Main.sex.endSexTurn(SexActionUtility.PLAYER_USE_ITEM);
+						Main.sex.setSexStarted(true);
+					}
+				});
+				
+			} else {
+				Main.game.setContent(new Response(
+						"",
+						"",
+						Main.game.getDefaultDialogue(false)) {
+					@Override
+					public boolean isStripContent() {
+						return true;
+					}
+					@Override
+					public void effects() {
+						Main.game.appendToTextStartStringBuilder(sb.toString());
+					}
+				});
 			}
 		}
 		

@@ -92,11 +92,15 @@ public class Nizhoni extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.1.8")) {
 			this.setStartingBody(true);
 		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.11.3")) {
+			this.addSpecialPerk(Perk.SPECIAL_SHORT_SIGHTED);
+		}
 	}
 
 	@Override
 	public void setupPerks(boolean autoSelectPerks) {
 		this.addSpecialPerk(Perk.SPECIAL_SLUT);
+		this.addSpecialPerk(Perk.SPECIAL_SHORT_SIGHTED);
 		
 		PerkManager.initialisePerks(this,
 				Util.newArrayListOfValues(),

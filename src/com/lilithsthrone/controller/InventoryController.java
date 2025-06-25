@@ -111,11 +111,11 @@ public class InventoryController {
 			((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
 				if (Main.game.getPlayer().getMoney()>0 && InventoryDialogue.getNPCInventoryInteraction() == InventoryInteraction.FULL_MANAGEMENT) {
 					if (InventoryDialogue.getInventoryNPC() == null) {
-						Main.game.getPlayerCell().getInventory().incrementMoney((int) Math.max(1, Main.game.getPlayer().getMoney()*0.01f));
+						Main.game.getPlayerCell().getInventory().incrementMoney((long) Math.max(1, Main.game.getPlayer().getMoney()*0.01f));
 					} else {
-						InventoryDialogue.getInventoryNPC().incrementMoney((int) Math.max(1, Main.game.getPlayer().getMoney()*0.01f));
+						InventoryDialogue.getInventoryNPC().incrementMoney((long) Math.max(1, Main.game.getPlayer().getMoney()*0.01f));
 					}
-					Main.game.getPlayer().incrementMoney((int) -Math.max(1, Main.game.getPlayer().getMoney()*0.01f));
+					Main.game.getPlayer().incrementMoney((long) -Math.max(1, Main.game.getPlayer().getMoney()*0.01f));
 					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 				}
 			}, false);
@@ -126,11 +126,11 @@ public class InventoryController {
 			((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
 				if (Main.game.getPlayer().getMoney()>0 && InventoryDialogue.getNPCInventoryInteraction() == InventoryInteraction.FULL_MANAGEMENT) {
 					if (InventoryDialogue.getInventoryNPC() == null) {
-						Main.game.getPlayerCell().getInventory().incrementMoney((int) Math.max(1, Main.game.getPlayer().getMoney()*0.1f));
+						Main.game.getPlayerCell().getInventory().incrementMoney((long) Math.max(1, Main.game.getPlayer().getMoney()*0.1f));
 					} else {
-						InventoryDialogue.getInventoryNPC().incrementMoney((int) Math.max(1, Main.game.getPlayer().getMoney()*0.1f));
+						InventoryDialogue.getInventoryNPC().incrementMoney((long) Math.max(1, Main.game.getPlayer().getMoney()*0.1f));
 					}
-					Main.game.getPlayer().incrementMoney((int) -Math.max(1, Main.game.getPlayer().getMoney()*0.1f));
+					Main.game.getPlayer().incrementMoney((long) -Math.max(1, Main.game.getPlayer().getMoney()*0.1f));
 					Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 				}
 			}, false);
@@ -185,8 +185,8 @@ public class InventoryController {
 			if (MainController.document.getElementById(id) != null) {
 				((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
 					if (InventoryDialogue.getInventoryNPC().getMoney()>0 && InventoryDialogue.getNPCInventoryInteraction() == InventoryInteraction.FULL_MANAGEMENT) {
-						Main.game.getPlayer().incrementMoney((int) Math.max(1, InventoryDialogue.getInventoryNPC().getMoney()*0.01f));
-						InventoryDialogue.getInventoryNPC().incrementMoney((int) -Math.max(1, InventoryDialogue.getInventoryNPC().getMoney()*0.01f));
+						Main.game.getPlayer().incrementMoney((long) Math.max(1, InventoryDialogue.getInventoryNPC().getMoney()*0.01f));
+						InventoryDialogue.getInventoryNPC().incrementMoney((long) -Math.max(1, InventoryDialogue.getInventoryNPC().getMoney()*0.01f));
 						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 					}
 				}, false);
@@ -196,8 +196,8 @@ public class InventoryController {
 			if (MainController.document.getElementById(id) != null) {
 				((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
 					if (InventoryDialogue.getInventoryNPC().getMoney()>0 && InventoryDialogue.getNPCInventoryInteraction() == InventoryInteraction.FULL_MANAGEMENT) {
-						Main.game.getPlayer().incrementMoney((int) Math.max(1, InventoryDialogue.getInventoryNPC().getMoney()*0.1f));
-						InventoryDialogue.getInventoryNPC().incrementMoney((int) -Math.max(1, InventoryDialogue.getInventoryNPC().getMoney()*0.1f));
+						Main.game.getPlayer().incrementMoney((long) Math.max(1, InventoryDialogue.getInventoryNPC().getMoney()*0.1f));
+						InventoryDialogue.getInventoryNPC().incrementMoney((long) -Math.max(1, InventoryDialogue.getInventoryNPC().getMoney()*0.1f));
 						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 					}
 				}, false);
@@ -248,8 +248,8 @@ public class InventoryController {
 			if (MainController.document.getElementById(id) != null) {
 				((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
 					if (Main.game.getPlayerCell().getInventory().getMoney()>0 && InventoryDialogue.getNPCInventoryInteraction() == InventoryInteraction.FULL_MANAGEMENT) {
-						Main.game.getPlayer().incrementMoney((int) Math.max(1, Main.game.getPlayerCell().getInventory().getMoney()*0.01f));
-						Main.game.getPlayerCell().getInventory().incrementMoney((int) -Math.max(1, Main.game.getPlayerCell().getInventory().getMoney()*0.01f));
+						Main.game.getPlayer().incrementMoney((long) Math.max(1, Main.game.getPlayerCell().getInventory().getMoney()*0.01f));
+						Main.game.getPlayerCell().getInventory().incrementMoney((long) -Math.max(1, Main.game.getPlayerCell().getInventory().getMoney()*0.01f));
 						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 					}
 				}, false);
@@ -259,8 +259,8 @@ public class InventoryController {
 			if (MainController.document.getElementById(id) != null) {
 				((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
 					if (Main.game.getPlayerCell().getInventory().getMoney()>0 && InventoryDialogue.getNPCInventoryInteraction() == InventoryInteraction.FULL_MANAGEMENT) {
-						Main.game.getPlayer().incrementMoney((int) Math.max(1, Main.game.getPlayerCell().getInventory().getMoney()*0.1f));
-						Main.game.getPlayerCell().getInventory().incrementMoney((int) -Math.max(1, Main.game.getPlayerCell().getInventory().getMoney()*0.1f));
+						Main.game.getPlayer().incrementMoney((long) Math.max(1, Main.game.getPlayerCell().getInventory().getMoney()*0.1f));
+						Main.game.getPlayerCell().getInventory().incrementMoney((long) -Math.max(1, Main.game.getPlayerCell().getInventory().getMoney()*0.1f));
 						Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 					}
 				}, false);

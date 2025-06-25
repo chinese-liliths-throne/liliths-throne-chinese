@@ -977,6 +977,7 @@ public abstract class AbstractItemEffectType {
 				return ("In a week, makes "+changeAdd+".");
 			case BOOST:
 				return ("In a day, makes "+changeAdd+".");
+			case SPECIAL:
 			case MAJOR_BOOST:
 				return ("In an hour, makes "+changeAdd+".");
 			case MINOR_DRAIN:
@@ -995,6 +996,7 @@ public abstract class AbstractItemEffectType {
 				return ("Weekly "+subject+" increase. (Limit: "+limit+")");
 			case BOOST:
 				return ("Daily "+subject+" increase. (Limit: "+limit+")");
+			case SPECIAL:
 			case MAJOR_BOOST:
 				return ("Hourly "+subject+" increase. (Limit: "+limit+")");
 			case MINOR_DRAIN:
@@ -1052,6 +1054,7 @@ public abstract class AbstractItemEffectType {
 			case BOOST:
 				secondsRequired = 24 * 60 * 60;
 				break;
+			case SPECIAL:
 			case MAJOR_BOOST:
 				secondsRequired = 60 * 60;
 				break;
@@ -2082,6 +2085,7 @@ public abstract class AbstractItemEffectType {
 							}
 						}
 						break;
+					case SPECIAL:
 					case MAJOR_BOOST:
 						if(primaryModifier==null || primaryModifier==TFModifier.NONE) {
 							addResourceDescriptionsRestore(60, restorationType);
@@ -2216,6 +2220,7 @@ public abstract class AbstractItemEffectType {
 						}
 					}
 					break;
+				case SPECIAL:
 				case MAJOR_BOOST:
 					if(primaryModifier==null || primaryModifier==TFModifier.NONE) {
 						sb.append(applyRestoration(target, restorationType, 0.6f));
@@ -5363,6 +5368,7 @@ public abstract class AbstractItemEffectType {
 								return new RacialEffectUtil("[style.colourMinorGood(++)] Cum storage (+" + Units.fluid(largeChangeMinorBoost) + ")") { @Override public String applyEffect() { return target.incrementPenisCumStorage(largeChangeMinorBoost); } };
 							case BOOST:
 								return new RacialEffectUtil("[style.colourGood(++)] Cum storage (+" + Units.fluid(largeChangeBoost) + ")") { @Override public String applyEffect() { return target.incrementPenisCumStorage(largeChangeBoost); } };
+							case SPECIAL:
 							case MAJOR_BOOST:
 								return new RacialEffectUtil("[style.colourExcellent(++)] Cum storage (+" + Units.fluid(largeChangeMajorBoost) + ")") { @Override public String applyEffect() { return target.incrementPenisCumStorage(largeChangeMajorBoost); } };
 						}
@@ -5493,6 +5499,7 @@ public abstract class AbstractItemEffectType {
 								return new RacialEffectUtil("[style.colourMinorGood(++)] Milk storage (+" + Units.fluid(largeChangeMinorBoost) + ")") { @Override public String applyEffect() { return target.incrementBreastMilkStorage(largeChangeMinorBoost); } };
 							case BOOST:
 								return new RacialEffectUtil("[style.colourGood(++)] Milk storage (+" + Units.fluid(largeChangeBoost) + ")") { @Override public String applyEffect() { return target.incrementBreastMilkStorage(largeChangeBoost); } };
+							case SPECIAL:
 							case MAJOR_BOOST:
 								return new RacialEffectUtil("[style.colourExcellent(++)] Milk storage (+" + Units.fluid(largeChangeMajorBoost) + ")") { @Override public String applyEffect() { return target.incrementBreastMilkStorage(largeChangeMajorBoost); } };
 						}
@@ -5623,6 +5630,7 @@ public abstract class AbstractItemEffectType {
 								return new RacialEffectUtil("[style.colourMinorGood(++)] Udder-milk storage (" + Units.fluid(largeChangeMinorBoost) + ")") { @Override public String applyEffect() { return target.incrementBreastCrotchMilkStorage(largeChangeMinorBoost); } };
 							case BOOST:
 								return new RacialEffectUtil("[style.colourGood(++)] Udder-milk storage (" + Units.fluid(largeChangeBoost) + ")") { @Override public String applyEffect() { return target.incrementBreastCrotchMilkStorage(largeChangeBoost); } };
+							case SPECIAL:
 							case MAJOR_BOOST:
 								return new RacialEffectUtil("[style.colourExcellent(++)] Udder-milk storage (" + Units.fluid(largeChangeMajorBoost) + ")") { @Override public String applyEffect() { return target.incrementBreastCrotchMilkStorage(largeChangeMajorBoost); } };
 						}
@@ -5753,6 +5761,7 @@ public abstract class AbstractItemEffectType {
 								return new RacialEffectUtil("[style.colourMinorGood(++)] Vaginal lubrication (+" + Units.fluid(smallChangeMinorBoost) + ")") { @Override public String applyEffect() { return target.incrementVaginaWetness(smallChangeMinorBoost); } };
 							case BOOST:
 								return new RacialEffectUtil("[style.colourGood(++)] Vaginal lubrication (+" + Units.fluid(smallChangeBoost) + ")") { @Override public String applyEffect() { return target.incrementVaginaWetness(smallChangeBoost); } };
+							case SPECIAL:
 							case MAJOR_BOOST:
 								return new RacialEffectUtil("[style.colourExcellent(++)] Vaginal lubrication (+" + Units.fluid(smallChangeMajorBoost) + ")") { @Override public String applyEffect() { return target.incrementVaginaWetness(smallChangeMajorBoost); } };
 						}

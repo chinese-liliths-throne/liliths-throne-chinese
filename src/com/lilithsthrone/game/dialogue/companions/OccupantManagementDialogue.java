@@ -1521,8 +1521,16 @@ public class OccupantManagementDialogue {
 							+ "<span style='color:"+obedience.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(obedience.getName())+"</span>"
 						+"</div>"
 						+ "<div style='float:left; width:15%; margin:0; padding:0;'>"
-							+ "<b>"+Util.capitaliseSentence(occupant.getHistory().getName(occupant))+"</b><br/>"
-							+ UtilText.formatAsMoney(occupant.hasJob()?PlaceUpgrade.LILAYA_GUEST_ROOM.getUpkeep():0)+"/day"
+							+ "<b>"
+								+(occupant.hasJob() || !occupant.hasAnySlaveJobAssigned()
+									?Util.capitaliseSentence(occupant.getHistory().getName(occupant))
+									:Util.capitaliseSentence(occupant.getSlaveJob(Main.game.getHourOfDay()).getName(occupant))+" (now)")
+							+"</b>"
+							+ "<br/>"
+							+ UtilText.formatAsMoney(occupant.hasJob()
+									?PlaceUpgrade.LILAYA_GUEST_ROOM.getUpkeep()
+									:SlaveJob.getFinalDailyIncomeAfterModifiers(occupant))
+								+"/day"
 						+"</div>"
 							
 				+ "<div style='float:left; width:15%; margin:0 auto; padding:0; display:inline-block; text-align:center;'>"

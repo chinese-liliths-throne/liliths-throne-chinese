@@ -382,7 +382,7 @@ public enum SVGImages {
 			
 			is = this.getClass().getResourceAsStream("/com/lilithsthrone/res/statusEffects/race/raceUnknown.svg");
 			raceUnknown = Util.inputStreamToString(is);
-			raceUnknown = setColour(raceUnknown, PresetColour.RACE_UNKNOWN);
+			raceUnknown = setColour(raceUnknown, PresetColour.BASE_PITCH_BLACK, PresetColour.RACE_UNKNOWN, null);
 			
 			is = this.getClass().getResourceAsStream("/com/lilithsthrone/res/statusEffects/race/raceDogMorphDobermann.svg");
 			raceDobermann = Util.inputStreamToString(is);

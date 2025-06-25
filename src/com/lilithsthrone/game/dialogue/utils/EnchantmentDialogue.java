@@ -171,8 +171,9 @@ public class EnchantmentDialogue {
 		// Potency:
 		inventorySB.append("<div class='container-full-width' style='text-align:center; padding:8px 0; margin-top:0;'>");
 		
-		for(TFPotency potency : TFPotency.values()) {
-			inventorySB.append("<div class='normal-button"+(ingredient.getEnchantmentEffect().getPotencyModifiers(primaryMod, secondaryMod).contains(potency)?"":" disabled")+(EnchantmentDialogue.potency==potency?" selected":"")+"' id='POTENCY_"+potency+"'"
+		for(TFPotency potency : TFPotency.getAllPotencies()) {
+			inventorySB.append("<div class='normal-button"+(ingredient.getEnchantmentEffect().getPotencyModifiers(primaryMod, secondaryMod).contains(potency)?"":" disabled")+(EnchantmentDialogue.potency==potency?" selected":"")
+					+"' id='POTENCY_"+potency+"'"
 					+ " style='"+(EnchantmentDialogue.potency==potency?"color:"+potency.getColour().toWebHexString()+";":"")+" margin:0 1%; width:14%;'>"+potency.getName()+"</div>");
 		}
 		
@@ -516,84 +517,109 @@ public class EnchantmentDialogue {
 					}
 				};
 				
-			// Ingredients:
-			} else if (index == 1) {
-				int price = EnchantingUtils.getCost(ingredient, effects)*EnchantingUtils.FLAME_COST_MODIFER;
+			}
+			
+			try {
+				int essenceCost = EnchantingUtils.getCost(ingredient, effects);
+				int price = essenceCost*EnchantingUtils.FLAME_COST_MODIFER;
+				int ingredientCount = ingredient instanceof AbstractItem
+						?Main.game.getPlayer().getItemCount((AbstractItem)ingredient)
+						:(ingredient instanceof AbstractClothing
+								?Main.game.getPlayer().getClothingCount((AbstractClothing)ingredient)
+								:(ingredient instanceof AbstractWeapon
+									?Main.game.getPlayer().getWeaponCount((AbstractWeapon)ingredient)
+									:1));
 				
-				if((effects.equals(ingredient.getEffects())
-						|| (effects.isEmpty() && ingredient instanceof AbstractItem))
-//						 && outputName.equals(ingredient.getName())
-						 ) {
-					return new Response("Craft", "You need to add at least one effect before you can craft something!", null);
-					
-				} else if(canAffordCost(ingredient, effects)) {
-					return new ResponseEffectsOnly((ingredient instanceof Tattoo
-																?"Enchant ("+UtilText.formatAsMoney(price, "span")+")"
-																:"Craft"),
-													((ingredient instanceof Tattoo)
-																	?"Enchant this tattoo with the specified effects. This will cost "+UtilText.formatAsMoney(price, "span")+"."
-																	:"Craft '"+EnchantingUtils.getPotionName(ingredient, effects)+"'. This will cost [style.boldArcane("+EnchantingUtils.getCost(ingredient, effects)+")] arcane essences.")){
+				if (index == 1) {
+					if((effects.equals(ingredient.getEffects())
+							|| (effects.isEmpty() && ingredient instanceof AbstractItem))) {
+						return new Response("Craft", "You need to add at least one effect before you can craft something!", null);
+						
+					} else if(!canAffordCost(ingredient, effects, 1)) {
+						return new Response(
+								(ingredient instanceof Tattoo
+										?"Enchant ("+UtilText.formatAsMoneyUncoloured(price, "span")+")"
+										:"Craft ("+UtilText.formatAsEssencesUncoloured(essenceCost, "span", false)+")"),
+								"You can't afford to craft this right now!", null);
+						
+					} else  {
+						return new ResponseEffectsOnly(
+								(ingredient instanceof Tattoo
+									?"Enchant ("+UtilText.formatAsMoney(price, "span")+")"
+									:"Craft ("+UtilText.formatAsEssences(essenceCost, "span", false)+")"),
+								((ingredient instanceof Tattoo)
+									?"Enchant this tattoo with the specified effects. This will cost "+UtilText.formatAsMoney(price, "span")+"."
+									:"Craft '"+EnchantingUtils.getPotionName(ingredient, effects)+"'. This will cost [style.boldArcane("+essenceCost+")] arcane essences.")){
+							@Override
+							public void effects() {
+								applyEnchantingEffect(1);
+							}
+						};
+					}
+	
+				} else if (index == 2 && !(ingredient instanceof Tattoo)) {
+					if((effects.equals(ingredient.getEffects())
+							|| (effects.isEmpty() && ingredient instanceof AbstractItem))) {
+						return new Response("Craft x5", "You need to add at least one effect before you can craft something!", null);
+						
+					} else if(ingredientCount<5) {
+						return new Response(
+								"Craft x5 ("+UtilText.formatAsEssencesUncoloured(essenceCost*5, "span", false)+")",
+								"You don't have five "+ingredient.getNamePlural()+", so you can't craft five of these right now...",
+								null);
+						
+					} else if(!canAffordCost(ingredient, effects, 5)) {
+						return new Response(
+								"Craft x5 ("+UtilText.formatAsEssencesUncoloured(essenceCost*5, "span", false)+")",
+								"You can't afford to craft five of these right now!",
+								null);
+						
+					} else {
+						return new ResponseEffectsOnly(
+								"Craft x5 ("+UtilText.formatAsEssences(essenceCost*5, "span", false)+")",
+								"Craft five '"+EnchantingUtils.getPotionName(ingredient, effects)+"'. This will cost [style.boldArcane("+essenceCost*5+")] arcane essences."){
+							@Override
+							public void effects() {
+								applyEnchantingEffect(5);
+							}
+						};
+					}
+	
+				} else if (index == 3 && !(ingredient instanceof Tattoo)) {
+					if((effects.equals(ingredient.getEffects())
+							|| (effects.isEmpty() && ingredient instanceof AbstractItem))) {
+						return new Response("Craft all (x"+ingredientCount+")", "You need to add at least one effect before you can craft something!", null);
+						
+					} else if(!canAffordCost(ingredient, effects, ingredientCount)) {
+						return new Response(
+								"Craft all (x"+ingredientCount+") ("+UtilText.formatAsEssencesUncoloured(essenceCost*ingredientCount, "span", false)+")",
+								"You can't afford to craft five of these right now!",
+								null);
+						
+					} else {
+						return new ResponseEffectsOnly(
+								"Craft all (x"+ingredientCount+") ("+UtilText.formatAsEssences(essenceCost*ingredientCount, "span", false)+")",
+								"Craft "+Util.intToString(ingredientCount)+" '"+EnchantingUtils.getPotionName(ingredient, effects)+"'. This will cost [style.boldArcane("+essenceCost*ingredientCount+")] arcane essences."){
+							@Override
+							public void effects() {
+								applyEnchantingEffect(ingredientCount);
+							}
+						};
+					}
+	
+				} else if (index == 6) {
+					return new Response("Save/Load", "Save/Load enchantment recipes.", ENCHANTMENT_SAVE_LOAD) {
 						@Override
 						public void effects() {
 							Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenPField').innerHTML=document.getElementById('output_name').value;");
 							EnchantmentDialogue.setOutputName(Main.mainController.getWebEngine().getDocument().getElementById("hiddenPField").getTextContent());
-							
-							craftAndApplyFullInventoryEffects(ingredient, effects);
-							
-							if((previousIngredient instanceof AbstractItem && Main.game.getPlayer().hasItem((AbstractItem) previousIngredient))
-									|| (previousIngredient instanceof AbstractClothing && Main.game.getPlayer().hasClothing((AbstractClothing) previousIngredient))
-									|| (previousIngredient instanceof AbstractWeapon && Main.game.getPlayer().hasWeapon((AbstractWeapon) previousIngredient))) {
-								ingredient = previousIngredient;
-								effects = new ArrayList<>(previousEffects);
-								Main.game.setContent(new Response("", "", ENCHANTMENT_MENU));
-								
-							} else if(previousIngredient instanceof Tattoo) {
-								if(BodyChanging.getTarget().isPlayer()) {
-									if(Main.game.getPlayer().getLocationPlaceType()==PlaceType.SHOPPING_ARCADE_KATES_SHOP) {
-										Main.game.setContent(new Response("", "", SuccubisSecrets.SHOP_BEAUTY_SALON_TATTOOS));
-									} else {
-										Main.game.setContent(new Response("", "", CosmeticsDialogue.BEAUTICIAN_TATTOOS));
-									}
-								} else {
-									Main.game.setContent(new Response("", "", CompanionManagement.SLAVE_MANAGEMENT_TATTOOS));
-								}
-								
-							} else {
-								Main.game.setContent(new Response("", "", InventoryDialogue.INVENTORY_MENU) {
-									@Override
-									public void effects() {
-										Main.game.setResponseTab(0);
-										EnchantmentDialogue.resetEnchantmentVariables();
-										InventoryDialogue.resetItems();
-										InventoryDialogue.setNPCInventoryInteraction(interactionInit);
-									}
-								});
-							}
-							
 						}
 					};
-					
-				} else {
-					return new Response(
-							(ingredient instanceof Tattoo
-									?"Enchant ("+UtilText.formatAsMoneyUncoloured(price, "span")+")"
-									:"Craft"),
-							"You can't afford to craft this right now!", null);
+				
 				}
-
-			// Save/load
-			} else if (index == 2) {
-				return new Response("Save/Load", "Save/Load enchantment recipes.", ENCHANTMENT_SAVE_LOAD) {
-					@Override
-					public void effects() {
-						Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenPField').innerHTML=document.getElementById('output_name').value;");
-						EnchantmentDialogue.setOutputName(Main.mainController.getWebEngine().getDocument().getElementById("hiddenPField").getTextContent());
-					}
-				};
-			
-			} else {
-				return null;
+			} catch(Exception ex) {
 			}
+			return null;
 		}
 
 		@Override
@@ -602,11 +628,50 @@ public class EnchantmentDialogue {
 		}
 	};
 	
-	public static boolean canAffordCost(AbstractCoreItem ingredient, List<ItemEffect> itemEffects) {
-		if(ingredient instanceof Tattoo) {
-			return Main.game.getPlayer().getMoney()  >= EnchantingUtils.getCost(ingredient, itemEffects)*EnchantingUtils.FLAME_COST_MODIFER;
+	private static void applyEnchantingEffect(int count) {
+		Main.mainController.getWebEngine().executeScript("document.getElementById('hiddenPField').innerHTML=document.getElementById('output_name').value;");
+		EnchantmentDialogue.setOutputName(Main.mainController.getWebEngine().getDocument().getElementById("hiddenPField").getTextContent());
+		
+		for(int i=0; i<count; i++) {
+			craftAndApplyFullInventoryEffectsStack(ingredient, effects, i==count-1);
 		}
-		return Main.game.getPlayer().getEssenceCount() >= EnchantingUtils.getCost(ingredient, itemEffects);
+		
+		if((previousIngredient instanceof AbstractItem && Main.game.getPlayer().hasItem((AbstractItem) previousIngredient))
+				|| (previousIngredient instanceof AbstractClothing && Main.game.getPlayer().hasClothing((AbstractClothing) previousIngredient))
+				|| (previousIngredient instanceof AbstractWeapon && Main.game.getPlayer().hasWeapon((AbstractWeapon) previousIngredient))) {
+			ingredient = previousIngredient;
+			effects = new ArrayList<>(previousEffects);
+			Main.game.setContent(new Response("", "", ENCHANTMENT_MENU));
+			
+		} else if(previousIngredient instanceof Tattoo) {
+			if(BodyChanging.getTarget().isPlayer()) {
+				if(Main.game.getPlayer().getLocationPlaceType()==PlaceType.SHOPPING_ARCADE_KATES_SHOP) {
+					Main.game.setContent(new Response("", "", SuccubisSecrets.SHOP_BEAUTY_SALON_TATTOOS));
+				} else {
+					Main.game.setContent(new Response("", "", CosmeticsDialogue.BEAUTICIAN_TATTOOS));
+				}
+			} else {
+				Main.game.setContent(new Response("", "", CompanionManagement.SLAVE_MANAGEMENT_TATTOOS));
+			}
+			
+		} else {
+			Main.game.setContent(new Response("", "", InventoryDialogue.INVENTORY_MENU) {
+				@Override
+				public void effects() {
+					Main.game.setResponseTab(0);
+					EnchantmentDialogue.resetEnchantmentVariables();
+					InventoryDialogue.resetItems();
+					InventoryDialogue.setNPCInventoryInteraction(interactionInit);
+				}
+			});
+		}
+	}
+	
+	public static boolean canAffordCost(AbstractCoreItem ingredient, List<ItemEffect> itemEffects, int count) {
+		if(ingredient instanceof Tattoo) {
+			return Main.game.getPlayer().getMoney()  >= EnchantingUtils.getCost(ingredient, itemEffects) * count * EnchantingUtils.FLAME_COST_MODIFER;
+		}
+		return Main.game.getPlayer().getEssenceCount() >= EnchantingUtils.getCost(ingredient, itemEffects) * count;
 	}
 
 	public static AbstractCoreItem craftAndApplyFullInventoryEffects(AbstractCoreItem ingredient, List<ItemEffect> effects) {
@@ -614,12 +679,25 @@ public class EnchantmentDialogue {
 	}
 	
 	public static AbstractCoreItem craftAndApplyFullInventoryEffects(AbstractCoreItem ingredient, List<ItemEffect> effects, boolean applyCost) {
+		return craftAndApplyFullInventoryEffectsStack(ingredient, effects, applyCost, true);
+	}
+
+	public static AbstractCoreItem craftAndApplyFullInventoryEffectsStack(AbstractCoreItem ingredient, List<ItemEffect> effects, boolean finalCraftInStack) {
+		return craftAndApplyFullInventoryEffectsStack(ingredient, effects, true, finalCraftInStack);
+	}
+	
+	public static AbstractCoreItem craftAndApplyFullInventoryEffectsStack(AbstractCoreItem ingredient, List<ItemEffect> effects, boolean applyCost, boolean finalCraftInStack) {
 		if(ingredient instanceof AbstractItem) {
 			Main.game.getPlayer().removeItem((AbstractItem) ingredient);
 			AbstractItem craftedItem = EnchantingUtils.craftItem(ingredient, effects);
 			Main.game.getPlayer().addItem(craftedItem, false);
 			Main.game.addEvent(new EventLogEntry("[style.colourExcellent(Item Enchanted)]", Util.capitaliseSentence(craftedItem.getName(false, true))), false);
-			finaliseCrafting(ingredient, effects, applyCost);
+			if(applyCost) {
+				Main.game.getPlayer().incrementEssenceCount(-EnchantingUtils.getCost(ingredient, effects), false);
+			}
+			if(finalCraftInStack) {
+				finaliseCrafting(ingredient, effects);
+			}
 			return craftedItem;
 			
 		} else if(ingredient instanceof AbstractClothing) {
@@ -627,7 +705,12 @@ public class EnchantmentDialogue {
 			AbstractClothing craftedClothing = EnchantingUtils.craftClothing(ingredient, effects);
 			Main.game.getPlayer().addClothing(craftedClothing, false);
 			Main.game.addEvent(new EventLogEntry("[style.colourExcellent(Clothing Enchanted)]", Util.capitaliseSentence(craftedClothing.getName(false, true))), false);
-			finaliseCrafting(ingredient, effects, applyCost);
+			if(applyCost) {
+				Main.game.getPlayer().incrementEssenceCount(-EnchantingUtils.getCost(ingredient, effects), false);
+			}
+			if(finalCraftInStack) {
+				finaliseCrafting(ingredient, effects);
+			}
 			return craftedClothing;
 			
 		} else if(ingredient instanceof AbstractWeapon) {
@@ -635,7 +718,12 @@ public class EnchantmentDialogue {
 			AbstractWeapon craftedWeapon = EnchantingUtils.craftWeapon(ingredient, effects);
 			Main.game.getPlayer().addWeapon(craftedWeapon, false);
 			Main.game.addEvent(new EventLogEntry("[style.colourExcellent(Weapon Enchanted)]", Util.capitaliseSentence(craftedWeapon.getName(false, true))), false);
-			finaliseCrafting(ingredient, effects, applyCost);
+			if(applyCost) {
+				Main.game.getPlayer().incrementEssenceCount(-EnchantingUtils.getCost(ingredient, effects), false);
+			}
+			if(finalCraftInStack) {
+				finaliseCrafting(ingredient, effects);
+			}
 			return craftedWeapon;
 			
 		} else if(ingredient instanceof Tattoo) {
@@ -652,18 +740,16 @@ public class EnchantmentDialogue {
 				tattoo = EnchantingUtils.craftTattoo(ingredient, effects);
 			}
 			Main.game.addEvent(new EventLogEntry("[style.colourExcellent(Tattoo Enchanted)]", Util.capitaliseSentence(((Tattoo)ingredient).getName())), false);
-			finaliseCrafting(ingredient, effects, applyCost);
+			if(finalCraftInStack) {
+				finaliseCrafting(ingredient, effects);
+			}
 			return tattoo;
 		}
 		
 		return null;
 	}
 	
-	private static void finaliseCrafting(AbstractCoreItem ingredient, List<ItemEffect> effects, boolean applyCost) {
-		if(!(ingredient instanceof Tattoo) && applyCost) {
-			Main.game.getPlayer().incrementEssenceCount(-EnchantingUtils.getCost(ingredient, effects), false);
-		}
-		
+	private static void finaliseCrafting(AbstractCoreItem ingredient, List<ItemEffect> effects) {
 		previousIngredient = ingredient;
 		previousPrimaryMod = primaryMod;
 		previousSecondaryMod = secondaryMod;
@@ -828,6 +914,11 @@ public class EnchantmentDialogue {
 			} else {
 				return null;
 			}
+		}
+		
+		@Override
+		public DialogueNodeType getDialogueNodeType() {
+			return DialogueNodeType.INVENTORY;
 		}
 	};
 	

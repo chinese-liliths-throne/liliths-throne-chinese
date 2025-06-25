@@ -183,7 +183,7 @@ public class SlaveForSale extends NPC {
 			return super.getDescription();
 		}
 		if(this.isSlave()) {
-			return UtilText.parse(this, "For one reason or another, [npc.sheIs] now a slave, and is no more than [npc.her] owner's property.");
+			return UtilText.parse(this, "For one reason or another, [npc.nameIsFull] a slave, and is no more than [npc.her] owner's property.");
 			
 		} else {
 			return UtilText.parse(this, "After a period of being your slave, [npc.nameIsFull] now your trusted friend.");

@@ -570,6 +570,11 @@ public enum PerkManager {
 				case PHYSICAL_WATER:
 					break;
 			}
+			
+			// 5% chance for short-sighted NPC
+			if(Math.random()<0.05f && !character.isPerfectVision()) {
+				character.addSpecialPerk(Perk.SPECIAL_SHORT_SIGHTED);
+			}
 		}
 	}
 

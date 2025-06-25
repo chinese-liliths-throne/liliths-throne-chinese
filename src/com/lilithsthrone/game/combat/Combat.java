@@ -520,7 +520,7 @@ public class Combat {
 				}
 			}
 			
-			int money = Main.game.getPlayer().getMoney();
+			long money = Main.game.getPlayer().getMoney();
 			int moneyLoss = (-enemyLeader.getLootMoney()/2)*enemies.size();
 			if(moneyLoss!=0 && enemyLeader.isLootingPlayerAfterCombat()) {
 				Main.game.getPlayer().incrementMoney(moneyLoss);

@@ -80,7 +80,7 @@ public class Properties {
 	
 	public int fontSize = 18;
 	public int level = 1;
-	public int money = 0;
+	public long money = 0;
 	public int arcaneEssences = 0;
 	
 	// Taur furry options:
@@ -739,7 +739,7 @@ public class Properties {
 				race = ((Element)element.getElementsByTagName("race").item(0)).getAttribute("value");
 				quest = ((Element)element.getElementsByTagName("quest").item(0)).getAttribute("value");
 				level = Integer.valueOf(((Element)element.getElementsByTagName("level").item(0)).getAttribute("value"));
-				money = Integer.valueOf(((Element)element.getElementsByTagName("money").item(0)).getAttribute("value"));
+				money = Long.valueOf(((Element)element.getElementsByTagName("money").item(0)).getAttribute("value"));
 				if(element.getElementsByTagName("arcaneEssences").item(0)!=null) {
 					arcaneEssences = Integer.valueOf(((Element)element.getElementsByTagName("arcaneEssences").item(0)).getAttribute("value"));
 				}

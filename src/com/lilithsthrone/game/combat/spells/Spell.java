@@ -1869,7 +1869,9 @@ public enum Spell {
 					SpellUpgrade.CLEANSE_1,
 					SpellUpgrade.CLEANSE_2,
 					SpellUpgrade.CLEANSE_3),
-			null, Util.newArrayListOfValues("[style.colourGood(Removes all)] combat status effects from both the targeted ally and enemy")) {
+			null, Util.newArrayListOfValues(
+					"[style.colourGood(Removes all)] combat status effects from",
+					"both the targeted ally and enemy")) {
 		
 		@Override
 		public String getBasicEffectsString(GameCharacter caster, GameCharacter target, List<GameCharacter> enemies, List<GameCharacter> allies) {

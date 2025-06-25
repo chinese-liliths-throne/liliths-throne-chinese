@@ -1111,8 +1111,12 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 			}
 			description += st.getDescription();
 		}
-
-		return UtilText.parse(characterEquippedOn, this, description);
+//		if(characterEquippedOn==null) {
+//			System.err.println("ERROR: null character in getTypeDescription() for "+this.getClothingType().getName());
+//			new Exception().printStackTrace();
+//		}
+		
+		return UtilText.parse(characterEquippedOn==null?Main.game.getPlayer():characterEquippedOn, this, description);
 	}
 	
 	@Override
@@ -2257,6 +2261,9 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 		for(ItemEffect effect : this.getEffects()) {
 			if(effect.getSecondaryModifier()==TFModifier.CLOTHING_SEALING) {
 				switch(effect.getPotency()) {
+					case SPECIAL:
+						cost += ItemEffect.SEALED_COST_SPECIAL;
+						break;
 					case BOOST:
 						break;
 					case DRAIN:

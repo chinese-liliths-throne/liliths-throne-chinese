@@ -172,7 +172,7 @@ public class SillyModeLARPAttacker extends NPC {
 
 	@Override
 	public void equipClothing(List<EquipClothingSetting> settings) {
-		this.incrementMoney((int) (this.getInventory().getNonEquippedValue() * 1f));
+		this.incrementMoney((long) (this.getInventory().getNonEquippedValue() * 1f));
 		this.clearNonEquippedInventory(false);
 		Main.game.getCharacterUtils().generateItemsInInventory(this, true, true, true);
 		

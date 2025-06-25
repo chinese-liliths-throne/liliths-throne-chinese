@@ -19,6 +19,7 @@ import com.lilithsthrone.game.sex.SexPace;
 import com.lilithsthrone.game.sex.SexParticipantType;
 import com.lilithsthrone.game.sex.positions.slots.SexSlot;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotAllFours;
+import com.lilithsthrone.game.sex.positions.slots.SexSlotLyingDown;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotTag;
 import com.lilithsthrone.game.sex.sexActions.SexAction;
 import com.lilithsthrone.game.sex.sexActions.SexActionCategory;
@@ -30,10 +31,48 @@ import com.lilithsthrone.utils.Util.Value;
 
 /**
  * @since 0.2.8
- * @version 0.3.3
+ * @version 0.4.11.2
  * @author Innoxia
  */
-public class DoggyStyle {
+public class DoggyStyleAndProneBone {
+	
+	private static boolean suitablePositionsForPullingAndGrabbing(GameCharacter performer, GameCharacter target) {
+		boolean suitableSlot = false;
+		
+		// Doggy-style check:
+		if(Main.sex.getSexPositionSlot(target)==SexSlotAllFours.ALL_FOURS) {
+			suitableSlot = Main.sex.getSexPositionSlot(performer)==SexSlotAllFours.BEHIND
+					|| Main.sex.getSexPositionSlot(performer)==SexSlotAllFours.HUMPING;
+		}
+		if(Main.sex.getSexPositionSlot(target)==SexSlotAllFours.ALL_FOURS_TWO) {
+			suitableSlot = Main.sex.getSexPositionSlot(performer)==SexSlotAllFours.BEHIND_TWO
+					|| Main.sex.getSexPositionSlot(performer)==SexSlotAllFours.HUMPING_TWO;
+		}
+		if(Main.sex.getSexPositionSlot(target)==SexSlotAllFours.ALL_FOURS_THREE) {
+			suitableSlot = Main.sex.getSexPositionSlot(performer)==SexSlotAllFours.BEHIND_THREE
+					|| Main.sex.getSexPositionSlot(performer)==SexSlotAllFours.HUMPING_THREE;
+		}
+		if(Main.sex.getSexPositionSlot(target)==SexSlotAllFours.ALL_FOURS_FOUR) {
+			suitableSlot = Main.sex.getSexPositionSlot(performer)==SexSlotAllFours.BEHIND_FOUR
+					|| Main.sex.getSexPositionSlot(performer)==SexSlotAllFours.HUMPING_FOUR;
+		}
+		
+		// Prone bone check:
+		if(Main.sex.getSexPositionSlot(target)==SexSlotLyingDown.LYING_DOWN_FRONT) {
+			suitableSlot = Main.sex.getSexPositionSlot(performer)==SexSlotLyingDown.MISSIONARY;
+		}
+		if(Main.sex.getSexPositionSlot(target)==SexSlotLyingDown.LYING_DOWN_FRONT_TWO) {
+			suitableSlot = Main.sex.getSexPositionSlot(performer)==SexSlotLyingDown.MISSIONARY_TWO;
+		}
+		if(Main.sex.getSexPositionSlot(target)==SexSlotLyingDown.LYING_DOWN_FRONT_THREE) {
+			suitableSlot = Main.sex.getSexPositionSlot(performer)==SexSlotLyingDown.MISSIONARY_THREE;
+		}
+		if(Main.sex.getSexPositionSlot(target)==SexSlotLyingDown.LYING_DOWN_FRONT_FOUR) {
+			suitableSlot = Main.sex.getSexPositionSlot(performer)==SexSlotLyingDown.MISSIONARY_FOUR;
+		}
+		
+		return suitableSlot;
+	}
 	
 	public static final SexAction PULL_HAIR = new SexAction(
 			SexActionType.REQUIRES_EXPOSED,
@@ -62,22 +101,11 @@ public class DoggyStyle {
 		public boolean isBaseRequirementsMet() {
 			boolean suitableSlot = false;
 			
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING;
+			if(Main.sex.getCharacterTargetedForSexAction(this).isAsleep()) {
+				return false;
 			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_TWO) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_TWO
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_TWO;
-			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_THREE) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_THREE
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_THREE;
-			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_FOUR) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_FOUR
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_FOUR;
-			}
+			
+			suitableSlot = suitablePositionsForPullingAndGrabbing(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this));
 			
 			if(!suitableSlot) {
 				return false;
@@ -211,22 +239,10 @@ public class DoggyStyle {
 		public boolean isBaseRequirementsMet() {
 			boolean suitableSlot = false;
 
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING;
+			if(Main.sex.getCharacterTargetedForSexAction(this).isAsleep()) {
+				return false;
 			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_TWO) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_TWO
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_TWO;
-			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_THREE) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_THREE
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_THREE;
-			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_FOUR) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_FOUR
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_FOUR;
-			}
+			suitableSlot = suitablePositionsForPullingAndGrabbing(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this));
 			
 			if(!suitableSlot) {
 				return false;
@@ -358,22 +374,10 @@ public class DoggyStyle {
 		public boolean isBaseRequirementsMet() {
 			boolean suitableSlot = false;
 
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING;
+			if(Main.sex.getCharacterTargetedForSexAction(this).isAsleep()) {
+				return false;
 			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_TWO) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_TWO
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_TWO;
-			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_THREE) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_THREE
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_THREE;
-			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_FOUR) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_FOUR
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_FOUR;
-			}
+			suitableSlot = suitablePositionsForPullingAndGrabbing(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this));
 
 			if(!suitableSlot) {
 				return false;
@@ -507,22 +511,10 @@ public class DoggyStyle {
 		public boolean isBaseRequirementsMet() {
 			boolean suitableSlot = false;
 
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING;
+			if(Main.sex.getCharacterTargetedForSexAction(this).isAsleep()) {
+				return false;
 			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_TWO) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_TWO
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_TWO;
-			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_THREE) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_THREE
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_THREE;
-			}
-			if(Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this))==SexSlotAllFours.ALL_FOURS_FOUR) {
-				suitableSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.BEHIND_FOUR
-						|| Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction())==SexSlotAllFours.HUMPING_FOUR;
-			}
+			suitableSlot = suitablePositionsForPullingAndGrabbing(Main.sex.getCharacterPerformingAction(), Main.sex.getCharacterTargetedForSexAction(this));
 
 			if(!suitableSlot) {
 				return false;
@@ -640,9 +632,10 @@ public class DoggyStyle {
 		public boolean isBaseRequirementsMet() {
 			SexSlot slot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction());
 			SexSlot targetedSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this));
+			
 			return Main.sex.getSexPace(Main.sex.getCharacterPerformingAction())!=SexPace.SUB_RESISTING
-					&& (slot.hasTag(SexSlotTag.ALL_FOURS))
-					&& (targetedSlot.hasTag(SexSlotTag.BEHIND_ALL_FOURS))
+					&& ((slot.hasTag(SexSlotTag.ALL_FOURS) && targetedSlot.hasTag(SexSlotTag.BEHIND_ALL_FOURS))
+							|| (slot.hasTag(SexSlotTag.LYING_DOWN_ON_FRONT) && targetedSlot.hasTag(SexSlotTag.MISSIONARY)))
 					&& !Main.sex.isCharacterImmobilised(Main.sex.getCharacterPerformingAction());
 		}
 		
@@ -696,11 +689,15 @@ public class DoggyStyle {
 			SexPace.DOM_ROUGH) {
 		@Override
 		public boolean isBaseRequirementsMet() {
+			SexSlot slot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction());
+			SexSlot targetedSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this));
+			
 			return Main.sex.getCharacterTargetedForSexAction(this).isCoverableAreaExposed(CoverableArea.MOUTH)
 					&& Main.sex.isDom(Main.sex.getCharacterPerformingAction())
 					&& Main.sex.getDominantParticipants(false).size()==1
 					&& Main.sex.getCharacterPerformingAction().hasPenisIgnoreDildo()
-					&& (Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction()).hasTag(SexSlotTag.BEHIND_ALL_FOURS))
+					&& (slot.hasTag(SexSlotTag.BEHIND_ALL_FOURS)
+							|| (slot.hasTag(SexSlotTag.MISSIONARY) && targetedSlot.hasTag(SexSlotTag.LYING_DOWN_ON_FRONT)))
 					&& (Main.sex.getCharacterPerformingAction().isPlayer() || Main.sex.getRequestedPulloutWeighting(Main.sex.getCharacterPerformingAction())<=0)
 					&& !Main.sex.isCharacterImmobilised(Main.sex.getCharacterPerformingAction());
 //					&& (Main.sex.getCharacterPerformingAction().isPlayer() || !Main.sex.getCharacterPerformingAction().getFetishDesire(Fetish.FETISH_SADIST).isNegative());
@@ -749,14 +746,22 @@ public class DoggyStyle {
 			
 			sb.append("<br/><br/>");
 
+			boolean isDoggyStyle = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction()).hasTag(SexSlotTag.BEHIND_ALL_FOURS);
 			if(immobile) {
 				sb.append("Reaching down, [npc.she] then [npc.verb(grab)] [npc2.namePos] shoulders, before pushing [npc.her] weight down onto [npc2.her] back as [npc.she] roughly [npc.verb(mount)] [npc2.herHim]."
-						+ " With [npc.namePos] weight now on top of [npc2.herHim], [npc2.name] [npc2.verb(collapse)] to the floor, still staying silent and unmoving as [npc2.sheIs] put in such a submissive position."
+						+ " With [npc.namePos] weight now on top of [npc2.herHim], [npc2.name]"
+						+ (isDoggyStyle
+								?" [npc2.verb(collapse)] down onto [npc2.her] front"
+								:" is squished beneath [npc.herHim]")
+						+ " and [npc2.verb(remain)] silent and unmoving as [npc2.sheIs] put in such a submissive position."
 						+ " Bending down, and with [npc.her] throbbing [npc.cock] still hilted in [npc2.namePos] [npc2.asshole+], [npc.name] [npc.verb(growl)] menacingly in [npc2.her] [npc2.ear], "
 								+ "[npc.speech(You dumb doll! All you're good for is being my sex toy cock-sleeve!)]");
 			} else {
 				sb.append("Reaching down, [npc.she] then [npc.verb(grab)] [npc2.namePos] shoulders, before pushing [npc.her] weight down onto [npc2.her] back as [npc.she] roughly [npc.verb(mount)] [npc2.herHim]."
-						+ " With [npc.namePos] weight now on top of [npc2.herHim], [npc2.name] [npc2.verb(collapse)] to the floor with [npc2.a_moan+]."
+						+ " With [npc.namePos] weight now on top of [npc2.herHim], [npc2.name]"
+						+ (isDoggyStyle
+								?" [npc2.verb(collapse)] down onto [npc2.her] front with [npc2.a_moan+]."
+								:" is squished beneath [npc.herHim] and [npc2.verb(let)] out [npc2.a_moan+].")
 						+ " Bending down, and with [npc.her] throbbing [npc.cock] still hilted in [npc2.namePos] [npc2.asshole+], [npc.name] [npc.verb(growl)] menacingly in [npc2.her] [npc2.ear], "
 								+ "[npc.speech(You little bitch! All you're good for is being my slutty cock-sleeve!)]");
 			}
@@ -787,13 +792,13 @@ public class DoggyStyle {
 					sb.append(", [npc.her] [npc.cum+] shoots");
 					break;
 				case FIVE_HUGE:
-					sb.append(", [npc.her] load pours out");
+					sb.append(", [npc.her] huge load of [npc.cum+] blasts out");
 					break;
 				case SIX_EXTREME:
-					sb.append(", [npc.her] huge load pours out");
+					sb.append(", [npc.her] massive load of [npc.cum+] blasts out");
 					break;
 				case SEVEN_MONSTROUS:
-					sb.append(", [npc.her] enormous load pours out");
+					sb.append(", [npc.her] enormous load of [npc.cum+] explodes out");
 					break;
 			}
 			
@@ -864,11 +869,15 @@ public class DoggyStyle {
 			SexPace.DOM_ROUGH) {
 		@Override
 		public boolean isBaseRequirementsMet() {
+			SexSlot slot = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction());
+			SexSlot targetedSlot = Main.sex.getSexPositionSlot(Main.sex.getCharacterTargetedForSexAction(this));
+			
 			return Main.sex.getCharacterTargetedForSexAction(this).isCoverableAreaExposed(CoverableArea.MOUTH)
 					&& Main.sex.isDom(Main.sex.getCharacterPerformingAction())
 					&& Main.sex.getDominantParticipants(false).size()==1
 					&& Main.sex.getCharacterPerformingAction().hasPenisIgnoreDildo()
-					&& (Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction()).hasTag(SexSlotTag.BEHIND_ALL_FOURS))
+					&& (slot.hasTag(SexSlotTag.BEHIND_ALL_FOURS)
+							|| (slot.hasTag(SexSlotTag.MISSIONARY) && targetedSlot.hasTag(SexSlotTag.LYING_DOWN_ON_FRONT)))
 					&& (Main.sex.getCharacterPerformingAction().isPlayer() || Main.sex.getRequestedPulloutWeighting(Main.sex.getCharacterPerformingAction())<=0)
 					&& !Main.sex.isCharacterImmobilised(Main.sex.getCharacterPerformingAction());
 //					&& (Main.sex.getCharacterPerformingAction().isPlayer() || !Main.sex.getCharacterPerformingAction().getFetishDesire(Fetish.FETISH_SADIST).isNegative());
@@ -917,14 +926,22 @@ public class DoggyStyle {
 			
 			sb.append("<br/><br/>");
 
+			boolean isDoggyStyle = Main.sex.getSexPositionSlot(Main.sex.getCharacterPerformingAction()).hasTag(SexSlotTag.BEHIND_ALL_FOURS);
 			if(immobile) {
 				sb.append("Reaching down, [npc.she] then [npc.verb(grab)] [npc2.namePos] shoulders, before pushing [npc.her] weight down onto [npc2.her] back as [npc.she] roughly [npc.verb(mount)] [npc2.herHim]."
-						+ " With [npc.namePos] weight now on top of [npc2.herHim], [npc2.name] [npc2.verb(collapse)] to the floor, still staying silent and unmoving as [npc2.sheIs] put in such a submissive position."
+						+ " With [npc.namePos] weight now on top of [npc2.herHim], [npc2.name]"
+						+ (isDoggyStyle
+								?" [npc2.verb(collapse)] down onto [npc2.her] front"
+								:" is squished beneath [npc.herHim]")
+						+" and [npc2.verb(remain)] silent and unmoving as [npc2.sheIs] put in such a submissive position."
 						+ " Bending down, and with [npc.her] throbbing [npc.cock] still hilted in [npc2.namePos] [npc2.pussy+], [npc.name] [npc.verb(growl)] menacingly in [npc2.her] [npc2.ear], "
 								+ "[npc.speech(You dumb doll! All you're good for is being my sex toy cock-sleeve!)]");
 			} else {
 				sb.append("Reaching down, [npc.she] then [npc.verb(grab)] [npc2.namePos] shoulders, before pushing [npc.her] weight down onto [npc2.her] back as [npc.she] roughly [npc.verb(mount)] [npc2.herHim]."
-						+ " With [npc.namePos] weight now on top of [npc2.herHim], [npc2.name] [npc2.verb(collapse)] to the floor with [npc2.a_moan+]."
+						+ " With [npc.namePos] weight now on top of [npc2.herHim], [npc2.name] "
+						+ (isDoggyStyle
+								?" [npc2.verb(collapse)] down onto [npc2.her] front with [npc2.a_moan+]."
+								:" is squished beneath [npc.herHim] and [npc2.verb(let)] out [npc2.a_moan+].")
 						+ " Bending down, and with [npc.her] throbbing [npc.cock] still hilted in [npc2.namePos] [npc2.pussy+], [npc.name] [npc.verb(growl)] menacingly in [npc2.her] [npc2.ear], "
 								+ "[npc.speech(You little bitch! All you're good for is being my slutty cock-sleeve!)]");
 			}
@@ -955,13 +972,13 @@ public class DoggyStyle {
 					sb.append(", [npc.her] [npc.cum+] shoots");
 					break;
 				case FIVE_HUGE:
-					sb.append(", [npc.her] load pours out");
+					sb.append(", [npc.her] huge load of [npc.cum+] blasts out");
 					break;
 				case SIX_EXTREME:
-					sb.append(", [npc.her] huge load pours out");
+					sb.append(", [npc.her] massive load of [npc.cum+] blasts out");
 					break;
 				case SEVEN_MONSTROUS:
-					sb.append(", [npc.her] enormous load pours out");
+					sb.append(", [npc.her] enormous load of [npc.cum+] explodes out");
 					break;
 			}
 			

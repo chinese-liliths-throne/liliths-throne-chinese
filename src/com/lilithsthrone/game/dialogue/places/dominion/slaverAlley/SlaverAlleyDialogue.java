@@ -1186,6 +1186,7 @@ public class SlaverAlleyDialogue {
 						slave.setFetishDesire(fetish, FetishDesire.TWO_NEUTRAL); // Remove all negative fetishes to make sure they don't start hating sex scenes
 					}
 				}
+				Main.game.getNpc(Finch.class).addSlave(slave);
 				
 				if(Main.game.getPlayer().getLocationPlaceType()==PlaceType.SLAVER_ALLEY_CAFE) { //Oral:
 					applySlaveEffectsOral(slave);

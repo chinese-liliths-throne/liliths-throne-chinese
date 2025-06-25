@@ -121,7 +121,7 @@ public abstract class AbstractAttribute implements Comparable<AbstractAttribute>
 	public String getColouredName(String tag) {
 		return "<"+tag+" style='color:"+this.getColour().toWebHexString()+";'>"+name+"</"+tag+">";
 	}
-
+	
 	public String getFormattedValue(float value) {
 		return getFormattedValue(value, null);
 	}

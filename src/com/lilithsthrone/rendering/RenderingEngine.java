@@ -1345,7 +1345,7 @@ public enum RenderingEngine {
 		uiAttributeSB.setLength(0);
 		
 		uiAttributeSB.append(
-				"<body onLoad='scrollEventLogToBottom()'>");
+				"<body onLoad='scrollEventLogToBottom()' style='"+Main.game.getBodyStyle()+"'>");
 		
 		if(Main.game.isInSex()) {
 			// Name box:
@@ -1614,7 +1614,7 @@ public enum RenderingEngine {
 		uiAttributeSB.setLength(0);
 		
 		uiAttributeSB.append(
-				"<body onLoad='scrollEventLogToBottom()'>"
+				"<body onLoad='scrollEventLogToBottom()' style='"+Main.game.getBodyStyle()+"'>"
 					+ " <script>"
 						+"function scrollEventLogToBottom() {document.getElementById('event-log-inner-id').scrollTop = document.getElementById('event-log-inner-id').scrollHeight;}"
 					+ "</script>");

@@ -48,6 +48,12 @@
 		<!-- 'true' if this item is consumed on use. Most items have this set to 'true'. -->
 		<consumedOnUse>true</consumedOnUse>
 		
+		<!-- 'true' if using this item should close the player's inventory and display the item's effects as a full dialogue.
+			This is very rarely set to true, and is defaulted to false if omitted or left blank.
+			NOTE: If this is set to true, then this item cannot be used in combat, and will ignore the 'combatUseAllies' element above.
+			An example where this is true is in the 'res/items/innoxia/race/slime_biojuice_canister.xml' file. -->
+		<breakOutOfInventory>false</breakOutOfInventory>
+		
 		<!-- The rarity of this item. Values can be found here: https://github.com/Innoxia/liliths-throne-public/blob/master/src/com/lilithsthrone/game/inventory/Rarity.java -->
 		<rarity>COMMON</rarity> 
 		

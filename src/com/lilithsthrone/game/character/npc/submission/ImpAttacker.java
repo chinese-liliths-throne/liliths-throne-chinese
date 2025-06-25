@@ -174,7 +174,7 @@ public class ImpAttacker extends NPC {
 
 	@Override
 	public void equipClothing(List<EquipClothingSetting> settings) { //TODO gang tattoos?
-		this.incrementMoney((int) (this.getInventory().getNonEquippedValue() * 0.5f));
+		this.incrementMoney((long) (this.getInventory().getNonEquippedValue() * 0.5f));
 		this.clearNonEquippedInventory(false);
 		Main.game.getCharacterUtils().generateItemsInInventory(this, true, true, true);
 

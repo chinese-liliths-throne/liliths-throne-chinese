@@ -1108,7 +1108,7 @@ public class Evelyx extends NPC {
 		StringBuilder sb = new StringBuilder();
 		boolean anySeals = false;
 		int clothingValue = Main.game.getPlayer().getInventoryNonEquippedValue();
-		int flames = Main.game.getPlayer().getMoney();
+		long flames = Main.game.getPlayer().getMoney();
 		
 		// Clothing removal:
 		List<AbstractClothing> clothingToRemove = new ArrayList<>();

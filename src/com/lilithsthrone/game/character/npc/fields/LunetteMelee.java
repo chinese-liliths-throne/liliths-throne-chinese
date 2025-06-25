@@ -367,7 +367,7 @@ public class LunetteMelee extends NPC {
 		return null; // Post-combat responses are handled in the dialogue itself
 	}
 
-	public int getPaymentDemand() {
+	public long getPaymentDemand() {
 		return (Math.max(2500, Math.min(Main.game.getPlayer().getMoney()/10, 10000))/500) * 500; // Round to nearest 500
 	}
 	

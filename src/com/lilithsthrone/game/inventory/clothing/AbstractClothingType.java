@@ -2140,7 +2140,7 @@ public abstract class AbstractClothingType extends AbstractCoreType {
 			}
 		}
 		
-		return getSVGImage(null, slotEquippedTo, colours, true, null, new ArrayList<>(), null);
+		return getSVGImage(null, slotEquippedTo, colours, false, null, new ArrayList<>(), null);
 	}
 	
 	/**

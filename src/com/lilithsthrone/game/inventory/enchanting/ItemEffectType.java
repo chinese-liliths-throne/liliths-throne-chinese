@@ -909,6 +909,7 @@ public class ItemEffectType {
 					case MINOR_DRAIN:
 					case DRAIN:
 					case MAJOR_DRAIN:
+					case SPECIAL:
 						break;
 				}
 				return Util.newArrayListOfValues("");
@@ -945,6 +946,7 @@ public class ItemEffectType {
 					case MINOR_DRAIN:
 					case DRAIN:
 					case MAJOR_DRAIN:
+					case SPECIAL:
 						break;
 				}
 				return "";
@@ -2285,7 +2287,10 @@ public class ItemEffectType {
 				effectsList.add(secondaryModifier.getAssociatedAttribute().getFormattedValue(potency.getClothingBonusValue()));
 				
 			} else if(secondaryModifier == TFModifier.CLOTHING_SEALING) {
-				if(potency==TFPotency.MINOR_DRAIN) {
+				if(potency==TFPotency.SPECIAL) {
+					effectsList.add("[style.colourCrimson(Seals onto wearer)] <b>([style.colourTerrible(Cannot be unsealed!)])</b>");
+					
+				} else if(potency==TFPotency.MINOR_DRAIN) {
 					effectsList.add("[style.colourCrimson(Seals onto wearer)] <b>(Unseal: [style.colourArcane(" + ItemEffect.SEALED_COST_MINOR_DRAIN + ")])</b>");
 					
 				} else if(potency==TFPotency.DRAIN) {

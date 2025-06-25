@@ -2365,7 +2365,7 @@ public class LilayaDressingRoomDialogue {
 		// Potency:
 		inventorySB.append("<div class='container-full-width' style='text-align:center; padding:8px 0; margin-top:0;'>");
 		
-		for(TFPotency potency : TFPotency.values()) {
+		for(TFPotency potency : TFPotency.getAllPotencies()) {
 			inventorySB.append("<div class='normal-button"
 									+(getSelectedItem().getEnchantmentEffect().getPotencyModifiers(primaryMod, secondaryMod).contains(potency)?"":" disabled")
 									+(LilayaDressingRoomDialogue.potency==potency?" selected":"")+"'"

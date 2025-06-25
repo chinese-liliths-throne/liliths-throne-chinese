@@ -167,7 +167,7 @@ public class PenisPenis {
 				break;
 			case SUB_RESISTING:
 				sb.append(UtilText.returnStringAtRandom(
-						" Desperately trying, and failing, to pull away from [npc.namePos] [npc.cock], [npc2.name] desperately [npc2.verb(beg)] for [npc.name] to get away from [npc2.him].",
+						" Desperately trying, and failing, to pull away from [npc.namePos] [npc.cock], [npc2.name] frantically [npc2.verb(beg)] for [npc.name] to get away from [npc2.him].",
 						" [npc2.A_sob+] bursts out from between [npc2.namePos] [npc2.lips] as [npc2.she] weakly [npc2.verb(try)] to push [npc.name] away from [npc2.her] groin.",
 						" [npc2.Sobbing] in distress, and with tears running down [npc2.her] [npc2.face],"
 								+ " [npc2.name] weakly [npc2.verb(struggle)] against [npc.name], pleading and crying for [npc.herHim] to get away from [npc2.her] groin."));
@@ -801,7 +801,7 @@ public class PenisPenis {
 
 		@Override
 		public List<CoverableArea> getAreasCummedOn(GameCharacter cumProvider, GameCharacter cumTarget) {
-			if(cumProvider.equals(Main.sex.getCharacterPerformingAction()) && cumTarget.equals(Main.sex.getTargetedPartner(Main.sex.getCharacterPerformingAction()))) {
+			if(cumProvider.equals(Main.sex.getCharacterPerformingAction()) && cumTarget.equals(getCharacterToBeCreampied())) {
 				if(cumTarget.getGenitalArrangement()==GenitalArrangement.CLOACA || cumTarget.getGenitalArrangement()==GenitalArrangement.CLOACA_BEHIND) {
 					return Util.newArrayListOfValues(
 							CoverableArea.ANUS,
@@ -1008,7 +1008,7 @@ public class PenisPenis {
 						"You're pretty big, but there's always someone better!",
 						"You're pretty big, but I'm bigger!",
 						"Not bad, but I've seen bigger.",
-						"Nice cock, "+(target.isFeminine()?"filly":"colt")+", but you've got a ways to go."
+						"Nice cock, but you've got a ways to go."
 					);
 					break;
 			}
@@ -1093,15 +1093,23 @@ public class PenisPenis {
 					);
 					break;
 			}
-			quote = "[npc.speech(" + quote + ")].";
+			quote = "[npc.speech(" + quote + ")]";
 			String response;
-			response =  UtilText.returnStringAtRandom(
-				"[npc2.Name] [npc2.verb(continue)] to thrust and grind against [npc.name], with a little extra vigor from [npc.her] encouragement.",
-				"Spurred by [npc.her] encouragement, [npc2.name] enthusiastically [npc2.verb(buck)] against [npc.her] [npc.cock+]",
-				"Encouraged by [npc.her] teasing compliment, [npc2.name] [npc2.verb(give)] [npc.him] a few extra-hard thrusts.",
-				"[npc2.Name] blushes a little at [npc.her] praise, and presses in closer to [npc.him].",
-				"[npc2.Name] [npc2.verb(answer)] [npc.her] praise with a [npc2.moan], pressing in closer to rub [npc2.her] cock against "+getHersWithDildoHandling("npc")+" a little harder."
-			);
+			if(Main.sex.getSexPace(target)==SexPace.SUB_RESISTING) {
+				response = UtilText.returnStringAtRandom(
+						"<br/>Desperately trying, and failing, to pull away from [npc.namePos] [npc.cock], [npc2.name] frantically [npc2.verb(beg)] for [npc.name] to get away from [npc2.him].",
+						"<br/>[npc2.A_sob+] bursts out from between [npc2.namePos] [npc2.lips] as [npc2.she] weakly [npc2.verb(try)] to push [npc.name] away from [npc2.her] groin.",
+						"<br/>[npc2.Sobbing] in distress, and with tears running down [npc2.her] [npc2.face],"
+								+ " [npc2.name] weakly [npc2.verb(struggle)] against [npc.name], pleading and crying for [npc.herHim] to get away from [npc2.her] groin.");
+				
+			} else {
+				response = UtilText.returnStringAtRandom(
+						"<br/>[npc2.Name] [npc2.verb(continue)] to thrust and grind against [npc.name], with a little extra vigour from [npc.her] encouragement.",
+						"<br/>Spurred on by [npc.her] encouragement, [npc2.name] enthusiastically [npc2.verb(buck)] against [npc.her] [npc.cock+]",
+						"<br/>Encouraged by [npc.her] teasing compliment, [npc2.name] [npc2.verb(give)] [npc.him] a few extra-hard thrusts.",
+						"<br/>[npc2.Name] [npc2.verb(blush)] a little at [npc.her] praise, and [npc2.verb(press)] in closer to [npc.him].",
+						"<br/>[npc2.Name] [npc2.verb(answer)] [npc.her] praise with a [npc2.moan], pressing in closer to rub [npc2.her] cock against "+getHersWithDildoHandling("npc")+" a little harder.");
+			}
 			return String.join(" ", intro, mid, quote, response);
 		}
 	};

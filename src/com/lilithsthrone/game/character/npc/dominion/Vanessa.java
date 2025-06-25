@@ -33,6 +33,7 @@ import com.lilithsthrone.game.character.body.valueEnums.OrificeElasticity;
 import com.lilithsthrone.game.character.body.valueEnums.OrificePlasticity;
 import com.lilithsthrone.game.character.body.valueEnums.TongueLength;
 import com.lilithsthrone.game.character.body.valueEnums.Wetness;
+import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.effects.PerkCategory;
 import com.lilithsthrone.game.character.effects.PerkManager;
 import com.lilithsthrone.game.character.fetishes.Fetish;
@@ -108,10 +109,15 @@ public class Vanessa extends NPC {
 			this.setHairCovering(new Covering(BodyCoveringType.BODY_HAIR_HUMAN, PresetColour.COVERING_GREY), false);
 			this.setHairCovering(new Covering(BodyCoveringType.BODY_HAIR_FOX_FUR, PresetColour.COVERING_GREY), false);
 		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.11.3")) {
+			this.addSpecialPerk(Perk.SPECIAL_SHORT_SIGHTED);
+		}
 	}
 
 	@Override
 	public void setupPerks(boolean autoSelectPerks) {
+		this.addSpecialPerk(Perk.SPECIAL_SHORT_SIGHTED);
+		
 		this.setAttribute(Attribute.MAJOR_CORRUPTION, 15);
 		
 		PerkManager.initialisePerks(this,

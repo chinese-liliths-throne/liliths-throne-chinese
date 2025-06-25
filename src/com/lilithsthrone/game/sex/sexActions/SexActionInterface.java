@@ -1939,6 +1939,7 @@ public interface SexActionInterface {
 							return CondomFailure.CUM_OVERLOAD;
 						}
 						break;
+					case SPECIAL:
 					case MAJOR_BOOST:
 						break;
 					case MAJOR_DRAIN:

@@ -1730,6 +1730,8 @@ public class MainController implements Initializable {
 		} else if (currentNode.equals(ElementalDialogue.ELEMENTAL_FETISHES)
 				|| currentNode.equals(PhoneDialogue.CHARACTER_FETISHES)) {
 			MiscController.initFetishListeners();
+		} else if(currentNode.equals(PhoneDialogue.RACES)) {
+			MiscController.initEncyclopediaRaceListeners();
 		} else if (currentNode.equals(EnchantmentDialogue.ENCHANTMENT_MENU)) {
 			EnchantmentController.initEnchantmentMenuListeners();
 		} else if (currentNode.equals(EnchantmentDialogue.ENCHANTMENT_SAVE_LOAD)) {

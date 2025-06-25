@@ -900,14 +900,14 @@ public class Sex {
 					|| (Main.getProperties().hasValue(PropertyValue.autoSexStrip) && character.isPlayer() && Main.sex.getInitialSexManager().isAbleToRemoveSelfClothing(character))) {
 				clothingToStrip.clear();
 				clothingToStrip.addAll(character.getClothingCurrentlyEquipped());
-				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment());
+				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment() || (character.hasPerkAnywhereInTree(Perk.SPECIAL_SHORT_SIGHTED) && c.getItemTags().contains(ItemTag.PRESCRIPTION_GLASSES)));
 				for(AbstractClothing c : clothingToStrip) {
 					character.unequipClothingIntoInventory(c, true, character);
 				}
 				// If any clothing was unable to be removed, displace it in every way possible:
 				clothingToStrip.clear();
 				clothingToStrip.addAll(character.getClothingCurrentlyEquipped());
-				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment());
+				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment() || (character.hasPerkAnywhereInTree(Perk.SPECIAL_SHORT_SIGHTED) && c.getItemTags().contains(ItemTag.PRESCRIPTION_GLASSES)));
 				for(AbstractClothing c : clothingToStrip) {
 					for(DisplacementType dt : c.getBlockedPartsKeysAsListWithoutNONE(character, c.getSlotEquippedTo())) {
 						character.isAbleToBeDisplaced(c, dt, true, true, character);
@@ -923,7 +923,7 @@ public class Sex {
 				boolean anyClothingStripped = false;
 				clothingToStrip.clear();
 				clothingToStrip.addAll(character.getClothingCurrentlyEquipped());
-				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment());
+				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment() || (character.hasPerkAnywhereInTree(Perk.SPECIAL_SHORT_SIGHTED) && c.getItemTags().contains(ItemTag.PRESCRIPTION_GLASSES)));
 				for(AbstractClothing c : clothingToStrip) {
 					if(Main.sex.getInitialSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), c)) {
 						character.unequipClothingIntoInventory(c, true, character);
@@ -933,7 +933,7 @@ public class Sex {
 				// If any clothing was unable to be removed, displace it in every way possible:
 				clothingToStrip.clear();
 				clothingToStrip.addAll(character.getClothingCurrentlyEquipped());
-				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment());
+				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment() || (character.hasPerkAnywhereInTree(Perk.SPECIAL_SHORT_SIGHTED) && c.getItemTags().contains(ItemTag.PRESCRIPTION_GLASSES)));
 				for(AbstractClothing c : clothingToStrip) {
 					if(Main.sex.getInitialSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), c)) {
 						for(DisplacementType dt : c.getBlockedPartsKeysAsListWithoutNONE(character, c.getSlotEquippedTo())) {
@@ -2837,17 +2837,15 @@ public class Sex {
 					List<CoverableArea> extraCoverableAreasHit = new ArrayList<>();
 					if(extraDirtySlots>0) {
 						dirtiedSlotsSB.append("<p style='text-align:center;'>[style.boldSex(");
-						dirtiedSlotsSB.append(UtilText.parse(cumProvider, cumTarget, "[npc.Name] [npc.verb(cum)] so much that [npc2.nameIsFull]"));
+						dirtiedSlotsSB.append(UtilText.parse(cumProvider, cumTarget, "[npc.Name] [npc.verb(cum)] so much that"));
 						switch(cumProduction) {
 							case FOUR_LARGE:
 							case FIVE_HUGE:
-								dirtiedSlotsSB.append(" splattered all over by it!");
-								break;
 							case SIX_EXTREME:
-								dirtiedSlotsSB.append(" almost completely coated by it!");
+								dirtiedSlotsSB.append(UtilText.parse(cumProvider, cumTarget, " [npc.her] [npc.cum+] splatters all over [npc2.name]!"));
 								break;
 							case SEVEN_MONSTROUS:
-								dirtiedSlotsSB.append(" absolutely drenched in it!");
+								dirtiedSlotsSB.append(UtilText.parse(cumProvider, cumTarget, " [npc2.nameIsFull] absolutely drenched in [npc.her] [npc.cum+]!"));
 								break;
 							case THREE_AVERAGE:
 							case TWO_SMALL_AMOUNT:

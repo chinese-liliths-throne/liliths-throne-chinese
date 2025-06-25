@@ -151,7 +151,7 @@ public class DominionSuccubusAttacker extends NPC {
 
 	@Override
 	public void equipClothing(List<EquipClothingSetting> settings) {
-		this.incrementMoney((int) (this.getInventory().getNonEquippedValue() * 0.5f));
+		this.incrementMoney((long) (this.getInventory().getNonEquippedValue() * 0.5f));
 		this.clearNonEquippedInventory(false);
 		Main.game.getCharacterUtils().generateItemsInInventory(this, true, true, true);
 		

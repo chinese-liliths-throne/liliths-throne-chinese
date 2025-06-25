@@ -1904,7 +1904,6 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 		
 
 		//--- BREASTS ---//
-		
 		// Breast size:
 		if(target.getBreastSize().getMeasurement() + 3 <= body.getBreast().getSize().getMeasurement()) {
 			possibleEffects.add(new PossibleItemEffect(
@@ -1925,19 +1924,19 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 				if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 				
 		} else if(target.getBreastSize().getMeasurement()>0) {
-			if(target.getBreastSize().getMeasurement() >= body.getBreast().getSize().getMeasurement() - 3) {
+			if(target.getBreastSize().getMeasurement() - 3 >= body.getBreast().getSize().getMeasurement()) {
 				possibleEffects.add(new PossibleItemEffect(
 						new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_BREASTS, TFModifier.TF_MOD_SIZE, TFPotency.MAJOR_DRAIN, 1),
 						"Your breasts are far too big!"));
 					if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 					
-			} else if(target.getBreastSize().getMeasurement() >= body.getBreast().getSize().getMeasurement() - 2) {
+			} else if(target.getBreastSize().getMeasurement() - 2 >= body.getBreast().getSize().getMeasurement()) {
 				possibleEffects.add(new PossibleItemEffect(
 						new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_BREASTS, TFModifier.TF_MOD_SIZE, TFPotency.DRAIN, 1),
 						"Your breasts are too big!"));
 					if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 					
-			} else if(target.getBreastSize().getMeasurement() >= body.getBreast().getSize().getMeasurement() - 1) {
+			} else if(target.getBreastSize().getMeasurement() - 1 >= body.getBreast().getSize().getMeasurement()) {
 				possibleEffects.add(new PossibleItemEffect(
 						new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_BREASTS, TFModifier.TF_MOD_SIZE, TFPotency.MINOR_DRAIN, 1),
 						"Your breasts are a little too big!"));
@@ -1967,19 +1966,19 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 					if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 					
 			} else if(target.getBreastCrotchSize().getMeasurement()>0) {
-				if(target.getBreastCrotchSize().getMeasurement() >= body.getBreastCrotch().getSize().getMeasurement() - 3) {
+				if(target.getBreastCrotchSize().getMeasurement() - 3 >= body.getBreastCrotch().getSize().getMeasurement()) {
 					possibleEffects.add(new PossibleItemEffect(
 							new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_BREASTS_CROTCH, TFModifier.TF_MOD_SIZE, TFPotency.MAJOR_DRAIN, 1),
 							"Your crotch-boobs are far too big!"));
 						if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 						
-				} else if(target.getBreastCrotchSize().getMeasurement() >= body.getBreastCrotch().getSize().getMeasurement() - 2) {
+				} else if(target.getBreastCrotchSize().getMeasurement() - 2 >= body.getBreastCrotch().getSize().getMeasurement()) {
 					possibleEffects.add(new PossibleItemEffect(
 							new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_BREASTS_CROTCH, TFModifier.TF_MOD_SIZE, TFPotency.DRAIN, 1),
 							"Your crotch-boobs are too big!"));
 						if(possibleEffects.size()>=numberOfTransformations) { return new TransformativePotion(itemType, possibleEffects, body); }
 						
-				} else if(target.getBreastCrotchSize().getMeasurement() >= body.getBreastCrotch().getSize().getMeasurement() - 1) {
+				} else if(target.getBreastCrotchSize().getMeasurement() - 1 >= body.getBreastCrotch().getSize().getMeasurement()) {
 					possibleEffects.add(new PossibleItemEffect(
 							new ItemEffect(itemType.getEnchantmentEffect(), TFModifier.TF_BREASTS_CROTCH, TFModifier.TF_MOD_SIZE, TFPotency.MINOR_DRAIN, 1),
 							"Your crotch-boobs are a little too big!"));

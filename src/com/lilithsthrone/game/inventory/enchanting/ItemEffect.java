@@ -32,6 +32,7 @@ public class ItemEffect implements XMLSaving {
 	public static final int SEALED_COST_MINOR_DRAIN = 25;
 	public static final int SEALED_COST_DRAIN = 100;
 	public static final int SEALED_COST_MAJOR_DRAIN = 500;
+	public static final int SEALED_COST_SPECIAL = 1_000_000;
 	
 	private AbstractItemEffectType itemEffectType;
 	private TFModifier primaryModifier;
