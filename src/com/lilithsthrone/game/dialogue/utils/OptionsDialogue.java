@@ -304,7 +304,7 @@ public class OptionsDialogue {
 		
 		sb.append("<p style='text-align:center;'>");
 			sb.append("Your java version: "+System.getProperty("java.version"));
-			if (!version.equals("1.8.0_172")) {
+			if (!version.equals("1.8.0_172") && !version.startsWith("17.0")) {
 				sb.append("<br/>[style.italicsBad(1.8.0_172 is the recommended java version!)]");
 				sb.append("<br/>[style.italicsMinorBad(This may result in abnormal behaviour such as tooltips getting stuck! Please launch with the recommended version or use the .exe build.)]");
 			}
