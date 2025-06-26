@@ -666,13 +666,66 @@ public class Util {
 			"eighty",
 			"ninety"
 	};
+
+	static String[] digits = {"零","一","二","三","四","五","六","七","八","九"};
+	static String[] lower_base = {"","十","百","千"};
+	static String[] upper_base = {"","万","亿", "兆", "京", "垓"};
+
+	static String intBlockToString(int integer, boolean isLower, char charTwo)
+	{
+		if (integer == 2 && !isLower) return String.valueOf(charTwo);
+		StringBuilder sb = new StringBuilder();
+		String intStr = Integer.toString(integer);
+		int n = intStr.length();
+		for(int i = 0; i < n; i++)
+		{
+			int num = intStr.charAt(i) - '0';
+			if (num == 0 && sb.length() > 0 && sb.charAt(sb.length()-1) == '零') continue;
+			String digit = digits[num];
+			if (num == 2 && n - 1 - i != 0 && n - 1 - i != 1) sb.append('两');
+			else sb.append(digit);
+			if (num != 0) sb.append(lower_base[n - 1 - i]);
+			if (!isLower && sb.length() > 1 && sb.charAt(0) == '一' && sb.charAt(1) == '十') sb.deleteCharAt(0);
+		}
+		if (sb.length() == 0) return "";
+		if (sb.charAt(sb.length()-1) == '零') sb.deleteCharAt(sb.length()-1);
+		return sb.toString();
+	}
+
+	public static String intToString(long integer) {
+		return intToString(integer, true);
+	}
+
+	public static String intToString(long integer, boolean withLiang) {
+		if (integer == 0) return "零";
+		StringBuilder sb = new StringBuilder();
+		String minus = "";
+		if (integer < 0) 
+		{
+			minus = "负";
+			integer = -integer;
+		}
+		int upper_cap = 0;
+		while(integer > 0)
+		{
+			int upper = (int)(integer%10000);
+			if (sb.length() == 1 || (sb.length() > 1 && sb.charAt(1) != '千')) sb.insert(0, '零');
+			sb.insert(0, intBlockToString(upper, integer/10000 > 0, withLiang ? '两' : '二')+upper_base[upper_cap]);
+			integer = integer/10000;
+			upper_cap++;
+		}
+
+		sb.insert(0, minus);
+
+		return sb.toString();
+	}
 	
-	/**
+	/*
 	 * Only works for values -9,223,372,036,854,775,807 to 9,223,372,036,854,775,807.
 	 * @param integer (it's a long :3)
 	 * @return Who knows?! It's a mystery!
 	 */
-	public static String intToString(long integer) {
+	public static String intToStringOld(long integer) {
 		boolean minus = integer<0;
 		integer = Math.abs(integer);
 		
@@ -823,12 +876,16 @@ public class Util {
 		
 		return intToString(integer)+" times";
 	}
+	
+	public static String intToPosition(int integer) {
+	    return "第" + intToString(integer, false);
+	}
 
 	/**
 	 * @param integer Input number to convert.
 	 * @return 'first', 'second', etc.
 	 */
-	public static String intToPosition(int integer) {
+	public static String intToPositionOld(int integer) {
 		String intToString = "";
 		
 		if(integer<0) {
