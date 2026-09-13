@@ -240,24 +240,17 @@ public class DarkSiren extends NPC {
 		this.addSpell(Spell.TELEKENETIC_SHOWER);
 		this.addSpellUpgrade(SpellUpgrade.TELEKENETIC_SHOWER_1);
 	}
-	
-	@Override
-	public void setStartingBody(boolean setPersona) {
-		
-		// Persona:
 
-		if(setPersona) {
+	@Override
+	public void setStartingPersona(boolean setPersonality, boolean setFetishes, boolean setOrientation, boolean setHistory, boolean setSpells) {
+		if(setPersonality) {
 			this.setPersonalityTraits(
 					PersonalityTrait.CONFIDENT,
 					PersonalityTrait.BRAVE,
 					PersonalityTrait.INNOCENT);
-			
-			addSpells();
-			
-			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
-			
-			this.setHistory(Occupation.NPC_ARCANE_RESEARCHER);
-			
+		}
+		
+		if(setFetishes) {
 			this.clearFetishes();
 			
 			this.addFetish(Fetish.FETISH_TRANSFORMATION_GIVING);
@@ -265,6 +258,24 @@ public class DarkSiren extends NPC {
 			this.setFetishDesire(Fetish.FETISH_PENIS_GIVING, FetishDesire.ONE_DISLIKE);
 		}
 		
+		if(setOrientation) {
+			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
+		}
+
+		if(setHistory) {
+			this.setHistory(Occupation.NPC_ARCANE_RESEARCHER);
+		}
+		
+		if(setSpells) {
+			addSpells();
+		}
+	}
+	
+	@Override
+	public void setStartingBody(boolean setPersona) {
+		if(setPersona) {
+			setStartingPersona();
+		}
 		
 		// Body:
 		this.setSubspeciesOverride(Subspecies.HALF_DEMON);
@@ -417,6 +428,15 @@ public class DarkSiren extends NPC {
 		return true;
 	}
 
+	@Override
+	public boolean isAttractedTo(GameCharacter character) {
+		// Player might be a demon, and as such is technically related to Meraxis, and as she doesn't have the incest fetish she will hate sex with the player
+		if(character.isPlayer()) {
+			return true;
+		}
+		return super.isAttractedTo(character);
+	}
+	
 	@Override
 	public String getDescription() {
 		if(this.isSlave()) {

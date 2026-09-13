@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.lilithsthrone.game.Game;
 import com.lilithsthrone.game.PropertyValue;
 import com.lilithsthrone.game.character.CharacterImportSetting;
 import com.lilithsthrone.game.character.EquipClothingSetting;
@@ -52,6 +53,8 @@ import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.pregnancy.FertilisationType;
+import com.lilithsthrone.game.character.quests.Quest;
+import com.lilithsthrone.game.character.quests.QuestLine;
 import com.lilithsthrone.game.character.race.Race;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.RacialBody;
@@ -98,7 +101,7 @@ public class Shiranui extends NPC {
 				"",
 				47, Month.JANUARY, 1,
 				40, Gender.F_P_V_B_FUTANARI, Subspecies.FOX_ASCENDANT, RaceStage.PARTIAL_FULL,
-				new CharacterInventory(false, 50_000),
+				new CharacterInventory(false, 0),
 				WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL,
 				true);
 		
@@ -139,6 +142,12 @@ public class Shiranui extends NPC {
 	public void loadFromXML(Element parentElement, Document doc, CharacterImportSetting... settings) {
 		loadNPCVariablesFromXML(this, null, parentElement, doc, settings);
 		this.setPlayerKnowsName(true);
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.11.7")) {
+			this.setMoney(0);
+			if(Main.game.getPlayer().getQuest(QuestLine.MAIN)==Quest.MAIN_3_K_WEAPONS_CACHE && this.getRace()!=Race.FOX_MORPH) {
+				this.setBodyToMeraxis(false, true);
+			}
+		}
 	}
 
 	@Override
@@ -155,24 +164,18 @@ public class Shiranui extends NPC {
 						new Value<>(PerkCategory.LUST, 5),
 						new Value<>(PerkCategory.ARCANE, 5)));
 	}
-	
+
 	@Override
-	public void setStartingBody(boolean setPersona) {
-		
-		// Persona:
-		
-		if(setPersona) {
+	public void setStartingPersona(boolean setPersonality, boolean setFetishes, boolean setOrientation, boolean setHistory, boolean setSpells) {
+		if(setPersonality) {
 			this.setPersonalityTraits(
 					PersonalityTrait.CONFIDENT,
 					PersonalityTrait.SELFISH);
-			
-			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
-			
-			this.setHistory(Occupation.NPC_YOUKO);
-			
-			this.clearFetishes();
+		}
+		
+		if(setFetishes) {
 			this.clearFetishDesires();
-			
+			this.clearFetishes();
 			this.addFetish(Fetish.FETISH_TRANSFORMATION_GIVING);
 			this.addFetish(Fetish.FETISH_ORAL_RECEIVING);
 			this.addFetish(Fetish.FETISH_BONDAGE_APPLIER);
@@ -187,7 +190,24 @@ public class Shiranui extends NPC {
 			this.setFetishDesire(Fetish.FETISH_PENIS_RECEIVING, FetishDesire.THREE_LIKE);
 			this.setFetishDesire(Fetish.FETISH_VAGINAL_RECEIVING, FetishDesire.THREE_LIKE);
 			this.setFetishDesire(Fetish.FETISH_SIZE_QUEEN, FetishDesire.THREE_LIKE);
-			
+		}
+		
+		if(setOrientation) {
+			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
+		}
+
+		if(setHistory) {
+			this.setHistory(Occupation.NPC_YOUKO);
+		}
+		
+		if(setSpells) {
+		}
+	}
+	
+	@Override
+	public void setStartingBody(boolean setPersona) {
+		if(setPersona) {
+			setStartingPersona();
 		}
 		
 		// Body:
@@ -353,7 +373,7 @@ public class Shiranui extends NPC {
 	
 	@Override
 	public boolean isAbleToBeImpregnated() {
-		return false; // TODO need to fix youko pregnancy before this can be enabled
+		return true;
 	}
 	
 	@Override
@@ -529,8 +549,8 @@ public class Shiranui extends NPC {
 			
 			// Reset pregnancy as otherwise it will be demon or half-demon due to Meraxis form:
 			if(this.isPregnant()) {
-				this.endPregnancy(false);
 				FertilisationType ft = this.pregnantLitter.getFertilisationType();
+				this.endPregnancy(false);
 				this.guaranteePregnancyOnNextRoll();
 				// GameCharacter partner, Body partnerBody, float cumQuantity, boolean directSexInsemination, FertilisationType fertilisationType, AbstractAttribute partnerVirilityAttribute
 				this.rollForPregnancy(Main.game.getPlayer(), Main.game.getPlayer().getBody(), 100, true, ft, Attribute.VIRILITY);
@@ -590,12 +610,12 @@ public class Shiranui extends NPC {
 		target.equipClothingFromNowhere(choker, true, this);
 	}
 	
-	public void addGifts(GameCharacter recipient) {
+	public void addGifts(GameCharacter recipient, boolean appendToDialogue) {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(recipient.addItem(Main.game.getItemGen().generateItem("innoxia_potions_youko_potion"), 10, false, true));
-		sb.append(recipient.addItem(Main.game.getItemGen().generateItem("innoxia_race_fox_vulpines_vineyard"), 3, false, true));
-		sb.append(recipient.addItem(Main.game.getItemGen().generateItem(ItemType.REJUVENATION_POTION), 1, false, true));
+		sb.append(recipient.addItem(Main.game.getItemGen().generateItem("innoxia_potions_youko_potion"), 10, false, appendToDialogue));
+		sb.append(recipient.addItem(Main.game.getItemGen().generateItem("innoxia_race_fox_vulpines_vineyard"), 3, false, appendToDialogue));
+		sb.append(recipient.addItem(Main.game.getItemGen().generateItem(ItemType.REJUVENATION_POTION), 1, false, appendToDialogue));
 		
 		TransformativePotion tfPotion = this.generateTransformativePotion(recipient);
 		AbstractItem potion = EnchantingUtils.craftItem(
@@ -604,7 +624,7 @@ public class Shiranui extends NPC {
 		potion.setName("Shiranui's Gift");
 		sb.append(recipient.addItem(potion, 1, false, true));
 		
-		if(recipient.isPlayer()) {
+		if(recipient.isPlayer() && appendToDialogue) {
 			Main.game.getTextEndStringBuilder().append(sb.toString());
 		}
 	}
